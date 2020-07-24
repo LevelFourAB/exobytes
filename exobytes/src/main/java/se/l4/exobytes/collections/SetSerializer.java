@@ -3,6 +3,7 @@ package se.l4.exobytes.collections;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import se.l4.exobytes.Serializer;
@@ -54,5 +55,28 @@ public class SetSerializer<T>
 		}
 
 		stream.writeListEnd();
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hash(itemSerializer);
+	}
+
+	@Override
+	@SuppressWarnings({ "rawtypes" })
+	public boolean equals(Object obj)
+	{
+		if(this == obj) return true;
+		if(obj == null) return false;
+		if(getClass() != obj.getClass()) return false;
+		SetSerializer other = (SetSerializer) obj;
+		return Objects.equals(itemSerializer, other.itemSerializer);
+	}
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName() + "{itemSerializer=" + itemSerializer + "}";
 	}
 }

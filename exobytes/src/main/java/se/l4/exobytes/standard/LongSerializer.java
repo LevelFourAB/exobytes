@@ -12,13 +12,9 @@ import se.l4.exobytes.format.Token;
 /**
  * Serializer for {@link Long}.
  */
-public class LongSerializer
+public final class LongSerializer
 	implements Serializer<Long>
 {
-	public LongSerializer()
-	{
-	}
-
 	@Override
 	public Optional<QualifiedName> getName()
 	{
@@ -38,5 +34,23 @@ public class LongSerializer
 		throws IOException
 	{
 		stream.writeLong(object);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return getClass().hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		return obj != null && (this == obj || getClass() == obj.getClass());
+	}
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName() + "{}";
 	}
 }

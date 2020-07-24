@@ -12,13 +12,9 @@ import se.l4.exobytes.format.Token;
 /**
  * Serializer for {@link Character}.
  */
-public class CharacterSerializer
+public final class CharacterSerializer
 	implements Serializer<Character>
 {
-	public CharacterSerializer()
-	{
-	}
-
 	@Override
 	public Optional<QualifiedName> getName()
 	{
@@ -38,5 +34,23 @@ public class CharacterSerializer
 		throws IOException
 	{
 		stream.writeChar(object);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return getClass().hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		return obj != null && (this == obj || getClass() == obj.getClass());
+	}
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName() + "{}";
 	}
 }

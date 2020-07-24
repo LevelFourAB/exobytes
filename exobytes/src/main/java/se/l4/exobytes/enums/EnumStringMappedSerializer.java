@@ -147,5 +147,31 @@ public class EnumStringMappedSerializer
 		{
 			out.writeString(enumToMapped[object.ordinal()]);
 		}
+
+		@Override
+		public int hashCode()
+		{
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + Objects.hashCode(mappedToEnum);
+			return result;
+		}
+
+		@Override
+		@SuppressWarnings({ "rawtypes" })
+		public boolean equals(Object obj)
+		{
+			if(this == obj) return true;
+			if(obj == null) return false;
+			if(getClass() != obj.getClass()) return false;
+			Impl other = (Impl) obj;
+			return Objects.equals(mappedToEnum, other.mappedToEnum);
+		}
+
+		@Override
+		public String toString()
+		{
+			return getClass().getSimpleName() + "{values=" + mappedToEnum + "}";
+		}
 	}
 }

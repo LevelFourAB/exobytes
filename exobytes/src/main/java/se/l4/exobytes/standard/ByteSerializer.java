@@ -12,13 +12,9 @@ import se.l4.exobytes.format.Token;
 /**
  * Serializer for {@link Boolean}.
  */
-public class ByteSerializer
+public final class ByteSerializer
 	implements Serializer<Byte>
 {
-	public ByteSerializer()
-	{
-	}
-
 	@Override
 	public Optional<QualifiedName> getName()
 	{
@@ -38,5 +34,23 @@ public class ByteSerializer
 		throws IOException
 	{
 		stream.writeByte(object);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return getClass().hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		return obj != null && (this == obj || getClass() == obj.getClass());
+	}
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName() + "{}";
 	}
 }

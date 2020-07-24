@@ -12,13 +12,9 @@ import se.l4.exobytes.format.Token;
 /**
  * Serializer for {@link Float}.
  */
-public class FloatSerializer
+public final class FloatSerializer
 	implements Serializer<Float>
 {
-	public FloatSerializer()
-	{
-	}
-
 	@Override
 	public Optional<QualifiedName> getName()
 	{
@@ -38,5 +34,23 @@ public class FloatSerializer
 		throws IOException
 	{
 		stream.writeFloat(object);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return getClass().hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		return obj != null && (this == obj || getClass() == obj.getClass());
+	}
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName() + "{}";
 	}
 }

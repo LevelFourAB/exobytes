@@ -15,7 +15,6 @@ import se.l4.exobytes.format.Token;
 public class CharArraySerializer
 	implements Serializer<char[]>
 {
-
 	@Override
 	public char[] read(StreamingInput in)
 		throws IOException
@@ -53,4 +52,21 @@ public class CharArraySerializer
 		out.writeListEnd();
 	}
 
+	@Override
+	public int hashCode()
+	{
+		return getClass().hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		return obj != null && (this == obj || getClass() == obj.getClass());
+	}
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName() + "{}";
+	}
 }

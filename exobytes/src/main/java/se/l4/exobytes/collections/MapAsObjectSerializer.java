@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 import se.l4.exobytes.Serializer;
 import se.l4.exobytes.format.StreamingInput;
@@ -63,5 +64,27 @@ public class MapAsObjectSerializer<V>
 		}
 
 		stream.writeObjectEnd();
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hash(serializer);
+	}
+
+	@Override
+	@SuppressWarnings({ "rawtypes" })
+	public boolean equals(Object obj) {
+		if(this == obj) return true;
+		if(obj == null) return false;
+		if(getClass() != obj.getClass()) return false;
+		MapAsObjectSerializer other = (MapAsObjectSerializer) obj;
+		return Objects.equals(serializer, other.serializer);
+	}
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName() + "{itemSerializer=" + serializer + "}";
 	}
 }

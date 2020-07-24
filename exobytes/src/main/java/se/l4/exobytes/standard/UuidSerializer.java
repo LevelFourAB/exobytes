@@ -13,13 +13,9 @@ import se.l4.exobytes.format.Token;
 /**
  * Serializer for {@link UUID} that transforms into a byte array.
  */
-public class UuidSerializer
+public final class UuidSerializer
 	implements Serializer<UUID>
 {
-	public UuidSerializer()
-	{
-	}
-
 	@Override
 	public Optional<QualifiedName> getName()
 	{
@@ -68,5 +64,23 @@ public class UuidSerializer
 		}
 
 		return buffer;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return getClass().hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		return obj != null && (this == obj || getClass() == obj.getClass());
+	}
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName() + "{}";
 	}
 }

@@ -1,6 +1,7 @@
 package se.l4.exobytes.enums;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Optional;
 
 import se.l4.exobytes.SerializationException;
@@ -75,6 +76,32 @@ public class EnumOrdinalSerializer
 			throws IOException
 		{
 			out.writeInt(object.ordinal());
+		}
+
+		@Override
+		public int hashCode()
+		{
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + Arrays.hashCode(values);
+			return result;
+		}
+
+		@Override
+		@SuppressWarnings({ "rawtypes" })
+		public boolean equals(Object obj)
+		{
+			if(this == obj) return true;
+			if(obj == null) return false;
+			if(getClass() != obj.getClass()) return false;
+			Impl other = (Impl) obj;
+			return Arrays.equals(values, other.values);
+		}
+
+		@Override
+		public String toString()
+		{
+			return getClass().getSimpleName() + "{values=" + Arrays.toString(values) + "}";
 		}
 	}
 }

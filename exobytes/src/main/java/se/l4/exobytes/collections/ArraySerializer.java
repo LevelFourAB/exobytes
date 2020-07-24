@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import se.l4.exobytes.Serializer;
 import se.l4.exobytes.format.StreamingInput;
@@ -73,5 +74,28 @@ public class ArraySerializer
 	public static int growArray(int currentSize)
 	{
 		return currentSize + (currentSize >> 1);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hash(componentType, itemSerializer);
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(this == obj) return true;
+		if(obj == null) return false;
+		if(getClass() != obj.getClass()) return false;
+		ArraySerializer other = (ArraySerializer) obj;
+		return Objects.equals(componentType, other.componentType)
+			&& Objects.equals(itemSerializer, other.itemSerializer);
+	}
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName() + "{componentType=" + componentType + ", itemSerializer=" + itemSerializer + "}";
 	}
 }

@@ -7,6 +7,8 @@ import java.util.Set;
 import java.util.UUID;
 
 import se.l4.commons.io.Bytes;
+import se.l4.commons.types.DefaultInstanceFactory;
+import se.l4.commons.types.InstanceFactory;
 import se.l4.exobytes.collections.ListSerializerResolver;
 import se.l4.exobytes.collections.MapSerializerResolver;
 import se.l4.exobytes.collections.SetSerializerResolver;
@@ -19,12 +21,10 @@ import se.l4.exobytes.standard.DoubleSerializer;
 import se.l4.exobytes.standard.FloatSerializer;
 import se.l4.exobytes.standard.IntSerializer;
 import se.l4.exobytes.standard.LongSerializer;
-import se.l4.exobytes.standard.OptionalSerializerResolver;
+import se.l4.exobytes.standard.OptionalSerializer;
 import se.l4.exobytes.standard.ShortSerializer;
 import se.l4.exobytes.standard.StringSerializer;
 import se.l4.exobytes.standard.UuidSerializer;
-import se.l4.commons.types.DefaultInstanceFactory;
-import se.l4.commons.types.InstanceFactory;
 
 /**
  * Default implementation of {@link Serializers}.
@@ -62,7 +62,7 @@ public class DefaultSerializers
 		bind(Set.class, new SetSerializerResolver());
 
 		// Optional<T>
-		bind(Optional.class, new OptionalSerializerResolver());
+		bind(Optional.class, new OptionalSerializer());
 
 		bind(Bytes.class, new BytesSerializer());
 	}

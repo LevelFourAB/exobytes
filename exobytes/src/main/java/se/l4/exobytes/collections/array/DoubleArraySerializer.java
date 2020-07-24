@@ -15,7 +15,6 @@ import se.l4.exobytes.format.Token;
 public class DoubleArraySerializer
 	implements Serializer<double[]>
 {
-
 	@Override
 	public double[] read(StreamingInput in)
 		throws IOException
@@ -53,4 +52,21 @@ public class DoubleArraySerializer
 		out.writeListEnd();
 	}
 
+	@Override
+	public int hashCode()
+	{
+		return getClass().hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		return obj != null && (this == obj || getClass() == obj.getClass());
+	}
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName() + "{}";
+	}
 }
