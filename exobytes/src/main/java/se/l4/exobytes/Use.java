@@ -11,7 +11,12 @@ import java.lang.annotation.Target;
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.FIELD, ElementType.TYPE })
+@Target({
+	ElementType.FIELD,
+	ElementType.METHOD,
+	ElementType.TYPE,
+	ElementType.TYPE_USE
+})
 @Documented
 public @interface Use
 {
