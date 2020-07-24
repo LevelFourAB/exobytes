@@ -10,7 +10,6 @@ import se.l4.commons.io.Bytes;
 import se.l4.exobytes.collections.ListSerializerResolver;
 import se.l4.exobytes.collections.MapSerializerResolver;
 import se.l4.exobytes.collections.SetSerializerResolver;
-import se.l4.exobytes.enums.EnumSerializerResolver;
 import se.l4.exobytes.standard.BooleanSerializer;
 import se.l4.exobytes.standard.ByteArraySerializer;
 import se.l4.exobytes.standard.ByteSerializer;
@@ -61,9 +60,6 @@ public class DefaultSerializers
 		bind(List.class, new ListSerializerResolver());
 		bind(Map.class, new MapSerializerResolver());
 		bind(Set.class, new SetSerializerResolver());
-
-		// Enums
-		bind(Enum.class, new EnumSerializerResolver());
 
 		// Optional<T>
 		bind(Optional.class, new OptionalSerializerResolver());
