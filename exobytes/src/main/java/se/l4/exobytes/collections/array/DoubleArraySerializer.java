@@ -12,7 +12,7 @@ import se.l4.exobytes.format.Token;
 /**
  * Custom serializer for arrays of doubles.
  */
-public class DoubleArraySerializer
+public final class DoubleArraySerializer
 	implements Serializer<double[]>
 {
 	@Override
@@ -21,23 +21,39 @@ public class DoubleArraySerializer
 	{
 		in.next(Token.LIST_START);
 
-		int length = 0;
-		double[] current = new double[512];
-		while(in.peek() != Token.LIST_END)
+		double[] result;
+		if(in.getLength().isPresent())
 		{
-			in.next(Token.VALUE);
-
-			if(length == current.length)
+			result = new double[in.getLength().getAsInt()];
+			int length = 0;
+			while(in.peek() != Token.LIST_END)
 			{
-				int newSize = ArraySerializer.growArray(current.length);
-				current = Arrays.copyOf(current, newSize);
+				in.next(Token.VALUE);
+				result[length++] = in.readDouble();
+			}
+		}
+		else
+		{
+			int length = 0;
+			double[] current = new double[512];
+			while(in.peek() != Token.LIST_END)
+			{
+				in.next(Token.VALUE);
+
+				if(length == current.length)
+				{
+					int newSize = ArraySerializer.growArray(current.length);
+					current = Arrays.copyOf(current, newSize);
+				}
+
+				current[length++] = in.readDouble();
 			}
 
-			current[length++] = in.readDouble();
+			result = Arrays.copyOf(current, length);
 		}
 
 		in.next(Token.LIST_END);
-		return Arrays.copyOf(current, length);
+		return result;
 	}
 
 	@Override

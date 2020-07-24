@@ -12,7 +12,7 @@ import se.l4.exobytes.format.Token;
 /**
  * Custom serializer for arrays of floats.
  */
-public class FloatArraySerializer
+public final class FloatArraySerializer
 	implements Serializer<float[]>
 {
 	@Override
@@ -21,23 +21,39 @@ public class FloatArraySerializer
 	{
 		in.next(Token.LIST_START);
 
-		int length = 0;
-		float[] current = new float[512];
-		while(in.peek() != Token.LIST_END)
+		float[] result;
+		if(in.getLength().isPresent())
 		{
-			in.next(Token.VALUE);
-
-			if(length == current.length)
+			result = new float[in.getLength().getAsInt()];
+			int length = 0;
+			while(in.peek() != Token.LIST_END)
 			{
-				int newSize = ArraySerializer.growArray(current.length);
-				current = Arrays.copyOf(current, newSize);
+				in.next(Token.VALUE);
+				result[length++] = in.readFloat();
+			}
+		}
+		else
+		{
+			int length = 0;
+			float[] current = new float[512];
+			while(in.peek() != Token.LIST_END)
+			{
+				in.next(Token.VALUE);
+
+				if(length == current.length)
+				{
+					int newSize = ArraySerializer.growArray(current.length);
+					current = Arrays.copyOf(current, newSize);
+				}
+
+				current[length++] = in.readFloat();
 			}
 
-			current[length++] = in.readFloat();
+			result = Arrays.copyOf(current, length);
 		}
 
 		in.next(Token.LIST_END);
-		return Arrays.copyOf(current, length);
+		return result;
 	}
 
 	@Override

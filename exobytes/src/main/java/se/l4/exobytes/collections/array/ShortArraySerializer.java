@@ -12,7 +12,7 @@ import se.l4.exobytes.format.Token;
 /**
  * Custom serializer for arrays of shorts.
  */
-public class ShortArraySerializer
+public final class ShortArraySerializer
 	implements Serializer<short[]>
 {
 	@Override
@@ -21,23 +21,39 @@ public class ShortArraySerializer
 	{
 		in.next(Token.LIST_START);
 
-		int length = 0;
-		short[] current = new short[512];
-		while(in.peek() != Token.LIST_END)
+		short[] result;
+		if(in.getLength().isPresent())
 		{
-			in.next(Token.VALUE);
-
-			if(length == current.length)
+			result = new short[in.getLength().getAsInt()];
+			int length = 0;
+			while(in.peek() != Token.LIST_END)
 			{
-				int newSize = ArraySerializer.growArray(current.length);
-				current = Arrays.copyOf(current, newSize);
+				in.next(Token.VALUE);
+				result[length++] = in.readShort();
+			}
+		}
+		else
+		{
+			int length = 0;
+			short[] current = new short[512];
+			while(in.peek() != Token.LIST_END)
+			{
+				in.next(Token.VALUE);
+
+				if(length == current.length)
+				{
+					int newSize = ArraySerializer.growArray(current.length);
+					current = Arrays.copyOf(current, newSize);
+				}
+
+				current[length++] = in.readShort();
 			}
 
-			current[length++] = in.readShort();
+			result = Arrays.copyOf(current, length);
 		}
 
 		in.next(Token.LIST_END);
-		return Arrays.copyOf(current, length);
+		return result;
 	}
 
 	@Override
