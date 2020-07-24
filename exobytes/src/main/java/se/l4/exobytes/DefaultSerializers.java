@@ -1,17 +1,27 @@
 package se.l4.exobytes;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableSet;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import se.l4.commons.io.Bytes;
 import se.l4.commons.types.DefaultInstanceFactory;
 import se.l4.commons.types.InstanceFactory;
-import se.l4.exobytes.collections.ListSerializerResolver;
 import se.l4.exobytes.collections.MapSerializerResolver;
-import se.l4.exobytes.collections.SetSerializerResolver;
+import se.l4.exobytes.collections.MutableCollectionResolver;
 import se.l4.exobytes.standard.BooleanSerializer;
 import se.l4.exobytes.standard.ByteArraySerializer;
 import se.l4.exobytes.standard.ByteSerializer;
@@ -57,9 +67,25 @@ public class DefaultSerializers
 		bind(UUID.class, new UuidSerializer());
 
 		// Collections
-		bind(List.class, new ListSerializerResolver());
 		bind(Map.class, new MapSerializerResolver());
-		bind(Set.class, new SetSerializerResolver());
+
+		bind(List.class, new MutableCollectionResolver<>(List.class, ArrayList::new));
+		bind(ArrayList.class, new MutableCollectionResolver<>(ArrayList.class, ArrayList::new));
+		bind(LinkedList.class, new MutableCollectionResolver<>(LinkedList.class, l -> new LinkedList<>()));
+		bind(CopyOnWriteArrayList.class, new MutableCollectionResolver<>(CopyOnWriteArrayList.class, l -> new CopyOnWriteArrayList<>()));
+
+		bind(Set.class, new MutableCollectionResolver<>(Set.class, HashSet::new));
+		bind(HashSet.class, new MutableCollectionResolver<>(HashSet.class, HashSet::new));
+		bind(LinkedHashSet.class, new MutableCollectionResolver<>(LinkedHashSet.class, LinkedHashSet::new));
+
+		bind(NavigableSet.class, new MutableCollectionResolver<>(NavigableSet.class, l -> new TreeSet<>()));
+		bind(SortedSet.class, new MutableCollectionResolver<>(SortedSet.class, l -> new TreeSet<>()));
+		bind(TreeSet.class, new MutableCollectionResolver<>(TreeSet.class, l -> new TreeSet<>()));
+
+		bind(CopyOnWriteArraySet.class, new MutableCollectionResolver<>(CopyOnWriteArraySet.class, l -> new CopyOnWriteArraySet<>()));
+		bind(ConcurrentSkipListSet.class, new MutableCollectionResolver<>(ConcurrentSkipListSet.class, l -> new ConcurrentSkipListSet<>()));
+
+		bind(Queue.class, new MutableCollectionResolver<>(Queue.class, l -> new LinkedList<>()));
 
 		// Optional<T>
 		bind(Optional.class, new OptionalSerializer());
