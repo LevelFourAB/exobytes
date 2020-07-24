@@ -10,6 +10,6 @@ public class BinaryTest
 	@Override
 	protected StreamingFormat format()
 	{
-		return StreamingFormat.BINARY;
+		return StreamingFormat.LEGACY_BINARY;
 	}
 }

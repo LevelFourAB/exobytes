@@ -25,7 +25,7 @@ public class OptionalSerializerTest
 	{
 		Serializer<Optional<String>> s = new OptionalSerializer<>(new StringSerializer());
 
-		StreamingCodec<Optional<String>> codec = s.toCodec(StreamingFormat.BINARY);
+		StreamingCodec<Optional<String>> codec = s.toCodec(StreamingFormat.LEGACY_BINARY);
 		Bytes data = Bytes.forObject(codec, Optional.empty());
 		Optional<String> opt = data.asObject(codec);
 
@@ -39,7 +39,7 @@ public class OptionalSerializerTest
 	{
 		Serializer<Optional<String>> s = new OptionalSerializer<>(new StringSerializer());
 
-		StreamingCodec<Optional<String>> codec = s.toCodec(StreamingFormat.BINARY);
+		StreamingCodec<Optional<String>> codec = s.toCodec(StreamingFormat.LEGACY_BINARY);
 		Bytes data = Bytes.forObject(codec, null);
 		Optional<String> opt = data.asObject(codec);
 
@@ -53,7 +53,7 @@ public class OptionalSerializerTest
 	{
 		Serializer<Optional<String>> s = new OptionalSerializer<>(new StringSerializer());
 
-		StreamingCodec<Optional<String>> codec = s.toCodec(StreamingFormat.BINARY);
+		StreamingCodec<Optional<String>> codec = s.toCodec(StreamingFormat.LEGACY_BINARY);
 		Bytes data = Bytes.forObject(codec, Optional.of("Hello"));
 		Optional<String> opt = data.asObject(codec);
 
@@ -74,7 +74,7 @@ public class OptionalSerializerTest
 
 		assertThat("serializer can be resolved", s, notNullValue());
 
-		StreamingCodec<Optional<String>> codec = s.toCodec(StreamingFormat.BINARY);
+		StreamingCodec<Optional<String>> codec = s.toCodec(StreamingFormat.LEGACY_BINARY);
 		Bytes data = Bytes.forObject(codec, Optional.of("Hello"));
 		Optional<String> opt = data.asObject(codec);
 

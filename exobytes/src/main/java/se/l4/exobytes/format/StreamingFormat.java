@@ -40,9 +40,11 @@ public interface StreamingFormat
 	static StreamingFormat JSON = create(JsonInput::new, JsonOutput::new);
 
 	/**
-	 * Format for the binary custom format.
+	 * Format for the binary custom format. Available only for legacy and
+	 * backwards compatibility reasons. For new code use {@link #CBOR} instead.
 	 */
-	static StreamingFormat BINARY = create(BinaryInput::new, BinaryOutput::new);
+	@Deprecated
+	static StreamingFormat LEGACY_BINARY = create(LegacyBinaryInput::new, LegacyBinaryOutput::new);
 
 	/**
 	 * Format that reads and writes CBOR.

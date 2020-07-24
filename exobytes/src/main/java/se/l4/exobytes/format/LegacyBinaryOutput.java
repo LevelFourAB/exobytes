@@ -8,10 +8,12 @@ import java.util.Arrays;
 import se.l4.commons.io.Bytes;
 
 /**
- * Output for custom binary format.
- *
+ * Output for custom binary format. Available only for backwards compatibility
+ * reasons, do not use for new code, it is recommended to use
+ * {@link StreamingFormat#CBOR} instead.
  */
-public class BinaryOutput
+@Deprecated
+public class LegacyBinaryOutput
 	implements StreamingOutput
 {
 	private static final int LEVELS = 20;
@@ -43,7 +45,7 @@ public class BinaryOutput
 
 	private int level;
 
-	public BinaryOutput(OutputStream out)
+	public LegacyBinaryOutput(OutputStream out)
 	{
 		this.out = out;
 

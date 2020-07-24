@@ -8,10 +8,12 @@ import java.io.InputStream;
 import se.l4.commons.io.Bytes;
 
 /**
- * Input for binary format.
- *
+ * Input for binary format.  Available only for backwards compatibility
+ * reasons, do not use for new code, it is recommended to use
+ * {@link StreamingFormat#CBOR} instead.
  */
-public class BinaryInput
+@Deprecated
+public class LegacyBinaryInput
 	extends AbstractStreamingInput
 {
 	private static final int CHARS_SIZE = 1024;
@@ -32,7 +34,7 @@ public class BinaryInput
 	private int currentValueByte;
 	private boolean didReadValue;
 
-	public BinaryInput(InputStream in)
+	public LegacyBinaryInput(InputStream in)
 	{
 		this.in = in;
 		buffer = new byte[8];
@@ -66,17 +68,17 @@ public class BinaryInput
 		{
 			case -1:
 				return Token.END_OF_STREAM;
-			case BinaryOutput.TAG_KEY:
+			case LegacyBinaryOutput.TAG_KEY:
 				return Token.KEY;
-			case BinaryOutput.TAG_OBJECT_START:
+			case LegacyBinaryOutput.TAG_OBJECT_START:
 				return Token.OBJECT_START;
-			case BinaryOutput.TAG_OBJECT_END:
+			case LegacyBinaryOutput.TAG_OBJECT_END:
 				return Token.OBJECT_END;
-			case BinaryOutput.TAG_LIST_START:
+			case LegacyBinaryOutput.TAG_LIST_START:
 				return Token.LIST_START;
-			case BinaryOutput.TAG_LIST_END:
+			case LegacyBinaryOutput.TAG_LIST_END:
 				return Token.LIST_END;
-			case BinaryOutput.TAG_NULL:
+			case LegacyBinaryOutput.TAG_NULL:
 				return Token.NULL;
 			default:
 				return Token.VALUE;
@@ -238,26 +240,26 @@ public class BinaryInput
 	{
 		switch(currentValueByte)
 		{
-			case BinaryOutput.TAG_BOOLEAN:
+			case LegacyBinaryOutput.TAG_BOOLEAN:
 				return readBoolean();
-			case BinaryOutput.TAG_DOUBLE:
+			case LegacyBinaryOutput.TAG_DOUBLE:
 				return readDouble();
-			case BinaryOutput.TAG_FLOAT:
+			case LegacyBinaryOutput.TAG_FLOAT:
 				return readFloat();
-			case BinaryOutput.TAG_INT:
-			case BinaryOutput.TAG_POSITIVE_INT:
-			case BinaryOutput.TAG_NEGATIVE_INT:
+			case LegacyBinaryOutput.TAG_INT:
+			case LegacyBinaryOutput.TAG_POSITIVE_INT:
+			case LegacyBinaryOutput.TAG_NEGATIVE_INT:
 				return readInt();
-			case BinaryOutput.TAG_LONG:
-			case BinaryOutput.TAG_POSITIVE_LONG:
-			case BinaryOutput.TAG_NEGATIVE_LONG:
+			case LegacyBinaryOutput.TAG_LONG:
+			case LegacyBinaryOutput.TAG_POSITIVE_LONG:
+			case LegacyBinaryOutput.TAG_NEGATIVE_LONG:
 				return readLong();
-			case BinaryOutput.TAG_KEY:
-			case BinaryOutput.TAG_STRING:
+			case LegacyBinaryOutput.TAG_KEY:
+			case LegacyBinaryOutput.TAG_STRING:
 				return readString();
-			case BinaryOutput.TAG_BYTE_ARRAY:
+			case LegacyBinaryOutput.TAG_BYTE_ARRAY:
 				return readByteArray();
-			case BinaryOutput.TAG_NULL:
+			case LegacyBinaryOutput.TAG_NULL:
 				return null;
 			default:
 				throw new IOException("Unexpected value type, no idea what to do (type was " + currentValueByte + ")");
@@ -270,7 +272,7 @@ public class BinaryInput
 	{
 		switch(currentValueByte)
 		{
-			case BinaryOutput.TAG_BOOLEAN:
+			case LegacyBinaryOutput.TAG_BOOLEAN:
 				int b = in.read();
 				markValueRead();
 				return b == 1;
@@ -321,29 +323,29 @@ public class BinaryInput
 	{
 		switch(currentValueByte)
 		{
-			case BinaryOutput.TAG_INT:
+			case LegacyBinaryOutput.TAG_INT:
 			{
 				int i = readRawInteger();
 				i = (i >>> 1) ^ -(i & 1);
 				markValueRead();
 				return i;
 			}
-			case BinaryOutput.TAG_POSITIVE_INT:
+			case LegacyBinaryOutput.TAG_POSITIVE_INT:
 			{
 				int i = readRawInteger();
 				markValueRead();
 				return i;
 			}
-			case BinaryOutput.TAG_NEGATIVE_INT:
+			case LegacyBinaryOutput.TAG_NEGATIVE_INT:
 			{
 				int i = - readRawInteger();
 				markValueRead();
 				return i;
 			}
 
-			case BinaryOutput.TAG_LONG:
-			case BinaryOutput.TAG_POSITIVE_LONG:
-			case BinaryOutput.TAG_NEGATIVE_LONG:
+			case LegacyBinaryOutput.TAG_LONG:
+			case LegacyBinaryOutput.TAG_POSITIVE_LONG:
+			case LegacyBinaryOutput.TAG_NEGATIVE_LONG:
 				long v = readLong();
 				if(v < Integer.MIN_VALUE || v > Integer.MAX_VALUE)
 				{
@@ -362,29 +364,29 @@ public class BinaryInput
 	{
 		switch(currentValueByte)
 		{
-			case BinaryOutput.TAG_LONG:
+			case LegacyBinaryOutput.TAG_LONG:
 			{
 				long l = readRawLong();
 				l = (l >>> 1) ^ -(l & 1);
 				markValueRead();
 				return l;
 			}
-			case BinaryOutput.TAG_POSITIVE_LONG:
+			case LegacyBinaryOutput.TAG_POSITIVE_LONG:
 			{
 				long l = readRawLong();
 				markValueRead();
 				return l;
 			}
-			case BinaryOutput.TAG_NEGATIVE_LONG:
+			case LegacyBinaryOutput.TAG_NEGATIVE_LONG:
 			{
 				long l = - readRawLong();
 				markValueRead();
 				return l;
 			}
 
-			case BinaryOutput.TAG_INT:
-			case BinaryOutput.TAG_POSITIVE_INT:
-			case BinaryOutput.TAG_NEGATIVE_INT:
+			case LegacyBinaryOutput.TAG_INT:
+			case LegacyBinaryOutput.TAG_POSITIVE_INT:
+			case LegacyBinaryOutput.TAG_NEGATIVE_INT:
 				return readInt();
 
 			default:
@@ -398,7 +400,7 @@ public class BinaryInput
 	{
 		switch(currentValueByte)
 		{
-			case BinaryOutput.TAG_FLOAT:
+			case LegacyBinaryOutput.TAG_FLOAT:
 				float f = readRawFloat();
 				markValueRead();
 				return f;
@@ -414,7 +416,7 @@ public class BinaryInput
 	{
 		switch(currentValueByte)
 		{
-			case BinaryOutput.TAG_DOUBLE:
+			case LegacyBinaryOutput.TAG_DOUBLE:
 				double d = readRawDouble();
 				markValueRead();
 				return d;
@@ -430,8 +432,8 @@ public class BinaryInput
 	{
 		switch(currentValueByte)
 		{
-			case BinaryOutput.TAG_STRING:
-			case BinaryOutput.TAG_KEY:
+			case LegacyBinaryOutput.TAG_STRING:
+			case LegacyBinaryOutput.TAG_KEY:
 				String s = readRawString();
 				markValueRead();
 				return s;
@@ -446,7 +448,7 @@ public class BinaryInput
 	{
 		switch(currentValueByte)
 		{
-			case BinaryOutput.TAG_BYTE_ARRAY:
+			case LegacyBinaryOutput.TAG_BYTE_ARRAY:
 				byte[] b = readRawByteArray();
 				markValueRead();
 				return b;
@@ -481,25 +483,25 @@ public class BinaryInput
 	{
 		switch(b)
 		{
-			case BinaryOutput.TAG_BOOLEAN:
+			case LegacyBinaryOutput.TAG_BOOLEAN:
 				return ValueType.BOOLEAN;
-			case BinaryOutput.TAG_DOUBLE:
+			case LegacyBinaryOutput.TAG_DOUBLE:
 				return ValueType.DOUBLE;
-			case BinaryOutput.TAG_FLOAT:
+			case LegacyBinaryOutput.TAG_FLOAT:
 				return ValueType.FLOAT;
-			case BinaryOutput.TAG_INT:
-			case BinaryOutput.TAG_POSITIVE_INT:
-			case BinaryOutput.TAG_NEGATIVE_INT:
+			case LegacyBinaryOutput.TAG_INT:
+			case LegacyBinaryOutput.TAG_POSITIVE_INT:
+			case LegacyBinaryOutput.TAG_NEGATIVE_INT:
 				return ValueType.INTEGER;
-			case BinaryOutput.TAG_LONG:
-			case BinaryOutput.TAG_POSITIVE_LONG:
-			case BinaryOutput.TAG_NEGATIVE_LONG:
+			case LegacyBinaryOutput.TAG_LONG:
+			case LegacyBinaryOutput.TAG_POSITIVE_LONG:
+			case LegacyBinaryOutput.TAG_NEGATIVE_LONG:
 				return ValueType.LONG;
-			case BinaryOutput.TAG_NULL:
+			case LegacyBinaryOutput.TAG_NULL:
 				return ValueType.NULL;
-			case BinaryOutput.TAG_STRING:
+			case LegacyBinaryOutput.TAG_STRING:
 				return ValueType.STRING;
-			case BinaryOutput.TAG_BYTE_ARRAY:
+			case LegacyBinaryOutput.TAG_BYTE_ARRAY:
 				return ValueType.BYTES;
 			default:
 				throw raiseException("Unexpected value type, no idea what to do (read byte was " + b + ")");

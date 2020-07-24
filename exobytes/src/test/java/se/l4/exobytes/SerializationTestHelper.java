@@ -10,8 +10,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.function.Function;
 
-import se.l4.exobytes.format.BinaryInput;
-import se.l4.exobytes.format.BinaryOutput;
+import se.l4.exobytes.format.LegacyBinaryInput;
+import se.l4.exobytes.format.LegacyBinaryOutput;
 import se.l4.exobytes.format.JsonInput;
 import se.l4.exobytes.format.JsonOutput;
 import se.l4.exobytes.format.StreamingInput;
@@ -27,7 +27,7 @@ public class SerializationTestHelper
 
 	public static <T> void testWriteAndRead(Serializer<T> serializer, T object)
 	{
-		testWriteAndRead(serializer, object, BinaryInput::new, BinaryOutput::new);
+		testWriteAndRead(serializer, object, LegacyBinaryInput::new, LegacyBinaryOutput::new);
 		testWriteAndRead(serializer, object, JsonInput::new, JsonOutput::new);
 		testWriteAndRead(serializer, object, CBORInput::new, CBOROutput::new);
 	}
