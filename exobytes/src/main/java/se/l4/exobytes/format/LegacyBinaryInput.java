@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.OptionalInt;
 
 import se.l4.commons.io.Bytes;
 
@@ -107,6 +108,12 @@ public class LegacyBinaryInput
 		}
 
 		return current;
+	}
+
+	@Override
+	public OptionalInt getLength()
+	{
+		return OptionalInt.empty();
 	}
 
 	private void readBuffer(int len)

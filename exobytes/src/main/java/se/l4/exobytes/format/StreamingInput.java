@@ -3,6 +3,7 @@ package se.l4.exobytes.format;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.OptionalInt;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import se.l4.commons.io.Bytes;
@@ -67,6 +68,13 @@ public interface StreamingInput
 	 * @return
 	 */
 	Token current();
+
+	/**
+	 * Get the length of the current list or object.
+	 *
+	 * @return
+	 */
+	OptionalInt getLength();
 
 	/**
 	 * Get the current value as a string.

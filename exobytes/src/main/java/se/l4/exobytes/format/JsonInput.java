@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.OptionalInt;
 
 import se.l4.commons.io.Bytes;
 
@@ -122,6 +123,12 @@ public class JsonInput
 		}
 
 		return Token.END_OF_STREAM;
+	}
+
+	@Override
+	public OptionalInt getLength()
+	{
+		return OptionalInt.empty();
 	}
 
 	/**

@@ -1,16 +1,16 @@
 package se.l4.exobytes.internal.format;
 
-import se.l4.exobytes.format.StreamingInput;
-import se.l4.exobytes.format.Token;
-
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.OptionalInt;
 
 import se.l4.commons.io.Bytes;
 import se.l4.exobytes.format.AbstractStreamingInput;
+import se.l4.exobytes.format.StreamingInput;
+import se.l4.exobytes.format.Token;
 
 /**
  * {@link StreamingInput} that reads CBOR encoded data.
@@ -32,6 +32,7 @@ public class CBORInput
 	private int level;
 
 	private boolean didReadValue;
+	private OptionalInt length;
 
 	public CBORInput(InputStream in)
 	{
@@ -44,6 +45,8 @@ public class CBORInput
 		remainingReads[0] = -1;
 
 		peekedByte = -2;
+
+		length = OptionalInt.empty();
 	}
 
 	@Override
@@ -118,6 +121,7 @@ public class CBORInput
 			case NULL:
 				markValueRead();
 				peekedByte = in.read();
+				length = OptionalInt.empty();
 				break;
 			case LIST_START:
 				markValueRead();
@@ -127,10 +131,12 @@ public class CBORInput
 			case OBJECT_START:
 				markValueRead();
 				peekedByte = in.read();
-				increaseLevel(isIndeterminateLength() ? -2 : getLengthAsInt() * 2, false);
+				increaseLevel(isIndeterminateLength() ? -2 : getLengthAsInt(), false);
 				break;
 			case LIST_END:
 			case OBJECT_END:
+				length = OptionalInt.empty();
+
 				if(remainingReads[level] != 0)
 				{
 					// Peek the next byte if this wasn't a synthetic end event
@@ -142,11 +148,19 @@ public class CBORInput
 				level--;
 				break;
 			default:
+				length = OptionalInt.empty();
+
 				peekedByte = in.read();
 				break;
 		}
 
 		return nextToken;
+	}
+
+	@Override
+	public OptionalInt getLength()
+	{
+		return length;
 	}
 
 	@Override
@@ -604,7 +618,9 @@ public class CBORInput
 		}
 
 		listOrMap[level] = isList;
-		remainingReads[level] = expectedCount;
+		remainingReads[level] = isList ? expectedCount : expectedCount * 2;
+
+		length = expectedCount < 0 ? OptionalInt.empty() : OptionalInt.of(expectedCount);
 	}
 
 	private int read()
