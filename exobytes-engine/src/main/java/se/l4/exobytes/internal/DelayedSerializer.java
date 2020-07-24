@@ -16,7 +16,7 @@ import se.l4.commons.types.reflect.TypeRef;
  * @param <T>
  */
 public class DelayedSerializer<T>
-	implements Serializer<T>
+	implements Serializer<T>, Serializer.NullHandling
 {
 	private volatile Serializer<T> instance;
 
@@ -37,11 +37,12 @@ public class DelayedSerializer<T>
 			}
 
 			@Override
-			public T read(StreamingInput in) throws IOException
+			public T read(StreamingInput in)
+				throws IOException
 			{
 				ensureSerializer();
 
-				return instance.read(in);
+				return in.readObject(instance);
 			}
 
 
@@ -51,7 +52,7 @@ public class DelayedSerializer<T>
 			{
 				ensureSerializer();
 
-				instance.write(object, stream);
+				stream.writeObject(instance, object);
 			}
 
 			@Override
@@ -67,17 +68,17 @@ public class DelayedSerializer<T>
 	}
 
 	@Override
-	public T read(StreamingInput in) throws IOException
+	public T read(StreamingInput in)
+		throws IOException
 	{
-		return instance.read(in);
+		return in.readObject(instance);
 	}
-
 
 	@Override
 	public void write(T object, StreamingOutput stream)
 		throws IOException
 	{
-		instance.write(object, stream);
+		stream.writeObject(instance, object);
 	}
 
 	@Override
