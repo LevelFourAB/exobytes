@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Optional;
 
 import se.l4.exobytes.Serializer;
-import se.l4.exobytes.SerializerFormatDefinition;
 import se.l4.exobytes.format.StreamingInput;
 import se.l4.exobytes.format.StreamingOutput;
 import se.l4.exobytes.format.Token;
@@ -17,13 +16,10 @@ public class OptionalSerializer<T>
 	implements Serializer<Optional<T>>, Serializer.NullHandling
 {
 	private final Serializer<T> itemSerializer;
-	private final SerializerFormatDefinition formatDefinition;
 
 	public OptionalSerializer(Serializer<T> itemSerializer)
 	{
 		this.itemSerializer = itemSerializer;
-
-		formatDefinition = itemSerializer.getFormatDefinition();
 	}
 
 	@Override
@@ -55,11 +51,5 @@ public class OptionalSerializer<T>
 			// If there is no object, write a null value
 			stream.writeNull();
 		}
-	}
-
-	@Override
-	public SerializerFormatDefinition getFormatDefinition()
-	{
-		return formatDefinition;
 	}
 }

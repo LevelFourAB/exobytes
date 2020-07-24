@@ -5,11 +5,9 @@ import java.util.Optional;
 
 import se.l4.exobytes.QualifiedName;
 import se.l4.exobytes.Serializer;
-import se.l4.exobytes.SerializerFormatDefinition;
 import se.l4.exobytes.format.StreamingInput;
 import se.l4.exobytes.format.StreamingOutput;
 import se.l4.exobytes.format.Token;
-import se.l4.exobytes.format.ValueType;
 
 /**
  * Serializer for {@link Float}.
@@ -17,11 +15,8 @@ import se.l4.exobytes.format.ValueType;
 public class FloatSerializer
 	implements Serializer<Float>
 {
-	private final SerializerFormatDefinition formatDefinition;
-
 	public FloatSerializer()
 	{
-		formatDefinition = SerializerFormatDefinition.forValue(ValueType.FLOAT);
 	}
 
 	@Override
@@ -43,11 +38,5 @@ public class FloatSerializer
 		throws IOException
 	{
 		stream.writeFloat(object);
-	}
-
-	@Override
-	public SerializerFormatDefinition getFormatDefinition()
-	{
-		return formatDefinition;
 	}
 }

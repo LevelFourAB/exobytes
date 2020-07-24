@@ -61,18 +61,6 @@ public interface Serializer<T>
 	}
 
 	/**
-	 * Get the definition that describes what this serializer can
-	 * read and write.
-	 *
-	 * @return
-	 */
-	@NonNull
-	default SerializerFormatDefinition getFormatDefinition()
-	{
-		return SerializerFormatDefinition.unknown();
-	}
-
-	/**
 	 * Take this serializer and transform it into a {@link StreamingCodec}.
 	 *
 	 * @param format

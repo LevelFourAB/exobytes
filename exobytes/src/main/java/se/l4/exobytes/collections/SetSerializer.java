@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import se.l4.exobytes.Serializer;
-import se.l4.exobytes.SerializerFormatDefinition;
 import se.l4.exobytes.format.StreamingInput;
 import se.l4.exobytes.format.StreamingOutput;
 import se.l4.exobytes.format.Token;
@@ -20,15 +19,10 @@ public class SetSerializer<T>
 	implements Serializer<Set<T>>
 {
 	private final Serializer<T> itemSerializer;
-	private final SerializerFormatDefinition formatDefinition;
 
 	public SetSerializer(Serializer<T> itemSerializer)
 	{
 		this.itemSerializer = itemSerializer;
-
-		formatDefinition = SerializerFormatDefinition.builder()
-			.list(itemSerializer)
-			.build();
 	}
 
 	@Override
@@ -60,11 +54,5 @@ public class SetSerializer<T>
 		}
 
 		stream.writeListEnd();
-	}
-
-	@Override
-	public SerializerFormatDefinition getFormatDefinition()
-	{
-		return formatDefinition;
 	}
 }

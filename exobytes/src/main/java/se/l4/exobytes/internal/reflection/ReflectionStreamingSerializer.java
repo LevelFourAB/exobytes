@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import se.l4.exobytes.QualifiedName;
 import se.l4.exobytes.Serializer;
-import se.l4.exobytes.SerializerFormatDefinition;
 import se.l4.exobytes.format.StreamingInput;
 import se.l4.exobytes.format.StreamingOutput;
 import se.l4.exobytes.format.Token;
@@ -71,11 +70,5 @@ public class ReflectionStreamingSerializer<T>
 		}
 
 		stream.writeObjectEnd();
-	}
-
-	@Override
-	public SerializerFormatDefinition getFormatDefinition()
-	{
-		return type.getFormatDefinition();
 	}
 }

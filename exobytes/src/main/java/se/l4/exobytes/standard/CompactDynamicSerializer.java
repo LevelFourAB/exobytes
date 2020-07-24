@@ -7,7 +7,6 @@ import java.util.Optional;
 import se.l4.exobytes.QualifiedName;
 import se.l4.exobytes.SerializationException;
 import se.l4.exobytes.Serializer;
-import se.l4.exobytes.SerializerFormatDefinition;
 import se.l4.exobytes.SerializerOrResolver;
 import se.l4.exobytes.SerializerResolver;
 import se.l4.exobytes.Serializers;
@@ -15,7 +14,6 @@ import se.l4.exobytes.TypeEncounter;
 import se.l4.exobytes.format.StreamingInput;
 import se.l4.exobytes.format.StreamingOutput;
 import se.l4.exobytes.format.Token;
-import se.l4.exobytes.internal.SerializerFormatDefinitionBuilderImpl;
 
 /**
  * Serializer that will attempt to dynamically resolve serializers based on
@@ -34,15 +32,10 @@ public class CompactDynamicSerializer
 		implements Serializer<Object>
 	{
 		private final Serializers collection;
-		private final SerializerFormatDefinition formatDefinition;
 
 		public Impl(Serializers collection)
 		{
 			this.collection = collection;
-
-			formatDefinition = new SerializerFormatDefinitionBuilderImpl()
-				.list(SerializerFormatDefinition.any())
-				.build();
 		}
 
 		@Override
@@ -106,12 +99,6 @@ public class CompactDynamicSerializer
 			stream.writeObject((Serializer) serializer, object);
 
 			stream.writeListEnd();
-		}
-
-		@Override
-		public SerializerFormatDefinition getFormatDefinition()
-		{
-			return formatDefinition;
 		}
 
 		@Override

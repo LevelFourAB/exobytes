@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.l4.exobytes.Serializer;
-import se.l4.exobytes.SerializerFormatDefinition;
 import se.l4.exobytes.format.StreamingInput;
 import se.l4.exobytes.format.StreamingOutput;
 import se.l4.exobytes.format.Token;
@@ -20,16 +19,11 @@ public class ArraySerializer
 	private final Class<?> componentType;
 	@SuppressWarnings("rawtypes")
 	private final Serializer itemSerializer;
-	private final SerializerFormatDefinition formatDefinition;
 
 	public ArraySerializer(Class<?> componentType, Serializer<?> itemSerializer)
 	{
 		this.componentType = componentType;
 		this.itemSerializer = itemSerializer;
-
-		formatDefinition = SerializerFormatDefinition.builder()
-			.list(itemSerializer)
-			.build();
 	}
 
 	@Override
@@ -68,12 +62,6 @@ public class ArraySerializer
 			stream.writeObject(itemSerializer, value);
 		}
 		stream.writeListEnd();
-	}
-
-	@Override
-	public SerializerFormatDefinition getFormatDefinition()
-	{
-		return formatDefinition;
 	}
 
 	/**

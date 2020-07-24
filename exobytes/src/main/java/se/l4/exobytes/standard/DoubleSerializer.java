@@ -5,11 +5,9 @@ import java.util.Optional;
 
 import se.l4.exobytes.QualifiedName;
 import se.l4.exobytes.Serializer;
-import se.l4.exobytes.SerializerFormatDefinition;
 import se.l4.exobytes.format.StreamingInput;
 import se.l4.exobytes.format.StreamingOutput;
 import se.l4.exobytes.format.Token;
-import se.l4.exobytes.format.ValueType;
 
 /**
  * Serializer for {@link Double}.
@@ -17,11 +15,8 @@ import se.l4.exobytes.format.ValueType;
 public class DoubleSerializer
 	implements Serializer<Double>
 {
-	private final SerializerFormatDefinition formatDefinition;
-
 	public DoubleSerializer()
 	{
-		formatDefinition = SerializerFormatDefinition.forValue(ValueType.DOUBLE);
 	}
 
 	@Override
@@ -43,11 +38,5 @@ public class DoubleSerializer
 		throws IOException
 	{
 		stream.writeDouble(object);
-	}
-
-	@Override
-	public SerializerFormatDefinition getFormatDefinition()
-	{
-		return formatDefinition;
 	}
 }

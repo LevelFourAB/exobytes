@@ -5,11 +5,9 @@ import java.util.Optional;
 
 import se.l4.exobytes.QualifiedName;
 import se.l4.exobytes.Serializer;
-import se.l4.exobytes.SerializerFormatDefinition;
 import se.l4.exobytes.format.StreamingInput;
 import se.l4.exobytes.format.StreamingOutput;
 import se.l4.exobytes.format.Token;
-import se.l4.exobytes.format.ValueType;
 
 /**
  * Serializer for byte arrays as they have special meaning in
@@ -18,11 +16,8 @@ import se.l4.exobytes.format.ValueType;
 public class ByteArraySerializer
 	implements Serializer<byte[]>
 {
-	private final SerializerFormatDefinition formatDefinition;
-
 	public ByteArraySerializer()
 	{
-		formatDefinition = SerializerFormatDefinition.forValue(ValueType.BYTES);
 	}
 
 	@Override
@@ -44,11 +39,5 @@ public class ByteArraySerializer
 		throws IOException
 	{
 		stream.writeBytes(object);
-	}
-
-	@Override
-	public SerializerFormatDefinition getFormatDefinition()
-	{
-		return formatDefinition;
 	}
 }

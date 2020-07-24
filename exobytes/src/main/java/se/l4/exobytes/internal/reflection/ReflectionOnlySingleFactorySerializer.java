@@ -6,13 +6,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 
+import se.l4.commons.types.Types;
 import se.l4.exobytes.QualifiedName;
 import se.l4.exobytes.Serializer;
-import se.l4.exobytes.SerializerFormatDefinition;
 import se.l4.exobytes.format.StreamingInput;
 import se.l4.exobytes.format.StreamingOutput;
 import se.l4.exobytes.format.Token;
-import se.l4.commons.types.Types;
 
 /**
  * Serializer that uses a smarter mapping creating instances using a single factory.
@@ -117,11 +116,5 @@ public class ReflectionOnlySingleFactorySerializer<T>
 		}
 
 		stream.writeObjectEnd();
-	}
-
-	@Override
-	public SerializerFormatDefinition getFormatDefinition()
-	{
-		return type.getFormatDefinition();
 	}
 }

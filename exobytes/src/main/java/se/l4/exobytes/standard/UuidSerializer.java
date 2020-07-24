@@ -6,11 +6,9 @@ import java.util.UUID;
 
 import se.l4.exobytes.QualifiedName;
 import se.l4.exobytes.Serializer;
-import se.l4.exobytes.SerializerFormatDefinition;
 import se.l4.exobytes.format.StreamingInput;
 import se.l4.exobytes.format.StreamingOutput;
 import se.l4.exobytes.format.Token;
-import se.l4.exobytes.format.ValueType;
 
 /**
  * Serializer for {@link UUID} that transforms into a byte array.
@@ -18,11 +16,8 @@ import se.l4.exobytes.format.ValueType;
 public class UuidSerializer
 	implements Serializer<UUID>
 {
-	private final SerializerFormatDefinition formatDefinition;
-
 	public UuidSerializer()
 	{
-		formatDefinition = SerializerFormatDefinition.forValue(ValueType.BYTES);
 	}
 
 	@Override
@@ -43,12 +38,6 @@ public class UuidSerializer
 		throws IOException
 	{
 		stream.writeBytes(toBytes0(object));
-	}
-
-	@Override
-	public SerializerFormatDefinition getFormatDefinition()
-	{
-		return formatDefinition;
 	}
 
 	private static UUID fromBytes0(byte[] bytes)

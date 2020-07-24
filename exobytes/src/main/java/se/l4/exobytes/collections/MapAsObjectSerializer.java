@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import se.l4.exobytes.Serializer;
-import se.l4.exobytes.SerializerFormatDefinition;
 import se.l4.exobytes.format.StreamingInput;
 import se.l4.exobytes.format.StreamingOutput;
 import se.l4.exobytes.format.Token;
@@ -15,15 +14,10 @@ public class MapAsObjectSerializer<V>
 	implements Serializer<Map<String, V>>
 {
 	private final Serializer<V> serializer;
-	private final SerializerFormatDefinition formatDefinition;
 
 	public MapAsObjectSerializer(Serializer<V> serializer)
 	{
 		this.serializer = serializer;
-
-		formatDefinition = SerializerFormatDefinition.builder()
-			.field("*").using(serializer)
-			.build();
 	}
 
 	@Override
@@ -69,11 +63,5 @@ public class MapAsObjectSerializer<V>
 		}
 
 		stream.writeObjectEnd();
-	}
-
-	@Override
-	public SerializerFormatDefinition getFormatDefinition()
-	{
-		return formatDefinition;
 	}
 }

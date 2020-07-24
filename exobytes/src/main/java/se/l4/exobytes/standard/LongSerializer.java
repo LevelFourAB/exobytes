@@ -5,11 +5,9 @@ import java.util.Optional;
 
 import se.l4.exobytes.QualifiedName;
 import se.l4.exobytes.Serializer;
-import se.l4.exobytes.SerializerFormatDefinition;
 import se.l4.exobytes.format.StreamingInput;
 import se.l4.exobytes.format.StreamingOutput;
 import se.l4.exobytes.format.Token;
-import se.l4.exobytes.format.ValueType;
 
 /**
  * Serializer for {@link Long}.
@@ -17,11 +15,8 @@ import se.l4.exobytes.format.ValueType;
 public class LongSerializer
 	implements Serializer<Long>
 {
-	private final SerializerFormatDefinition formatDefinition;
-
 	public LongSerializer()
 	{
-		formatDefinition = SerializerFormatDefinition.forValue(ValueType.LONG);
 	}
 
 	@Override
@@ -43,11 +38,5 @@ public class LongSerializer
 		throws IOException
 	{
 		stream.writeLong(object);
-	}
-
-	@Override
-	public SerializerFormatDefinition getFormatDefinition()
-	{
-		return formatDefinition;
 	}
 }

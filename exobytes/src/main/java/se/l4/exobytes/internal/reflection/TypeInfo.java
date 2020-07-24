@@ -6,7 +6,6 @@ import org.eclipse.collections.api.map.MapIterable;
 
 import se.l4.exobytes.QualifiedName;
 import se.l4.exobytes.ReflectionSerializer;
-import se.l4.exobytes.SerializerFormatDefinition;
 
 /**
  * Information about a type used with {@link ReflectionSerializer}.
@@ -19,7 +18,6 @@ public class TypeInfo<T>
 	private final FieldDefinition[] fields;
 	private final MapIterable<String, FieldDefinition> fieldMap;
 	private final FactoryDefinition<T>[] factories;
-	private final SerializerFormatDefinition formatDefinition;
 
 	public TypeInfo(
 		Class<T> type,
@@ -34,16 +32,6 @@ public class TypeInfo<T>
 		this.factories = factories;
 		this.fieldMap = fieldMap;
 		this.fields = fields;
-
-		SerializerFormatDefinition.Builder builder = SerializerFormatDefinition.builder();
-		for(FieldDefinition fdef : fields)
-		{
-			builder.field(fdef.getName())
-				.withType(fdef.getType())
-				.withHints(fdef.getHints())
-				.using(fdef.getSerializer());
-		}
-		formatDefinition = builder.build();
 	}
 
 	public Class<T> getType()
@@ -118,10 +106,5 @@ public class TypeInfo<T>
 		}
 
 		return result;
-	}
-
-	public SerializerFormatDefinition getFormatDefinition()
-	{
-		return formatDefinition;
 	}
 }

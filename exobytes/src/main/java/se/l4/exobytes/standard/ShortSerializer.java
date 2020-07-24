@@ -5,11 +5,9 @@ import java.util.Optional;
 
 import se.l4.exobytes.QualifiedName;
 import se.l4.exobytes.Serializer;
-import se.l4.exobytes.SerializerFormatDefinition;
 import se.l4.exobytes.format.StreamingInput;
 import se.l4.exobytes.format.StreamingOutput;
 import se.l4.exobytes.format.Token;
-import se.l4.exobytes.format.ValueType;
 
 /**
  * Serializer for {@link Short}.
@@ -17,11 +15,8 @@ import se.l4.exobytes.format.ValueType;
 public class ShortSerializer
 	implements Serializer<Short>
 {
-	private final SerializerFormatDefinition formatDefinition;
-
 	public ShortSerializer()
 	{
-		formatDefinition = SerializerFormatDefinition.forValue(ValueType.SHORT);
 	}
 
 	@Override
@@ -43,11 +38,5 @@ public class ShortSerializer
 		throws IOException
 	{
 		stream.writeInt(object);
-	}
-
-	@Override
-	public SerializerFormatDefinition getFormatDefinition()
-	{
-		return formatDefinition;
 	}
 }
