@@ -23,7 +23,7 @@
 	</properties>
 
 	<modules>
-		<module>exobytes-engine</module>
+		<module>exobytes</module>
 	</modules>
 
 	<!-- License -->

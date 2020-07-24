@@ -11,7 +11,7 @@
 		<relativePath>..</relativePath>
 	</parent>
 
-	<artifactId>exobytes-engine</artifactId>
+	<artifactId>exobytes</artifactId>
 	<name>${project.artifactId}</name>
 
 	<dependencies>
