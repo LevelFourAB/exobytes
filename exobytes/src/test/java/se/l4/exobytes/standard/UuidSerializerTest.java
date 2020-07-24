@@ -9,8 +9,8 @@ import java.util.UUID;
 
 import org.junit.Test;
 
-import se.l4.exobytes.format.BinaryInput;
-import se.l4.exobytes.format.BinaryOutput;
+import se.l4.exobytes.format.LegacyBinaryInput;
+import se.l4.exobytes.format.LegacyBinaryOutput;
 
 public class UuidSerializerTest
 {
@@ -30,9 +30,9 @@ public class UuidSerializerTest
 		try
 		{
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			serializer.write(uuid, new BinaryOutput(out));
+			serializer.write(uuid, new LegacyBinaryOutput(out));
 
-			return serializer.read(new BinaryInput(new ByteArrayInputStream(out.toByteArray())));
+			return serializer.read(new LegacyBinaryInput(new ByteArrayInputStream(out.toByteArray())));
 		}
 		catch(Exception e)
 		{
