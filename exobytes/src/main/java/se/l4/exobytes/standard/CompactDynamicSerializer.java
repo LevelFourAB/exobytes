@@ -60,7 +60,7 @@ public class CompactDynamicSerializer
 
 			Object result = null;
 
-			Optional<? extends Serializer<?>> serializer = collection.find(namespace, name);
+			Optional<? extends Serializer<?>> serializer = collection.getViaName(namespace, name);
 			if(! serializer.isPresent())
 			{
 				throw new SerializationException("No serializer found for `" + name + (namespace != null ? "` in `" + namespace + "`" : "`"));
@@ -77,7 +77,7 @@ public class CompactDynamicSerializer
 		public void write(Object object, StreamingOutput stream)
 			throws IOException
 		{
-			Serializer<?> serializer = collection.find(object.getClass());
+			Serializer<?> serializer = collection.get(object.getClass());
 
 			QualifiedName qname = serializer.getName()
 				.orElseThrow(() -> new SerializationException("Tried to use dynamic serialization for " + object.getClass() + ", but type has no name"));

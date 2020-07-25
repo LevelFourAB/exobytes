@@ -31,7 +31,7 @@ public class MapSerializerResolver
 		Optional<StringKey> key = encounter.getHint(StringKey.class);
 		if(key.isPresent())
 		{
-			return Optional.of(new MapAsObjectSerializer(encounter.find(type)));
+			return Optional.of(new MapAsObjectSerializer(encounter.get(type)));
 		}
 
 		return Optional.empty();

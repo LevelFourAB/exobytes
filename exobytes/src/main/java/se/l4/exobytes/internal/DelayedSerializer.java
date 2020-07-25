@@ -26,7 +26,7 @@ public class DelayedSerializer<T>
 			@SuppressWarnings("unchecked")
 			private void ensureSerializer()
 			{
-				Serializer<T> resolved = (Serializer<T>) collection.find(type);
+				Serializer<T> resolved = (Serializer<T>) collection.get(type);
 				if(resolved instanceof DelayedSerializer)
 				{
 					return;

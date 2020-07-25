@@ -59,7 +59,7 @@ public class ReflectionSerializer<T>
 			}
 
 			// Resolve the serializer to use for the field
-			Serializer<?> serializer = collection.find(field.getType());
+			Serializer<?> serializer = collection.get(field.getType());
 			boolean skipIfDefault = field.getAnnotation(AnnotationLocator.meta(SkipDefaultValue.class)).isPresent();
 
 			// Force the field to be accessible

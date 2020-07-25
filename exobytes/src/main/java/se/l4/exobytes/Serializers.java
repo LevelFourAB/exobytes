@@ -30,7 +30,7 @@ public interface Serializers
 	 * @param type
 	 */
 	@NonNull
-	Serializers bind(@NonNull Class<?> type);
+	Serializers register(@NonNull Class<?> type);
 
 	/**
 	 * Bind a given type to the specified serializer.
@@ -40,7 +40,7 @@ public interface Serializers
 	 * @param serializer
 	 */
 	@NonNull
-	<T> Serializers bind(@NonNull Class<T> type, @NonNull Serializer<T> serializer);
+	<T> Serializers register(@NonNull Class<T> type, @NonNull Serializer<T> serializer);
 
 	/**
 	 * Bind a given type to the specified resolver. The resolver will be
@@ -51,7 +51,7 @@ public interface Serializers
 	 * @param resolver
 	 */
 	@NonNull
-	<T> Serializers bind(@NonNull Class<T> type, @NonNull SerializerResolver<? extends T> resolver);
+	<T> Serializers register(@NonNull Class<T> type, @NonNull SerializerResolver<? extends T> resolver);
 
 	/**
 	 * Find a serializer suitable for the specific type.
@@ -61,7 +61,7 @@ public interface Serializers
 	 * @return
 	 */
 	@NonNull
-	<T> Serializer<T> find(@NonNull Class<T> type);
+	<T> Serializer<T> get(@NonNull Class<T> type);
 
 	/**
 	 * Find a serializer suitable for the specific type.
@@ -71,7 +71,7 @@ public interface Serializers
 	 * @return
 	 */
 	@NonNull
-	<T> Serializer<T> find(@NonNull Class<T> type, @NonNull Iterable<? extends Annotation> hints);
+	<T> Serializer<T> get(@NonNull Class<T> type, @NonNull Iterable<? extends Annotation> hints);
 
 	/**
 	 * Find a serializer suitable for the specified type.
@@ -80,7 +80,7 @@ public interface Serializers
 	 * @return
 	 */
 	@NonNull
-	Serializer<?> find(@NonNull TypeRef type);
+	Serializer<?> get(@NonNull TypeRef type);
 
 	/**
 	 * Find a serializer based on its registered name.
@@ -89,7 +89,7 @@ public interface Serializers
 	 * @return
 	 */
 	@NonNull
-	Optional<? extends Serializer<?>> find(String name);
+	Optional<? extends Serializer<?>> getViaName(String name);
 
 	/**
 	 * Find a serializer based on its registered name.
@@ -98,7 +98,7 @@ public interface Serializers
 	 * @return
 	 */
 	@NonNull
-	Optional<? extends Serializer<?>> find(QualifiedName name);
+	Optional<? extends Serializer<?>> getViaName(QualifiedName name);
 
 	/**
 	 * Find a serializer based on its registered name.
@@ -108,7 +108,7 @@ public interface Serializers
 	 * @return
 	 */
 	@NonNull
-	Optional<? extends Serializer<?>> find(@NonNull String namespace, @NonNull String name);
+	Optional<? extends Serializer<?>> getViaName(@NonNull String namespace, @NonNull String name);
 
 	/**
 	 * Get if the given type can be serialized.

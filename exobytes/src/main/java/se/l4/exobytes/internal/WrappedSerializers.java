@@ -29,15 +29,15 @@ public class WrappedSerializers
 	}
 
 	@Override
-	public Serializer<?> find(TypeRef type)
+	public Serializer<?> get(TypeRef type)
 	{
 		try
 		{
-			return super.find(type);
+			return super.get(type);
 		}
 		catch(SerializationException e)
 		{
-			return other.find(type);
+			return other.get(type);
 		}
 	}
 }

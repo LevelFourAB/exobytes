@@ -67,22 +67,22 @@ public abstract class AbstractSerializers
 	}
 
 	@Override
-	public Serializers bind(Class<?> type)
+	public Serializers register(Class<?> type)
 	{
-		find(type);
+		get(type);
 
 		return this;
 	}
 
 	@Override
-	public <T> Serializers bind(Class<T> type, Serializer<T> serializer)
+	public <T> Serializers register(Class<T> type, Serializer<T> serializer)
 	{
 		mapper.addSpecific(type, serializer);
 		return this;
 	}
 
 	@Override
-	public <T> Serializers bind(Class<T> type, SerializerResolver<? extends T> resolver)
+	public <T> Serializers register(Class<T> type, SerializerResolver<? extends T> resolver)
 	{
 		mapper.addHierarchyResolver(type, new SerializerResolverAdapter(resolver));
 		return this;
@@ -90,20 +90,20 @@ public abstract class AbstractSerializers
 
 	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public <T> Serializer<T> find(Class<T> type)
+	public <T> Serializer<T> get(Class<T> type)
 	{
-		return (Serializer) find(Types.reference(type));
+		return (Serializer) get(Types.reference(type));
 	}
 
 	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public <T> Serializer<T> find(Class<T> type, Iterable<? extends Annotation> hints)
+	public <T> Serializer<T> get(Class<T> type, Iterable<? extends Annotation> hints)
 	{
-		return (Serializer) find(Types.reference(type).withUsage(TypeUsage.forAnnotations(hints)));
+		return (Serializer) get(Types.reference(type).withUsage(TypeUsage.forAnnotations(hints)));
 	}
 
 	@Override
-	public Serializer<?> find(TypeRef type)
+	public Serializer<?> get(TypeRef type)
 	{
 		Set<TypeRef> s = stack.get();
 		if(s != null && s.contains(type))
@@ -145,19 +145,19 @@ public abstract class AbstractSerializers
 	}
 
 	@Override
-	public Optional<? extends Serializer<?>> find(String name)
+	public Optional<? extends Serializer<?>> getViaName(String name)
 	{
-		return find("", name);
+		return getViaName("", name);
 	}
 
 	@Override
-	public Optional<? extends Serializer<?>> find(QualifiedName name)
+	public Optional<? extends Serializer<?>> getViaName(QualifiedName name)
 	{
-		return find(name.getNamespace(), name.getName());
+		return getViaName(name.getNamespace(), name.getName());
 	}
 
 	@Override
-	public Optional<? extends Serializer<?>> find(String namespace, String name)
+	public Optional<? extends Serializer<?>> getViaName(String namespace, String name)
 	{
 		return Optional.ofNullable(nameToSerializer.get(new QualifiedName(namespace, name)));
 	}
@@ -167,7 +167,7 @@ public abstract class AbstractSerializers
 	{
 		try
 		{
-			find(type);
+			get(type);
 			return true;
 		}
 		catch(SerializationException e)

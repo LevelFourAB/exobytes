@@ -73,7 +73,7 @@ public class OptionalSerializerTest
 	public void testViaCollection()
 		throws IOException
 	{
-		Serializer<Optional<String>> s = (Serializer) serializers.find(
+		Serializer<Optional<String>> s = (Serializer) serializers.get(
 			Types.reference(Optional.class, String.class)
 		);
 

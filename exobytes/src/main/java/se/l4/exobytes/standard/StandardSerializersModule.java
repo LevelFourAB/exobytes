@@ -17,19 +17,19 @@ public class StandardSerializersModule
 	@Override
 	public void activate(Serializers serializers)
 	{
-		serializers.bind(Boolean.class, new BooleanSerializer());
-		serializers.bind(Byte.class, new ByteSerializer());
-		serializers.bind(Character.class, new CharacterSerializer());
-		serializers.bind(Double.class, new DoubleSerializer());
-		serializers.bind(Float.class, new FloatSerializer());
-		serializers.bind(Integer.class, new IntSerializer());
-		serializers.bind(Long.class, new LongSerializer());
-		serializers.bind(Short.class, new ShortSerializer());
-		serializers.bind(String.class, new StringSerializer());
-		serializers.bind(byte[].class, new ByteArraySerializer());
-		serializers.bind(UUID.class, new UuidSerializer());
+		serializers.register(Boolean.class, new BooleanSerializer());
+		serializers.register(Byte.class, new ByteSerializer());
+		serializers.register(Character.class, new CharacterSerializer());
+		serializers.register(Double.class, new DoubleSerializer());
+		serializers.register(Float.class, new FloatSerializer());
+		serializers.register(Integer.class, new IntSerializer());
+		serializers.register(Long.class, new LongSerializer());
+		serializers.register(Short.class, new ShortSerializer());
+		serializers.register(String.class, new StringSerializer());
+		serializers.register(byte[].class, new ByteArraySerializer());
+		serializers.register(UUID.class, new UuidSerializer());
 
-		serializers.bind(Optional.class, new OptionalSerializer());
-		serializers.bind(Bytes.class, new BytesSerializer());
+		serializers.register(Optional.class, new OptionalSerializer());
+		serializers.register(Bytes.class, new BytesSerializer());
 	}
 }

@@ -86,7 +86,7 @@ public class TypeEncounterImpl
 	}
 
 	@Override
-	public <T> Serializer<T> find(Class<? extends SerializerOrResolver<T>> serializerOrResolver, TypeRef type)
+	public <T> Serializer<T> get(Class<? extends SerializerOrResolver<T>> serializerOrResolver, TypeRef type)
 	{
 		SerializerOrResolver<T> instance = collection.getInstanceFactory()
 			.create(serializerOrResolver);
@@ -107,8 +107,8 @@ public class TypeEncounterImpl
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> Serializer<T> find(TypeRef type)
+	public <T> Serializer<T> get(TypeRef type)
 	{
-		return (Serializer<T>) collection.find(type);
+		return (Serializer<T>) collection.get(type);
 	}
 }

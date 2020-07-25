@@ -45,7 +45,7 @@ public class MutableCollectionResolver<C extends Collection<?>>
 			.getTypeParameter(0)
 			.orElseGet(() -> Types.reference(Object.class));
 
-		return Optional.of(new Impl(encounter.find(type), supplier));
+		return Optional.of(new Impl(encounter.get(type), supplier));
 	}
 
 	/**

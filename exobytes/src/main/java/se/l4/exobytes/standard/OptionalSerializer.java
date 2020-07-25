@@ -28,7 +28,7 @@ public class OptionalSerializer
 			.getTypeParameter(0)
 			.orElseGet(() -> Types.reference(Object.class));
 
-		return Optional.ofNullable(new Impl(encounter.find(type)));
+		return Optional.ofNullable(new Impl(encounter.get(type)));
 	}
 
 	public static <T> Serializer<Optional<T>> create(Serializer<T> itemSerializer)

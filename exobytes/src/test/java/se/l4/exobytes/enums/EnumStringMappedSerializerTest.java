@@ -54,7 +54,7 @@ public class EnumStringMappedSerializerTest
 	public void testResolvedSerializerWrite()
 		throws IOException
 	{
-		Serializer<AnnotatedEnum> serializer = serializers.find(AnnotatedEnum.class);
+		Serializer<AnnotatedEnum> serializer = serializers.get(AnnotatedEnum.class);
 		assertThat(serializer, instanceOf(EnumStringMappedSerializer.Impl.class));
 
 		StreamingInput in = write(out -> serializer.write(AnnotatedEnum.A2, out))
@@ -68,7 +68,7 @@ public class EnumStringMappedSerializerTest
 	public void testResolvedSerializerRead()
 		throws IOException
 	{
-		Serializer<AnnotatedEnum> serializer = serializers.find(AnnotatedEnum.class);
+		Serializer<AnnotatedEnum> serializer = serializers.get(AnnotatedEnum.class);
 		assertThat(serializer, instanceOf(EnumStringMappedSerializer.Impl.class));
 
 		StreamingInput in = write(out -> out.writeString("a-1"))

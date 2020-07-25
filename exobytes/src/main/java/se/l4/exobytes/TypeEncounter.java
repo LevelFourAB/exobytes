@@ -59,7 +59,7 @@ public interface TypeEncounter
 	 * @param type
 	 * @return
 	 */
-	<T> Serializer<T> find(TypeRef type);
+	<T> Serializer<T> get(TypeRef type);
 
 	/**
 	 * Find or create a serializer for the given type using the given serializer
@@ -71,5 +71,5 @@ public interface TypeEncounter
 	 * @param serializerOrResolver
 	 *   a resolver
 	 */
-	<T> Serializer<T> find(Class<? extends SerializerOrResolver<T>> serializerOrResolver, TypeRef type);
+	<T> Serializer<T> get(Class<? extends SerializerOrResolver<T>> serializerOrResolver, TypeRef type);
 }

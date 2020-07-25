@@ -47,7 +47,7 @@ public class OrdinalEnumSerializerTest
 	@Test
 	public void testAnnotatedEnumResolvesCorrectly()
 	{
-		Serializer<AnnotatedEnum> serializer = serializers.find(AnnotatedEnum.class);
+		Serializer<AnnotatedEnum> serializer = serializers.get(AnnotatedEnum.class);
 		assertThat(serializer, instanceOf(EnumOrdinalSerializer.Impl.class));
 	}
 

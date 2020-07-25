@@ -23,7 +23,7 @@ public class UseSerializerResolver
 
 		Class<? extends SerializerOrResolver> value = annotation.get().value();
 		return (Optional) Optional.of(
-			encounter.find((Class) value, encounter.getType())
+			encounter.get((Class) value, encounter.getType())
 		);
 	}
 }

@@ -17,7 +17,7 @@ public class DefaultSerializersTest
 	@Test
 	public void testUseAnnotation()
 	{
-		serializers.find(ClassWithUse.class);
+		serializers.get(ClassWithUse.class);
 	}
 
 	@Test
@@ -25,7 +25,7 @@ public class DefaultSerializersTest
 	{
 		try
 		{
-			serializers.find(ClassExtendingUse.class);
+			serializers.get(ClassExtendingUse.class);
 		}
 		catch(SerializationException e)
 		{
@@ -38,7 +38,7 @@ public class DefaultSerializersTest
 	@Test
 	public void testString()
 	{
-		Serializer<String> string = serializers.find(String.class);
+		Serializer<String> string = serializers.get(String.class);
 	}
 
 	@Use(ReflectionSerializer.class)

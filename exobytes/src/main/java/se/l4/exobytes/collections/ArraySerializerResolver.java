@@ -68,7 +68,7 @@ public class ArraySerializerResolver
 			return Optional.of(new ShortArraySerializer());
 		}
 
-		Serializer<?> itemSerializer = encounter.getCollection().find(componentType);
+		Serializer<?> itemSerializer = encounter.getCollection().get(componentType);
 		return Optional.of(new ArraySerializer(componentType.getErasedType(), itemSerializer));
 	}
 }
