@@ -5,7 +5,6 @@ import java.io.Flushable;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import se.l4.commons.io.Bytes;
 import se.l4.exobytes.Serializer;
 
 /**
@@ -162,15 +161,6 @@ public interface StreamingOutput
 	 * @throws IOException
 	 */
 	void writeBytes(byte[] data)
-		throws IOException;
-
-	/**
-	 * Write a {@link Bytes} instance to the output.
-	 *
-	 * @param data
-	 * @throws IOException
-	 */
-	void writeBytes(Bytes data)
 		throws IOException;
 
 	/**

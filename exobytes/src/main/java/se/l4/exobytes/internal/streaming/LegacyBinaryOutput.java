@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-import se.l4.commons.io.Bytes;
 import se.l4.exobytes.streaming.StreamingOutput;
 
 /**
@@ -390,13 +389,6 @@ public class LegacyBinaryOutput
 				writeBytes(toByteArray());
 			}
 		};
-	}
-
-	@Override
-	public void writeBytes(Bytes data)
-		throws IOException
-	{
-		writeBytes(data.toByteArray());
 	}
 
 	@Override

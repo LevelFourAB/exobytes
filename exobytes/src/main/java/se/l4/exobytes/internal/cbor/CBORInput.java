@@ -7,7 +7,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.OptionalInt;
 
-import se.l4.commons.io.Bytes;
 import se.l4.exobytes.streaming.AbstractStreamingInput;
 import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.Token;
@@ -465,13 +464,6 @@ public class CBORInput
 			markValueRead();
 			return data;
 		}
-	}
-
-	@Override
-	public Bytes readBytes()
-		throws IOException
-	{
-		return Bytes.create(readByteArray());
 	}
 
 	@Override

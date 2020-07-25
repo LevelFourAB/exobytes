@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.util.OptionalInt;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import se.l4.commons.io.Bytes;
 import se.l4.exobytes.Serializer;
 
 /**
@@ -164,14 +163,6 @@ public interface StreamingInput
 	 * @return
 	 */
 	byte[] readByteArray()
-		throws IOException;
-
-	/**
-	 * Read the next value into a {@link Bytes} instance.
-	 *
-	 * @return
-	 */
-	Bytes readBytes()
 		throws IOException;
 
 	/**

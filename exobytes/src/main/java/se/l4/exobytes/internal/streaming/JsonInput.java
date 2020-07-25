@@ -10,7 +10,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.OptionalInt;
 
-import se.l4.commons.io.Bytes;
 import se.l4.exobytes.streaming.AbstractStreamingInput;
 import se.l4.exobytes.streaming.Token;
 
@@ -725,12 +724,5 @@ public class JsonInput
 		throws IOException
 	{
 		return new ByteArrayInputStream(readByteArray());
-	}
-
-	@Override
-	public Bytes readBytes()
-		throws IOException
-	{
-		return Bytes.create(readByteArray());
 	}
 }

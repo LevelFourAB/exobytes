@@ -8,7 +8,6 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-import se.l4.commons.io.Bytes;
 import se.l4.exobytes.streaming.StreamingOutput;
 
 /**
@@ -458,13 +457,6 @@ public class JsonOutput
 				writeBytes(toByteArray());
 			}
 		};
-	}
-
-	@Override
-	public void writeBytes(Bytes data)
-		throws IOException
-	{
-		writeBytes(data.toByteArray());
 	}
 
 	/**

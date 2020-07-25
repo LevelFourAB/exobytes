@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.OptionalInt;
 
-import se.l4.commons.io.Bytes;
 import se.l4.exobytes.streaming.AbstractStreamingInput;
 import se.l4.exobytes.streaming.Token;
 
@@ -464,13 +463,6 @@ public class LegacyBinaryInput
 			default:
 				throw raiseException("Expected " + ValueType.BYTES + ", but found " + valueType(currentValueByte));
 		}
-	}
-
-	@Override
-	public Bytes readBytes()
-		throws IOException
-	{
-		return Bytes.create(readByteArray());
 	}
 
 	@Override

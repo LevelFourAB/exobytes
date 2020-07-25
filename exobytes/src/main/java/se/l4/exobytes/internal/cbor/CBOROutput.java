@@ -5,7 +5,6 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-import se.l4.commons.io.Bytes;
 import se.l4.commons.io.ChunkOutputStream;
 import se.l4.exobytes.streaming.StreamingOutput;
 
@@ -168,20 +167,6 @@ public class CBOROutput
 	{
 		writeMajorTypeAndLength(CborConstants.MAJOR_TYPE_BYTE_STRING, data.length);
 		out.write(data);
-	}
-
-	@Override
-	public void writeBytes(Bytes data)
-		throws IOException
-	{
-		out.write(CborConstants.MAJOR_TYPE_BYTE_STRING << 5 | CborConstants.AI_INDEFINITE);
-
-		data.asChunks(4095, (chunk, offset, len) -> {
-			writeMajorTypeAndLength(CborConstants.MAJOR_TYPE_BYTE_STRING, len);
-			out.write(chunk, offset, len);
-		});
-
-		writeBreak();
 	}
 
 	@Override
