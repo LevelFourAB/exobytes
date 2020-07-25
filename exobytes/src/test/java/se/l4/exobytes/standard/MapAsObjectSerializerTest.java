@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import se.l4.exobytes.DefaultSerializers;
 import se.l4.exobytes.SerializationTestHelper;
+import se.l4.exobytes.SerializerTest;
 import se.l4.exobytes.collections.MapAsObjectSerializer;
 import se.l4.exobytes.collections.MapSerializerResolver;
 import se.l4.exobytes.collections.StringKey;
@@ -17,6 +17,7 @@ import se.l4.exobytes.collections.StringKey;
  * is present.
  */
 public class MapAsObjectSerializerTest
+	extends SerializerTest
 {
 	@Test
 	public void testEmptyMapWithStrings()
@@ -39,8 +40,7 @@ public class MapAsObjectSerializerTest
 	@Test
 	public void testMapWithDynamicSerializer()
 	{
-		DefaultSerializers collection = new DefaultSerializers();
-		MapAsObjectSerializer<Object> serializer = new MapAsObjectSerializer<>(new DynamicSerializer.Impl(collection));
+		MapAsObjectSerializer<Object> serializer = new MapAsObjectSerializer<>(new DynamicSerializer.Impl(serializers));
 		Map<String, Object> map = new HashMap<>();
 
 		map.put("hello", "cookie");

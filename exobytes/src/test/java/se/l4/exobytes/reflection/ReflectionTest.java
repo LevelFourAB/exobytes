@@ -10,15 +10,14 @@ import java.io.InputStreamReader;
 
 import org.junit.Before;
 
-import se.l4.exobytes.DefaultSerializers;
+import se.l4.commons.types.Types;
+import se.l4.commons.types.mapping.OutputDeduplicator;
 import se.l4.exobytes.ReflectionSerializer;
 import se.l4.exobytes.Serializer;
 import se.l4.exobytes.Serializers;
 import se.l4.exobytes.format.JsonInput;
 import se.l4.exobytes.format.JsonOutput;
 import se.l4.exobytes.internal.TypeEncounterImpl;
-import se.l4.commons.types.Types;
-import se.l4.commons.types.mapping.OutputDeduplicator;
 
 public class ReflectionTest
 {
@@ -27,7 +26,8 @@ public class ReflectionTest
 	@Before
 	public void beforeTests()
 	{
-		collection = new DefaultSerializers();
+		collection = Serializers.create()
+			.build();
 	}
 
 	public <T> Serializer<T> resolve(Class<T> type)

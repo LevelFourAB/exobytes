@@ -6,6 +6,7 @@ import java.util.Optional;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import se.l4.commons.types.InstanceFactory;
 import se.l4.commons.types.reflect.TypeRef;
+import se.l4.exobytes.internal.SerializersBuilderImpl;
 
 
 /**
@@ -116,4 +117,61 @@ public interface Serializers
 	 * @return
 	 */
 	boolean isSupported(@NonNull Class<?> type);
+
+	/**
+	 * Start building a new instance of {@link Serializers}.
+	 *
+	 * @return
+	 */
+	static Builder create()
+	{
+		return new SerializersBuilderImpl();
+	}
+
+	/**
+	 * Builder for an instance of {@link Serializers}.
+	 */
+	interface Builder
+	{
+		/**
+		 * Set the instance factory to use.
+		 *
+		 * @param factory
+		 * @return
+		 */
+		Builder withInstanceFactory(InstanceFactory factory);
+
+		/**
+		 * Indicate that no default serializers should be registered. This
+		 * will create a serializer that can serialize nothing.
+		 *
+		 * @return
+		 */
+		Builder empty();
+
+		/**
+		 * Add a module to the built instance.
+		 *
+		 * @param module
+		 * @return
+		 */
+		Builder addModule(SerializersModule module);
+
+		/**
+		 * Create an instance that wraps another instance. This allows for
+		 * registering serializers that are only available for use when that
+		 * specific serializer is used.
+		 *
+		 * @param serializers
+		 * @return
+		 */
+		Builder wrap(Serializers serializers);
+
+		/**
+		 * Build the instance.
+		 *
+		 * @return
+		 */
+		Serializers build();
+	}
 }

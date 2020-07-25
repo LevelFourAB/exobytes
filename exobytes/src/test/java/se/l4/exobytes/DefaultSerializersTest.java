@@ -10,7 +10,8 @@ public class DefaultSerializersTest
 	@Before
 	public void before()
 	{
-		serializers = new DefaultSerializers();
+		serializers = Serializers.create()
+			.build();
 	}
 
 	@Test

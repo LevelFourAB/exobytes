@@ -22,7 +22,8 @@ public abstract class SerializerTest
 	@Before
 	public void provideSerializers()
 	{
-		serializers = new DefaultSerializers();
+		serializers = Serializers.create()
+			.build();
 	}
 
 	protected IOSupplier<StreamingInput> write(IOConsumer<StreamingOutput> output)

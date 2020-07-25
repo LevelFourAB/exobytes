@@ -10,15 +10,14 @@ import java.util.Optional;
 import org.junit.Test;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
-import se.l4.commons.io.Bytes;
-import se.l4.commons.io.StreamingCodec;
 import se.l4.commons.types.Types;
-import se.l4.exobytes.DefaultSerializers;
 import se.l4.exobytes.Serializer;
-import se.l4.exobytes.Serializers;
-import se.l4.exobytes.format.StreamingFormat;
+import se.l4.exobytes.SerializerTest;
+import se.l4.exobytes.format.StreamingInput;
+import se.l4.exobytes.format.Token;
 
 public class OptionalSerializerTest
+	extends SerializerTest
 {
 	@Test
 	public void testDirectEmpty()
@@ -26,9 +25,11 @@ public class OptionalSerializerTest
 	{
 		Serializer<Optional<String>> s = OptionalSerializer.create(new StringSerializer());
 
-		StreamingCodec<Optional<String>> codec = s.toCodec(StreamingFormat.LEGACY_BINARY);
-		Bytes data = Bytes.forObject(codec, Optional.empty());
-		Optional<String> opt = data.asObject(codec);
+		StreamingInput in = write(out -> out.writeObject(s, Optional.empty()))
+			.get();
+
+		Optional<String> opt = s.read(in);
+		assertThat(in.next(), is(Token.END_OF_STREAM));
 
 		assertThat("optional not null", opt, notNullValue());
 		assertThat("optional is empty", opt.isPresent(), is(false));
@@ -40,9 +41,11 @@ public class OptionalSerializerTest
 	{
 		Serializer<Optional<String>> s = OptionalSerializer.create(new StringSerializer());
 
-		StreamingCodec<Optional<String>> codec = s.toCodec(StreamingFormat.LEGACY_BINARY);
-		Bytes data = Bytes.forObject(codec, null);
-		Optional<String> opt = data.asObject(codec);
+		StreamingInput in = write(out -> out.writeObject(s, null))
+			.get();
+
+		Optional<String> opt = s.read(in);
+		assertThat(in.next(), is(Token.END_OF_STREAM));
 
 		assertThat("optional not null", opt, notNullValue());
 		assertThat("optional is empty", opt.isPresent(), is(false));
@@ -54,9 +57,11 @@ public class OptionalSerializerTest
 	{
 		Serializer<Optional<String>> s = OptionalSerializer.create(new StringSerializer());
 
-		StreamingCodec<Optional<String>> codec = s.toCodec(StreamingFormat.LEGACY_BINARY);
-		Bytes data = Bytes.forObject(codec, Optional.of("Hello"));
-		Optional<String> opt = data.asObject(codec);
+		StreamingInput in = write(out -> out.writeObject(s, Optional.of("Hello")))
+			.get();
+
+		Optional<String> opt = s.read(in);
+		assertThat(in.next(), is(Token.END_OF_STREAM));
 
 		assertThat("optional not null", opt, notNullValue());
 		assertThat("optional is present", opt.isPresent(), is(true));
@@ -68,16 +73,15 @@ public class OptionalSerializerTest
 	public void testViaCollection()
 		throws IOException
 	{
-		Serializers collection = new DefaultSerializers();
-		Serializer<Optional<String>> s = (Serializer) collection.find(
+		Serializer<Optional<String>> s = (Serializer) serializers.find(
 			Types.reference(Optional.class, String.class)
 		);
 
-		assertThat("serializer can be resolved", s, notNullValue());
+		StreamingInput in = write(out -> out.writeObject(s, Optional.of("Hello")))
+			.get();
 
-		StreamingCodec<Optional<String>> codec = s.toCodec(StreamingFormat.LEGACY_BINARY);
-		Bytes data = Bytes.forObject(codec, Optional.of("Hello"));
-		Optional<String> opt = data.asObject(codec);
+		Optional<String> opt = s.read(in);
+		assertThat(in.next(), is(Token.END_OF_STREAM));
 
 		assertThat("optional not null", opt, notNullValue());
 		assertThat("optional is present", opt.isPresent(), is(true));
