@@ -422,7 +422,7 @@ public class CBORInput
 
 		if(! isMajorType(CborConstants.MAJOR_TYPE_BYTE_STRING))
 		{
-			throw raiseException("Can not read string");
+			throw raiseException("Can not read bytes");
 		}
 
 		int length = getLengthAsInt();
@@ -439,7 +439,7 @@ public class CBORInput
 				currentByte = read();
 				if(! isMajorType(CborConstants.MAJOR_TYPE_BYTE_STRING))
 				{
-					throw raiseException("Expected chunked bytes, but could not read substring");
+					throw raiseException("Expected chunked bytes, but could not read byte chunk");
 				}
 
 				int subLength = getLengthAsInt();
