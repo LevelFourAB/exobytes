@@ -3,6 +3,7 @@ package se.l4.exobytes.internal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.ServiceLoader;
 
 import se.l4.commons.types.DefaultInstanceFactory;
 import se.l4.commons.types.InstanceFactory;
@@ -74,6 +75,12 @@ public class SerializersBuilderImpl
 		{
 			new StandardSerializersModule().activate(instance);
 			new CollectionSerializersModule().activate(instance);
+
+			// Attempt to load any modules exported by other projects
+			for(SerializersModule module : ServiceLoader.load(SerializersModule.class))
+			{
+				module.activate(instance);
+			}
 		}
 
 		// Register all the modules

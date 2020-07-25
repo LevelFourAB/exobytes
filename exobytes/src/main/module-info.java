@@ -9,4 +9,6 @@ module se.l4.exobytes {
 	exports se.l4.exobytes.enums;
 	exports se.l4.exobytes.format;
 	exports se.l4.exobytes.standard;
+
+	uses se.l4.exobytes.SerializersModule;
 }
