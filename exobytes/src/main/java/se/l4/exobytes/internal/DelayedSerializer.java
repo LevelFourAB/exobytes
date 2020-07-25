@@ -5,8 +5,8 @@ import java.io.IOException;
 import se.l4.commons.types.reflect.TypeRef;
 import se.l4.exobytes.Serializer;
 import se.l4.exobytes.Serializers;
-import se.l4.exobytes.format.StreamingInput;
-import se.l4.exobytes.format.StreamingOutput;
+import se.l4.exobytes.streaming.StreamingInput;
+import se.l4.exobytes.streaming.StreamingOutput;
 
 /**
  * Serializer that is delayed in that it will not be assigned until the entire

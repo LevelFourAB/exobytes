@@ -1,4 +1,4 @@
-package se.l4.exobytes.internal.format;
+package se.l4.exobytes.internal.cbor;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import se.l4.commons.io.Bytes;
 import se.l4.commons.io.ChunkOutputStream;
-import se.l4.exobytes.format.StreamingOutput;
+import se.l4.exobytes.streaming.StreamingOutput;
 
 /**
  * {@link StreamingOutput} that writes data in a CBOR format.

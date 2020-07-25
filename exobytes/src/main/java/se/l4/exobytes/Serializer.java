@@ -9,10 +9,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.UnknownNullness;
 import se.l4.commons.io.StreamingCodec;
-import se.l4.exobytes.format.StreamingFormat;
-import se.l4.exobytes.format.StreamingInput;
-import se.l4.exobytes.format.StreamingOutput;
-import se.l4.exobytes.format.Token;
+import se.l4.exobytes.streaming.StreamingFormat;
+import se.l4.exobytes.streaming.StreamingInput;
+import se.l4.exobytes.streaming.StreamingOutput;
+import se.l4.exobytes.streaming.Token;
 
 /**
  * Serializer for a specific class. A serializer is used to read and write

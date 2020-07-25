@@ -4,9 +4,9 @@ import java.io.IOException;
 
 import se.l4.exobytes.SerializationException;
 import se.l4.exobytes.Serializer;
-import se.l4.exobytes.format.StreamingInput;
-import se.l4.exobytes.format.StreamingOutput;
-import se.l4.exobytes.format.Token;
+import se.l4.exobytes.streaming.StreamingInput;
+import se.l4.exobytes.streaming.StreamingOutput;
+import se.l4.exobytes.streaming.Token;
 
 /**
  * Serializer for {@link Number}, {@link Boolean} or {@link String}.

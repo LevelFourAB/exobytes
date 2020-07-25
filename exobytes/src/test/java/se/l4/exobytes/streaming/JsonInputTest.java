@@ -1,4 +1,4 @@
-package se.l4.exobytes.format;
+package se.l4.exobytes.streaming;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -12,6 +12,9 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 
 import org.junit.Test;
+
+import se.l4.exobytes.internal.streaming.JsonInput;
+import se.l4.exobytes.internal.streaming.JsonOutput;
 
 /**
  * Test for {@link JsonInput}. Runs a set of JSON documents and makes sure

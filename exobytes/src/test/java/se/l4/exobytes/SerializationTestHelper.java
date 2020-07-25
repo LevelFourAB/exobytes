@@ -6,18 +6,10 @@ import static org.junit.Assert.assertThat;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.function.Function;
 
-import se.l4.exobytes.format.LegacyBinaryInput;
-import se.l4.exobytes.format.LegacyBinaryOutput;
-import se.l4.exobytes.format.JsonInput;
-import se.l4.exobytes.format.JsonOutput;
-import se.l4.exobytes.format.StreamingInput;
-import se.l4.exobytes.format.StreamingOutput;
-import se.l4.exobytes.internal.format.CBORInput;
-import se.l4.exobytes.internal.format.CBOROutput;
+import se.l4.exobytes.streaming.StreamingFormat;
+import se.l4.exobytes.streaming.StreamingInput;
+import se.l4.exobytes.streaming.StreamingOutput;
 
 public class SerializationTestHelper
 {
@@ -27,22 +19,21 @@ public class SerializationTestHelper
 
 	public static <T> void testWriteAndRead(Serializer<T> serializer, T object)
 	{
-		testWriteAndRead(serializer, object, LegacyBinaryInput::new, LegacyBinaryOutput::new);
-		testWriteAndRead(serializer, object, JsonInput::new, JsonOutput::new);
-		testWriteAndRead(serializer, object, CBORInput::new, CBOROutput::new);
+		testWriteAndRead(serializer, object, StreamingFormat.LEGACY_BINARY);
+		testWriteAndRead(serializer, object, StreamingFormat.JSON);
+		testWriteAndRead(serializer, object, StreamingFormat.CBOR);
 	}
 
 	public static <T> void testWriteAndRead(
 		Serializer<T> serializer,
 		T object,
-		Function<InputStream, StreamingInput> inputFactory,
-		Function<OutputStream, StreamingOutput> outputFactory
+		StreamingFormat format
 	)
 	{
 		try
 		{
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			try(StreamingOutput so = outputFactory.apply(out))
+			try(StreamingOutput so = format.createOutput(out))
 			{
 				try
 				{
@@ -55,7 +46,7 @@ public class SerializationTestHelper
 			}
 
 			ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-			try(StreamingInput si = inputFactory.apply(in))
+			try(StreamingInput si = format.createInput(in))
 			{
 				try
 				{

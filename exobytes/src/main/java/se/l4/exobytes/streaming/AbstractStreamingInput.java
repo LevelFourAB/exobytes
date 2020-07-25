@@ -1,4 +1,4 @@
-package se.l4.exobytes.format;
+package se.l4.exobytes.streaming;
 
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-package se.l4.exobytes.format;
+package se.l4.exobytes.internal.streaming;
 
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
@@ -11,6 +11,8 @@ import java.util.Base64;
 import java.util.OptionalInt;
 
 import se.l4.commons.io.Bytes;
+import se.l4.exobytes.streaming.AbstractStreamingInput;
+import se.l4.exobytes.streaming.Token;
 
 /**
  * Input for JSON. Please note that this class is not intended for general use

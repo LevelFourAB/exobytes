@@ -1,4 +1,4 @@
-package se.l4.exobytes.format;
+package se.l4.exobytes.streaming;
 
 /**
  * Tests for the binary format. Tests by first writing some values and then

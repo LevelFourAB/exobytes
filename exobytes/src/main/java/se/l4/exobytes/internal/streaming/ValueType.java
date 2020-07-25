@@ -1,4 +1,4 @@
-package se.l4.exobytes.format;
+package se.l4.exobytes.internal.streaming;
 
 /**
  * Values that are supported by the streaming input and outputs.

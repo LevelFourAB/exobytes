@@ -9,9 +9,9 @@ import java.util.TreeMap;
 import se.l4.commons.types.Types;
 import se.l4.exobytes.QualifiedName;
 import se.l4.exobytes.Serializer;
-import se.l4.exobytes.format.StreamingInput;
-import se.l4.exobytes.format.StreamingOutput;
-import se.l4.exobytes.format.Token;
+import se.l4.exobytes.streaming.StreamingInput;
+import se.l4.exobytes.streaming.StreamingOutput;
+import se.l4.exobytes.streaming.Token;
 
 /**
  * Serializer that uses a smarter mapping creating instances using a single factory.

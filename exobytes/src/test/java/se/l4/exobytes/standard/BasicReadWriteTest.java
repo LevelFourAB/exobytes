@@ -8,9 +8,9 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 
-import se.l4.exobytes.format.StreamingInput;
-import se.l4.exobytes.format.StreamingOutput;
-import se.l4.exobytes.format.Token;
+import se.l4.exobytes.streaming.StreamingInput;
+import se.l4.exobytes.streaming.StreamingOutput;
+import se.l4.exobytes.streaming.Token;
 
 /**
  * Test for standard serializers that just verify that they call the correct

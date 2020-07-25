@@ -1,4 +1,4 @@
-package se.l4.exobytes.format;
+package se.l4.exobytes.internal.streaming;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import se.l4.commons.io.Bytes;
+import se.l4.exobytes.streaming.StreamingOutput;
 
 /**
  * Streamer that outputs JSON.

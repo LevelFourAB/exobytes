@@ -1,4 +1,4 @@
-package se.l4.exobytes.format;
+package se.l4.exobytes.streaming;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;

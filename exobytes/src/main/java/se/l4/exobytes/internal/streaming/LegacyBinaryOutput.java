@@ -1,4 +1,4 @@
-package se.l4.exobytes.format;
+package se.l4.exobytes.internal.streaming;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.util.Arrays;
 
 import se.l4.commons.io.Bytes;
+import se.l4.exobytes.streaming.StreamingOutput;
 
 /**
  * Output for custom binary format. Available only for backwards compatibility

@@ -15,9 +15,9 @@ import se.l4.exobytes.Serializer;
 import se.l4.exobytes.SerializerOrResolver;
 import se.l4.exobytes.SerializerResolver;
 import se.l4.exobytes.TypeEncounter;
-import se.l4.exobytes.format.StreamingInput;
-import se.l4.exobytes.format.StreamingOutput;
-import se.l4.exobytes.format.Token;
+import se.l4.exobytes.streaming.StreamingInput;
+import se.l4.exobytes.streaming.StreamingOutput;
+import se.l4.exobytes.streaming.Token;
 
 /**
  * Resolver that will resolve a serializer for an {@link Enum} that has been

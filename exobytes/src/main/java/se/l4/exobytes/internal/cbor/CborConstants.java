@@ -1,4 +1,4 @@
-package se.l4.exobytes.internal.format;
+package se.l4.exobytes.internal.cbor;
 
 /**
  * Constants used for CBOR.

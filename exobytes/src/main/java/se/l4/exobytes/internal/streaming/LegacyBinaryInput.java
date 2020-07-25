@@ -1,4 +1,4 @@
-package se.l4.exobytes.format;
+package se.l4.exobytes.internal.streaming;
 
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.util.OptionalInt;
 
 import se.l4.commons.io.Bytes;
+import se.l4.exobytes.streaming.AbstractStreamingInput;
+import se.l4.exobytes.streaming.Token;
 
 /**
  * Input for binary format.  Available only for backwards compatibility

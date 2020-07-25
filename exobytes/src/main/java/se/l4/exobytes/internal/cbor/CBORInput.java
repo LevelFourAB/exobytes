@@ -1,4 +1,4 @@
-package se.l4.exobytes.internal.format;
+package se.l4.exobytes.internal.cbor;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -8,9 +8,9 @@ import java.util.Arrays;
 import java.util.OptionalInt;
 
 import se.l4.commons.io.Bytes;
-import se.l4.exobytes.format.AbstractStreamingInput;
-import se.l4.exobytes.format.StreamingInput;
-import se.l4.exobytes.format.Token;
+import se.l4.exobytes.streaming.AbstractStreamingInput;
+import se.l4.exobytes.streaming.StreamingInput;
+import se.l4.exobytes.streaming.Token;
 
 /**
  * {@link StreamingInput} that reads CBOR encoded data.

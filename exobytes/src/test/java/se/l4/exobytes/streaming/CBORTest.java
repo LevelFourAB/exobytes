@@ -1,4 +1,4 @@
-package se.l4.exobytes.format;
+package se.l4.exobytes.streaming;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -10,7 +10,7 @@ import java.io.OutputStream;
 import org.junit.Test;
 
 import se.l4.commons.io.IOConsumer;
-import se.l4.exobytes.internal.format.CBOROutput;
+import se.l4.exobytes.internal.cbor.CBOROutput;
 
 public class CBORTest
 	extends StreamingFormatTest

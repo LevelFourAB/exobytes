@@ -6,12 +6,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Objects;
 
+import se.l4.commons.types.Types;
 import se.l4.exobytes.SerializationException;
 import se.l4.exobytes.Serializer;
-import se.l4.exobytes.format.StreamingInput;
-import se.l4.exobytes.format.StreamingOutput;
-import se.l4.exobytes.format.Token;
-import se.l4.commons.types.Types;
+import se.l4.exobytes.streaming.StreamingInput;
+import se.l4.exobytes.streaming.StreamingOutput;
+import se.l4.exobytes.streaming.Token;
 
 /**
  * Definition of a field within a reflection serializer.
