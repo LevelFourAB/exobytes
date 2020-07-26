@@ -10,6 +10,7 @@ import java.util.OptionalInt;
 import se.l4.exobytes.streaming.AbstractStreamingInput;
 import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.Token;
+import se.l4.exobytes.streaming.ValueConversion;
 
 /**
  * {@link StreamingInput} that reads CBOR encoded data.
@@ -229,21 +230,21 @@ public class CBORInput
 	public byte readByte()
 		throws IOException
 	{
-		return (byte) readInt();
+		return ValueConversion.toByte(readInt());
 	}
 
 	@Override
 	public char readChar()
 		throws IOException
 	{
-		return (char) readInt();
+		return ValueConversion.toChar(readInt());
 	}
 
 	@Override
 	public short readShort()
 		throws IOException
 	{
-		return (short) readInt();
+		return ValueConversion.toShort(readInt());
 	}
 
 	@Override
@@ -312,13 +313,7 @@ public class CBORInput
 		}
 		else if(isSimpleType(CborConstants.SIMPLE_TYPE_DOUBLE))
 		{
-			double d = readRawDouble();
-			if(d < Float.MIN_VALUE || d > Float.MAX_VALUE)
-			{
-				throw raiseException("Expected float but " + d + " is outside valid range");
-			}
-
-			result = (float) d;
+			return (float) readRawDouble();
 		}
 		else
 		{
@@ -559,10 +554,17 @@ public class CBORInput
 				return read() << 8
 					| read();
 			case CborConstants.AI_FOUR_BYTES:
-				return read() << 24
+				int v = read() << 24
 					| read() << 16
 					| read() << 8
 					| read();
+
+				if(v < 0)
+				{
+					throw new IOException("Tried to read int but can not safely convert, value overflowed");
+				}
+
+				return v;
 			case CborConstants.AI_EIGHT_BYTES:
 				throw raiseException("Value does not fit within an int, consider using readLong");
 			default:

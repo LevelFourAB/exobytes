@@ -3,6 +3,8 @@ package se.l4.exobytes.streaming;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.closeTo;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -89,6 +91,38 @@ public abstract class StreamingFormatTest
 		try(StreamingInput in = in0.get())
 		{
 			in.next(Token.NULL);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testByte127()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeByte((byte) 127);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			assertThat(in.readByte(), is((byte) 127));
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testByteNegative128()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeByte((byte) -128);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			assertThat(in.readByte(), is((byte) -128));
 			in.next(Token.END_OF_STREAM);
 		}
 	}
@@ -411,6 +445,464 @@ public abstract class StreamingFormatTest
 			assertThat(in.readInt(), is(74749));
 			in.next(Token.LIST_END);
 			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testConversionByteToChar()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeByte((byte) 127);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThat(in.readChar(), is((char) 127));
+		}
+	}
+
+	@Test
+	public void testConversionByteToShort()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeByte((byte) 127);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThat(in.readShort(), is((short) 127));
+		}
+	}
+
+	@Test
+	public void testConversionByteToInt()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeByte((byte) 127);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThat(in.readInt(), is(127));
+		}
+	}
+
+	@Test
+	public void testConversionByteToLong()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeByte((byte) 127);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThat(in.readLong(), is(127l));
+		}
+	}
+
+	@Test
+	public void testConversionShortToByte()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeShort((short) 94);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThat(in.readByte(), is((byte) 94));
+		}
+	}
+
+	@Test
+	public void testConversionShortToByteOverflow()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeShort((short) (Byte.MAX_VALUE + 1));
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThrows(IOException.class, () -> {
+				in.readByte();
+			}, "Expected exception to be thrown due to overflowing byte");
+		}
+	}
+
+	@Test
+	public void testConversionShortToChar()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeShort((short) 127);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThat(in.readChar(), is((char) 127));
+		}
+	}
+
+	@Test
+	public void testConversionShortToInt()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeShort((short) 127);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThat(in.readInt(), is(127));
+		}
+	}
+
+	@Test
+	public void testConversionShortToLong()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeShort((short) 127);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThat(in.readLong(), is(127l));
+		}
+	}
+
+	@Test
+	public void testConversionIntToByte()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeInt(94);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThat(in.readByte(), is((byte) 94));
+		}
+	}
+
+	@Test
+	public void testConversionIntToByteOverflow()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeInt(Byte.MAX_VALUE + 1);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThrows(IOException.class, () -> {
+				in.readByte();
+			}, "Expected exception to be thrown due to overflowing byte");
+		}
+	}
+
+	@Test
+	public void testConversionIntToChar()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeInt(94);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThat(in.readChar(), is((char) 94));
+		}
+	}
+
+	@Test
+	public void testConversionIntToCharOverflow()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeInt(Character.MAX_VALUE + 1);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThrows(IOException.class, () -> {
+				in.readChar();
+			}, "Expected exception to be thrown due to overflowing char");
+		}
+	}
+
+	@Test
+	public void testConversionIntToShort()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeInt(94);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThat(in.readShort(), is((short) 94));
+		}
+	}
+
+	@Test
+	public void testConversionIntToShortOverflow()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeInt(Short.MAX_VALUE + 1);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThrows(IOException.class, () -> {
+				in.readShort();
+			}, "Expected exception to be thrown due to overflowing short");
+		}
+	}
+
+	@Test
+	public void testConversionIntToLong()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeInt(94);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThat(in.readLong(), is(94l));
+		}
+	}
+
+	@Test
+	public void testConversionLongToByte()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeLong(Byte.MAX_VALUE);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThat(in.readByte(), is(Byte.MAX_VALUE));
+		}
+	}
+
+	@Test
+	public void testConversionLongToByteOverflow()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeLong(Byte.MAX_VALUE + 1l);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThrows(IOException.class, () -> {
+				in.readByte();
+			}, "Expected exception to be thrown due to overflowing byte");
+		}
+	}
+
+	@Test
+	public void testConversionLongToChar()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeLong(Character.MAX_VALUE);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThat(in.readChar(), is(Character.MAX_VALUE));
+		}
+	}
+
+	@Test
+	public void testConversionLongToCharOverflow()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeLong(Character.MAX_VALUE + 1l);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThrows(IOException.class, () -> {
+				in.readChar();
+			}, "Expected exception to be thrown due to overflowing int");
+		}
+	}
+
+	@Test
+	public void testConversionLongToShort()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeLong(Short.MAX_VALUE);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThat(in.readShort(), is(Short.MAX_VALUE));
+		}
+	}
+
+	@Test
+	public void testConversionLongToShortOverflow()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeLong(Short.MAX_VALUE + 1l);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThrows(IOException.class, () -> {
+				in.readShort();
+			}, "Expected exception to be thrown due to overflowing short");
+		}
+	}
+
+	@Test
+	public void testConversionLongToInt()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeLong(Integer.MAX_VALUE);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThat(in.readInt(), is(Integer.MAX_VALUE));
+		}
+	}
+
+	@Test
+	public void testConversionLongToIntOverflow()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeLong(Integer.MAX_VALUE + 1l);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThrows(IOException.class, () -> {
+				in.readInt();
+			}, "Expected exception to be thrown due to overflowing int");
+		}
+	}
+
+	@Test
+	public void testConversionFloatToDouble()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeFloat(22f);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThat(in.readDouble(), is(22.0));
+		}
+	}
+
+	@Test
+	public void testConversionDoubleToFloat()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeDouble(Float.MAX_VALUE);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+
+			in.next(Token.VALUE);
+			assertThat((double) in.readFloat(), is((double) Float.MAX_VALUE));
 		}
 	}
 }

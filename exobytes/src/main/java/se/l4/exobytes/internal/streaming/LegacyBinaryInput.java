@@ -413,6 +413,11 @@ public class LegacyBinaryInput
 				markValueRead();
 				return f;
 
+			case LegacyBinaryOutput.TAG_DOUBLE:
+				double d = readRawDouble();
+				markValueRead();
+				return (float) d;
+
 			default:
 				throw raiseException("Expected " + ValueType.FLOAT + ", but found " + valueType(currentValueByte));
 		}
@@ -429,8 +434,13 @@ public class LegacyBinaryInput
 				markValueRead();
 				return d;
 
+			case LegacyBinaryOutput.TAG_FLOAT:
+				float f = readRawFloat();
+				markValueRead();
+				return f;
+
 			default:
-				throw raiseException("Expected " + ValueType.FLOAT + ", but found " + valueType(currentValueByte));
+				throw raiseException("Expected " + ValueType.DOUBLE + ", but found " + valueType(currentValueByte));
 		}
 	}
 

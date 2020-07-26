@@ -12,6 +12,7 @@ import java.util.OptionalInt;
 
 import se.l4.exobytes.streaming.AbstractStreamingInput;
 import se.l4.exobytes.streaming.Token;
+import se.l4.exobytes.streaming.ValueConversion;
 
 /**
  * Input for JSON. Please note that this class is not intended for general use
@@ -661,10 +662,6 @@ public class JsonInput
 				}
 				return (float) valueLong;
 			case DOUBLE:
-				if(valueDouble < Float.MIN_VALUE || valueDouble > Float.MAX_VALUE)
-				{
-					throw raiseException("Expected " + ValueType.FLOAT + " but " + valueDouble + " is outside valid range");
-				}
 				return (float) valueDouble;
 			default:
 				throw raiseException("Expected " + ValueType.FLOAT + " but found " + value);

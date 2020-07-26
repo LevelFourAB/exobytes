@@ -517,6 +517,16 @@ public class JsonInputTest
 	}
 
 	@Test
+	public void testWriteFloatMax()
+		throws IOException
+	{
+		StreamingOutput out = createOutput();
+		out.writeFloat(Float.MAX_VALUE);
+
+		assertStream(out, "3.4028235E38");
+	}
+
+	@Test
 	public void testWriteDouble()
 		throws IOException
 	{
@@ -531,7 +541,7 @@ public class JsonInputTest
 		throws IOException
 	{
 		StreamingOutput out = createOutput();
-		out.writeInt((short) 12);
+		out.writeShort((short) 12);
 
 		assertStream(out, "12");
 	}
