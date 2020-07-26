@@ -24,6 +24,8 @@
 
 	<modules>
 		<module>exobytes</module>
+
+		<module>exobytes-benchmarks</module>
 	</modules>
 
 	<!-- License -->
