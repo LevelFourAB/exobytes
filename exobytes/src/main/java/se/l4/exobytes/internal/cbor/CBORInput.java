@@ -550,7 +550,7 @@ public class CBORInput
 	}
 
 	@Override
-	public InputStream asInputStream()
+	public InputStream readByteStream()
 		throws IOException
 	{
 		checkReadable();

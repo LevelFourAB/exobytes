@@ -37,7 +37,7 @@ public class UuidSerializerTest extends SerializerTest {
 		StreamingInput in = write(out -> {
 			try
 			{
-				out.writeBytes(Hex.decodeHex("29fa14b76fb64d68bec140307a949421"));
+				out.writeByteArray(Hex.decodeHex("29fa14b76fb64d68bec140307a949421"));
 			}
 			catch(DecoderException e)
 			{

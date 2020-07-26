@@ -399,7 +399,7 @@ public class JsonInput
 	}
 
 	@Override
-	public InputStream asInputStream()
+	public InputStream readByteStream()
 		throws IOException
 	{
 		return new ByteArrayInputStream(readByteArray());

@@ -191,11 +191,13 @@ public interface StreamingInput
 		throws IOException;
 
 	/**
-	 * Get the current binary value as an {@link InputStream}.
+	 * Get the current binary value as an {@link InputStream}. This stream is
+	 * only valid for the {@link #current() current token} and must be closed to
+	 * allow this input to mark the value as consumed.
 	 *
 	 * @return
 	 */
-	InputStream asInputStream()
+	InputStream readByteStream()
 		throws IOException;
 
 	/**

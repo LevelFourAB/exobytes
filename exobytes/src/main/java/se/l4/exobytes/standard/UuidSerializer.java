@@ -33,7 +33,7 @@ public final class UuidSerializer
 	public void write(UUID object, StreamingOutput stream)
 		throws IOException
 	{
-		stream.writeBytes(toBytes0(object));
+		stream.writeByteArray(toBytes0(object));
 	}
 
 	private static UUID fromBytes0(byte[] bytes)

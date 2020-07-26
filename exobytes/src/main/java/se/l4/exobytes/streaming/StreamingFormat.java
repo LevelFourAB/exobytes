@@ -3,7 +3,6 @@ package se.l4.exobytes.streaming;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.function.Function;
 
 import se.l4.commons.io.IOFunction;
 import se.l4.exobytes.internal.cbor.CBORInput;

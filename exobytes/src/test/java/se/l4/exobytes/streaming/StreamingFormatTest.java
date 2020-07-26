@@ -297,7 +297,7 @@ public abstract class StreamingFormatTest
 	{
 		byte[] data = new byte[] { 0, -28, 42, 100 };
 		IOSupplier<StreamingInput> in0 = write(out -> {
-			out.writeBytes(data);
+			out.writeByteArray(data);
 		});
 
 		try(StreamingInput in = in0.get())
@@ -457,7 +457,7 @@ public abstract class StreamingFormatTest
 		throws IOException
 	{
 		IOSupplier<StreamingInput> in0 = write(out -> {
-			try(OutputStream o = out.writeBytes())
+			try(OutputStream o = out.writeByteStream())
 			{
 				for(int i=0; i<100; i++)
 				{
@@ -476,7 +476,7 @@ public abstract class StreamingFormatTest
 		try(StreamingInput in = in0.get())
 		{
 			in.next(Token.VALUE);
-			try(InputStream i = in.asInputStream())
+			try(InputStream i = in.readByteStream())
 			{
 			}
 			in.next(Token.END_OF_STREAM);
@@ -488,7 +488,7 @@ public abstract class StreamingFormatTest
 		throws IOException
 	{
 		IOSupplier<StreamingInput> in0 = write(out -> {
-			try(OutputStream stream = out.writeBytes())
+			try(OutputStream stream = out.writeByteStream())
 			{
 				for(int i=0; i<100; i++)
 				{
@@ -507,7 +507,7 @@ public abstract class StreamingFormatTest
 		try(StreamingInput in = in0.get())
 		{
 			in.next(Token.VALUE);
-			try(InputStream stream = in.asInputStream())
+			try(InputStream stream = in.readByteStream())
 			{
 				/*
 				 * This splits the read into 3 buffer reads and 2 reads that
@@ -1190,7 +1190,7 @@ public abstract class StreamingFormatTest
 		throws IOException
 	{
 		IOSupplier<StreamingInput> in0 = write(out -> {
-			out.writeBytes(new byte[] { 0x01, 0x02, 0x03 });
+			out.writeByteArray(new byte[] { 0x01, 0x02, 0x03 });
 		});
 
 		try(StreamingInput in = in0.get())

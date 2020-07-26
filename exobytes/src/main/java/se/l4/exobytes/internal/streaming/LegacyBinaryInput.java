@@ -472,7 +472,7 @@ public class LegacyBinaryInput
 	}
 
 	@Override
-	public InputStream asInputStream()
+	public InputStream readByteStream()
 		throws IOException
 	{
 		return new ByteArrayInputStream(readByteArray());

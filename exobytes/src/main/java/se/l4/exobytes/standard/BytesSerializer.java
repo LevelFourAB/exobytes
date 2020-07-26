@@ -26,7 +26,7 @@ public final class BytesSerializer
 	public void write(Bytes object, StreamingOutput out)
 		throws IOException
 	{
-		out.writeBytes(object.toByteArray());
+		out.writeByteArray(object.toByteArray());
 	}
 
 	@Override

@@ -4,7 +4,6 @@ import java.io.Closeable;
 import java.io.Flushable;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.List;
 import java.util.Map;
 
 import se.l4.exobytes.Serializer;
@@ -162,7 +161,7 @@ public interface StreamingOutput
 	 * @param data
 	 * @throws IOException
 	 */
-	void writeBytes(byte[] data)
+	void writeByteArray(byte[] data)
 		throws IOException;
 
 	/**
@@ -173,7 +172,7 @@ public interface StreamingOutput
 	 *   stream that can be used to write data to this output
 	 * @throws IOException
 	 */
-	OutputStream writeBytes()
+	OutputStream writeByteStream()
 		throws IOException;
 
 	/**
@@ -186,10 +185,10 @@ public interface StreamingOutput
 	 *   stream that can be used to write data to this output
 	 * @throws IOException
 	 */
-	default OutputStream writeBytes(int chunkSize)
+	default OutputStream writeByteStream(int chunkSize)
 		throws IOException
 	{
-		return writeBytes();
+		return writeByteStream();
 	}
 
 	/**
@@ -299,7 +298,7 @@ public interface StreamingOutput
 		}
 		else if(data instanceof byte[])
 		{
-			writeBytes((byte[]) data);
+			writeByteArray((byte[]) data);
 		}
 		else
 		{

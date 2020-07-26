@@ -162,7 +162,7 @@ public class CBOROutput
 	}
 
 	@Override
-	public void writeBytes(byte[] data)
+	public void writeByteArray(byte[] data)
 		throws IOException
 	{
 		writeMajorTypeAndLength(CborConstants.MAJOR_TYPE_BYTE_STRING, data.length);
@@ -170,14 +170,14 @@ public class CBOROutput
 	}
 
 	@Override
-	public OutputStream writeBytes()
+	public OutputStream writeByteStream()
 		throws IOException
 	{
-		return writeBytes(4096);
+		return writeByteStream(4096);
 	}
 
 	@Override
-	public OutputStream writeBytes(int chunkSize)
+	public OutputStream writeByteStream(int chunkSize)
 		throws IOException
 	{
 		out.write(CborConstants.MAJOR_TYPE_BYTE_STRING << 5 | CborConstants.AI_INDEFINITE);

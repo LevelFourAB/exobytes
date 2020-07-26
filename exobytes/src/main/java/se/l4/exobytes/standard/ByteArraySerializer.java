@@ -34,7 +34,7 @@ public final class ByteArraySerializer
 	public void write(byte[] object, StreamingOutput stream)
 		throws IOException
 	{
-		stream.writeBytes(object);
+		stream.writeByteArray(object);
 	}
 
 	@Override

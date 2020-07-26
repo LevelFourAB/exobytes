@@ -963,7 +963,7 @@ public class CBORTest
 		throws IOException
 	{
 		byte[] data = writeToBytes(out -> {
-			out.writeBytes(new byte[0]);
+			out.writeByteArray(new byte[0]);
 		});
 
 		assertThat(data[0], is((byte) 0x40));
@@ -974,7 +974,7 @@ public class CBORTest
 		throws IOException
 	{
 		byte[] data = writeToBytes(out -> {
-			out.writeBytes(new byte[] { 0x01, 0x02, 0x03, 0x04 });
+			out.writeByteArray(new byte[] { 0x01, 0x02, 0x03, 0x04 });
 		});
 
 		assertThat(data[0], is((byte) 0x44));
@@ -989,7 +989,7 @@ public class CBORTest
 		throws IOException
 	{
 		byte[] data = writeToBytes(out -> {
-			try(OutputStream stream = out.writeBytes())
+			try(OutputStream stream = out.writeByteStream())
 			{
 				stream.write(0x01);
 				stream.write(0x02);

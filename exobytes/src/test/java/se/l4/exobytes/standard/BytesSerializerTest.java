@@ -36,7 +36,7 @@ public class BytesSerializerTest
 	{
 		Serializer<Bytes> serializer = new BytesSerializer();
 
-		StreamingInput in = write(out -> out.writeBytes(new byte[] { 0x01, 0x02 }))
+		StreamingInput in = write(out -> out.writeByteArray(new byte[] { 0x01, 0x02 }))
 			.get();
 
 		Bytes v = serializer.read(in);

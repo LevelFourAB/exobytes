@@ -771,7 +771,7 @@ public class JsonInputTest
 		throws IOException
 	{
 		StreamingOutput out = createOutput();
-		out.writeBytes("kaka".getBytes(StandardCharsets.UTF_8));
+		out.writeByteArray("kaka".getBytes(StandardCharsets.UTF_8));
 
 		assertStream(out, "\"a2FrYQ==\"");
 	}

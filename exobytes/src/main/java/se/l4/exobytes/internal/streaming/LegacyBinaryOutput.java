@@ -364,7 +364,7 @@ public class LegacyBinaryOutput
 	}
 
 	@Override
-	public void writeBytes(byte[] data)
+	public void writeByteArray(byte[] data)
 		throws IOException
 	{
 		failKey();
@@ -377,7 +377,7 @@ public class LegacyBinaryOutput
 	}
 
 	@Override
-	public OutputStream writeBytes()
+	public OutputStream writeByteStream()
 		throws IOException
 	{
 		return new ByteArrayOutputStream()
@@ -386,7 +386,7 @@ public class LegacyBinaryOutput
 			public void close()
 				throws IOException
 			{
-				writeBytes(toByteArray());
+				writeByteArray(toByteArray());
 			}
 		};
 	}

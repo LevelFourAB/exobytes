@@ -415,7 +415,7 @@ public class JsonOutput
 	}
 
 	@Override
-	public void writeBytes(byte[] data)
+	public void writeByteArray(byte[] data)
 		throws IOException
 	{
 		startWrite();
@@ -444,7 +444,7 @@ public class JsonOutput
 	}
 
 	@Override
-	public OutputStream writeBytes()
+	public OutputStream writeByteStream()
 		throws IOException
 	{
 		return new ByteArrayOutputStream()
@@ -453,7 +453,7 @@ public class JsonOutput
 			public void close()
 				throws IOException
 			{
-				writeBytes(toByteArray());
+				writeByteArray(toByteArray());
 			}
 		};
 	}
