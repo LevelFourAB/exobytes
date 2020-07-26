@@ -3,7 +3,6 @@ package se.l4.exobytes.streaming;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.closeTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.ByteArrayInputStream;
@@ -81,7 +80,7 @@ public abstract class StreamingFormatTest
 	}
 
 	@Test
-	public void testNull()
+	public void testSymmetryNull()
 		throws IOException
 	{
 		IOSupplier<StreamingInput> in0 = write(out -> {
@@ -96,7 +95,7 @@ public abstract class StreamingFormatTest
 	}
 
 	@Test
-	public void testByte127()
+	public void testSymmetryByte127()
 		throws IOException
 	{
 		IOSupplier<StreamingInput> in0 = write(out -> {
@@ -112,7 +111,7 @@ public abstract class StreamingFormatTest
 	}
 
 	@Test
-	public void testByteNegative128()
+	public void testSymmetryByteNegative128()
 		throws IOException
 	{
 		IOSupplier<StreamingInput> in0 = write(out -> {
@@ -128,7 +127,7 @@ public abstract class StreamingFormatTest
 	}
 
 	@Test
-	public void testInt()
+	public void testSymmetryInt()
 		throws IOException
 	{
 		IOSupplier<StreamingInput> in0 = write(out -> {
@@ -144,7 +143,7 @@ public abstract class StreamingFormatTest
 	}
 
 	@Test
-	public void testIntNegative()
+	public void testSymmetryIntNegative()
 		throws IOException
 	{
 		IOSupplier<StreamingInput> in0 = write(out -> {
@@ -160,7 +159,7 @@ public abstract class StreamingFormatTest
 	}
 
 	@Test
-	public void testLong()
+	public void testSymmetryLong()
 		throws IOException
 	{
 		IOSupplier<StreamingInput> in0 = write(out -> {
@@ -176,7 +175,7 @@ public abstract class StreamingFormatTest
 	}
 
 	@Test
-	public void testLongNegative()
+	public void testSymmetryLongNegative()
 		throws IOException
 	{
 		IOSupplier<StreamingInput> in0 = write(out -> {
@@ -192,7 +191,7 @@ public abstract class StreamingFormatTest
 	}
 
 	@Test
-	public void testLongLarge()
+	public void testSymmetryLongLarge()
 		throws IOException
 	{
 		IOSupplier<StreamingInput> in0 = write(out -> {
@@ -208,7 +207,7 @@ public abstract class StreamingFormatTest
 	}
 
 	@Test
-	public void testBooleanFalse()
+	public void testSymmetryBooleanFalse()
 		throws IOException
 	{
 		IOSupplier<StreamingInput> in0 = write(out -> {
@@ -224,7 +223,7 @@ public abstract class StreamingFormatTest
 	}
 
 	@Test
-	public void testBooleanTrue()
+	public void testSymmetryBooleanTrue()
 		throws IOException
 	{
 		IOSupplier<StreamingInput> in0 = write(out -> {
@@ -240,7 +239,7 @@ public abstract class StreamingFormatTest
 	}
 
 	@Test
-	public void testFloat()
+	public void testSymmetryFloat()
 		throws IOException
 	{
 		IOSupplier<StreamingInput> in0 = write(out -> {
@@ -256,7 +255,7 @@ public abstract class StreamingFormatTest
 	}
 
 	@Test
-	public void testDouble()
+	public void testSymmetryDouble()
 		throws IOException
 	{
 		IOSupplier<StreamingInput> in0 = write(out -> {
@@ -272,7 +271,7 @@ public abstract class StreamingFormatTest
 	}
 
 	@Test
-	public void testString()
+	public void testSymmetryString()
 		throws IOException
 	{
 		IOSupplier<StreamingInput> in0 = write(out -> {
@@ -288,7 +287,7 @@ public abstract class StreamingFormatTest
 	}
 
 	@Test
-	public void testByteArray()
+	public void testSymmetryByteArray()
 		throws IOException
 	{
 		byte[] data = new byte[] { 0, -28, 42, 100 };
@@ -305,7 +304,7 @@ public abstract class StreamingFormatTest
 	}
 
 	@Test
-	public void testObjectEmpty()
+	public void testSymmetryObjectEmpty()
 		throws IOException
 	{
 		IOSupplier<StreamingInput> in0 = write(out -> {
@@ -322,7 +321,7 @@ public abstract class StreamingFormatTest
 	}
 
 	@Test
-	public void testObjectValues()
+	public void testSymmetryObjectValues()
 		throws IOException
 	{
 		IOSupplier<StreamingInput> in0 = write(out -> {
@@ -351,7 +350,7 @@ public abstract class StreamingFormatTest
 	}
 
 	@Test
-	public void testObjectValuesWithNull()
+	public void testSymmetryObjectValuesWithNull()
 		throws IOException
 	{
 		IOSupplier<StreamingInput> in0 = write(out -> {
@@ -380,7 +379,7 @@ public abstract class StreamingFormatTest
 	}
 
 	@Test
-	public void testObjectValuesWithNull2()
+	public void testSymmetryObjectValuesWithNull2()
 		throws IOException
 	{
 		IOSupplier<StreamingInput> in0 = write(out -> {
@@ -409,7 +408,7 @@ public abstract class StreamingFormatTest
 	}
 
 	@Test
-	public void testListEmpty()
+	public void testSymmetryListEmpty()
 		throws IOException
 	{
 		IOSupplier<StreamingInput> in0 = write(out -> {
@@ -426,7 +425,7 @@ public abstract class StreamingFormatTest
 	}
 
 	@Test
-	public void testListWithSeveralValues()
+	public void testSymmetryListWithSeveralValues()
 		throws IOException
 	{
 		IOSupplier<StreamingInput> in0 = write(out -> {
