@@ -86,6 +86,7 @@ public class TypeEncounterImpl
 	}
 
 	@Override
+	@SuppressWarnings({ "unchecked" })
 	public <T> Serializer<T> get(Class<? extends SerializerOrResolver<T>> serializerOrResolver, TypeRef type)
 	{
 		SerializerOrResolver<T> instance = collection.getInstanceFactory()

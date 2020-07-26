@@ -8,8 +8,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.OptionalInt;
 
-import javax.naming.ldap.Control;
-
 import se.l4.exobytes.streaming.AbstractStreamingInput;
 import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.Token;

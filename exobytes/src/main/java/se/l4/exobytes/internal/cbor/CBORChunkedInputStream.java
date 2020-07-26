@@ -2,9 +2,6 @@ package se.l4.exobytes.internal.cbor;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.function.Supplier;
-
-import se.l4.commons.io.IOSupplier;
 
 /**
  * Stream used to implement support for CBOR streaming.
