@@ -1269,4 +1269,157 @@ public abstract class StreamingFormatTest
 		assertThat(asMap.get("key1"), is("value"));
 		assertThat(((Number) asMap.get("key2")).longValue(), is(100l));
 	}
+
+	@Test
+	public void testDynamicNull()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> out.writeDynamic(null));
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.NULL);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testDynamicBoolean()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> out.writeDynamic(true));
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			assertThat(in.readBoolean(), is(true));
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testDynamicByte()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> out.writeDynamic((byte) 22));
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			assertThat(in.readByte(), is((byte) 22));
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testDynamicShort()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> out.writeDynamic((short) 400));
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			assertThat(in.readShort(), is((short) 400));
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testDynamicChar()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> out.writeDynamic((char) 400));
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			assertThat(in.readChar(), is((char) 400));
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testDynamicInt()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> out.writeDynamic(203040));
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			assertThat(in.readInt(), is(203040));
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testDynamicLong()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> out.writeDynamic(203040l));
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			assertThat(in.readLong(), is(203040l));
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testDynamicFloat()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> out.writeDynamic(4.2f));
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			assertThat(in.readFloat(), is(4.2f));
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testDynamicDouble()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> out.writeDynamic(45.0));
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			assertThat(in.readDouble(), is(45.0));
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testDynamicByteArray()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> out.writeDynamic(new byte[] { 0x01, 0x02, 0x03 }));
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			assertThat(in.readByteArray(), is(new byte[] { 0x01, 0x02, 0x03 }));
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testDynamicString()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> out.writeDynamic("test"));
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			assertThat(in.readString(), is("test"));
+			in.next(Token.END_OF_STREAM);
+		}
+	}
 }

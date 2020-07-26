@@ -4,6 +4,8 @@ import java.io.Closeable;
 import java.io.Flushable;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
+import java.util.Map;
 
 import se.l4.exobytes.Serializer;
 
@@ -217,6 +219,91 @@ public interface StreamingOutput
 		else
 		{
 			serializer.write(object, this);
+		}
+	}
+
+	/**
+	 * Write dynamic data to this output.
+	 *
+	 * @param data
+	 * @throws IOException
+	 */
+	@SuppressWarnings({ "unchecked" })
+	default void writeDynamic(Object data)
+		throws IOException
+	{
+		if(data == null)
+		{
+			writeNull();
+		}
+		else if(data instanceof Map)
+		{
+			Map<Object, Object> asMap = (Map<Object, Object>) data;
+			writeObjectStart();
+			for(Map.Entry<Object, Object> e : asMap.entrySet())
+			{
+				writeDynamic(e.getKey());
+				writeDynamic(e.getValue());
+			}
+			writeObjectEnd();
+		}
+		else if(data instanceof Iterable)
+		{
+			Iterable<Object> asIterable = (Iterable<Object>) data;
+			writeListStart();
+			for(Object o : asIterable)
+			{
+				writeDynamic(o);
+			}
+			writeListEnd();
+		}
+		else if(data instanceof String)
+		{
+			writeString((String) data);
+		}
+		else if(data instanceof Boolean)
+		{
+			writeBoolean((boolean) data);
+		}
+		else if(data instanceof Byte)
+		{
+			writeByte((byte) data);
+		}
+		else if(data instanceof Short)
+		{
+			writeShort((short) data);
+		}
+		else if(data instanceof Character)
+		{
+			writeChar((char) data);
+		}
+		else if(data instanceof Integer)
+		{
+			writeInt((int) data);
+		}
+		else if(data instanceof Long)
+		{
+			writeLong((long) data);
+		}
+		else if(data instanceof Float)
+		{
+			writeFloat((float) data);
+		}
+		else if(data instanceof Double)
+		{
+			writeDouble((double) data);
+		}
+		else if(data instanceof Number)
+		{
+			writeDouble(((Number) data).doubleValue());
+		}
+		else if(data instanceof byte[])
+		{
+			writeBytes((byte[]) data);
+		}
+		else
+		{
+			throw new IOException("Unsupported data of type " + data.getClass() + ", value: " + data);
 		}
 	}
 }
