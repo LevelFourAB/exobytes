@@ -51,7 +51,7 @@ public class ReflectionNonStreamingSerializer<T>
 			if(def == null)
 			{
 				// No such field, skip the entire value
-				in.skipValue();
+				in.skipNext();
 			}
 			else
 			{

@@ -34,14 +34,14 @@ public class LegacyBinaryInput
 
 	private int peekedByte;
 	private int currentValueByte;
-	private boolean didReadValue;
 
 	public LegacyBinaryInput(InputStream in)
+		throws IOException
 	{
 		this.in = in;
 		buffer = new byte[8];
 
-		peekedByte = -2;
+		peekedByte = in.read();
 	}
 
 	@Override
@@ -52,20 +52,9 @@ public class LegacyBinaryInput
 	}
 
 	@Override
-	public Token peek()
+	protected Token peek0()
 		throws IOException
 	{
-		if((current() == Token.VALUE || current() == Token.KEY) && ! didReadValue)
-		{
-			// The value hasn't actually been read
-			readDynamic();
-		}
-
-		if(peekedByte == -2)
-		{
-			peekedByte = in.read();
-		}
-
 		switch(peekedByte)
 		{
 			case -1:
@@ -115,6 +104,13 @@ public class LegacyBinaryInput
 	public OptionalInt getLength()
 	{
 		return OptionalInt.empty();
+	}
+
+	@Override
+	protected void skipKeyOrValue()
+		throws IOException
+	{
+		readDynamic();
 	}
 
 	private void readBuffer(int len)
@@ -482,10 +478,10 @@ public class LegacyBinaryInput
 		return new ByteArrayInputStream(readByteArray());
 	}
 
-	private void markValueRead()
+	protected void markValueRead()
 		throws IOException
 	{
-		didReadValue = true;
+		super.markValueRead();
 		peekedByte = in.read();
 	}
 

@@ -29,6 +29,7 @@ public class JsonInputTest
 	}
 
 	protected StreamingInput createInput(String in)
+		throws IOException
 	{
 		return new JsonInput(new StringReader(in));
 	}
@@ -340,7 +341,8 @@ public class JsonInputTest
 
 		// Read fields key
 		input.next(Token.KEY);
-		input.skipValue();
+		input.next();
+		input.skip();
 
 		// Read Object end
 		input.next(Token.OBJECT_END);
@@ -381,7 +383,8 @@ public class JsonInputTest
 					}
 					else
 					{
-						input.skipValue();
+						input.next();
+						input.skip();
 					}
 				default:
 					// Do nothing
@@ -447,7 +450,8 @@ public class JsonInputTest
 			switch(input.next())
 			{
 				case KEY:
-					input.skipValue();
+					input.next();
+					input.skip();
 				default:
 					// Do nothing
 			}
@@ -484,6 +488,16 @@ public class JsonInputTest
 		out.writeString("value");
 
 		assertStream(out, "\"value\"");
+	}
+
+	@Test
+	public void testWriteChar()
+		throws IOException
+	{
+		StreamingOutput out = createOutput();
+		out.writeChar('v');
+
+		assertStream(out, "\"v\"");
 	}
 
 	@Test

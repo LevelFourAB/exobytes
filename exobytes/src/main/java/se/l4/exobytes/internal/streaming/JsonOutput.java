@@ -369,7 +369,6 @@ public class JsonOutput
 	public void writeChar(char c)
 		throws IOException
 	{
-		failKey();
 		writeString(String.valueOf(c));
 	}
 

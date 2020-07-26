@@ -15,19 +15,37 @@ public interface StreamingInput
 	extends Closeable
 {
 	/**
-	 * Peek into the stream and return the next token.
+	 * Peek into the stream and return the next token. Peeking is only possible
+	 * if the value of {@link #current() current token} has been consumed.
+	 *
+	 * Tokens are considered consumed if:
+	 * <ul>
+	 *   <li>{@link Token#VALUE} and {@link Token#KEY} it has been read or {@link #skip() skipped}
+	 *   <li>{@link Token#NULL} is always fully consumed
+	 *   <li>
+	 *     {@link Token#OBJECT_START}, {@link Token#OBJECT_END},
+	 *     {@link Token#LIST_START} and {@link Token#LIST_END} have no values
+	 *     and are always considered consumed
+	 *   <li>{@link Token#END_OF_STREAM} is never consumed
+	 * </ul>
 	 *
 	 * @return
+	 * @throws IOException
+	 *   if unable to read from the stream, or if the current token has not
+	 *   been fully consumed
 	 */
+	@NonNull
 	Token peek()
 		throws IOException;
 
 	/**
-	 * Advance to the next token.
+	 * Advance to the next token. If the current value has not been consumed
+	 * this will automatically consume it.
 	 *
 	 * @return
 	 * @throws IOException
 	 */
+	@NonNull
 	Token next()
 		throws IOException;
 
@@ -43,29 +61,11 @@ public interface StreamingInput
 		throws IOException;
 
 	/**
-	 * Skip the started object, list or value. This method should only be used when
-	 * when token is either {@link Token#OBJECT_START}, {@link Token#LIST_START}
-	 * or {@link Token#VALUE}. See {@link #skipValue()} for skipping reading
-	 * when the current token is {@link Token#KEY}.
-	 *
-	 * @throws IOException
-	 */
-	void skip()
-		throws IOException;
-
-	/**
-	 * If this token is a {@link Token#KEY} this will skip its value.
-	 *
-	 * @throws IOException
-	 */
-	void skipValue()
-		throws IOException;
-
-	/**
 	 * Get the current token.
 	 *
 	 * @return
 	 */
+	@NonNull
 	Token current();
 
 	/**
@@ -73,15 +73,32 @@ public interface StreamingInput
 	 *
 	 * @return
 	 */
+	@NonNull
 	OptionalInt getLength();
 
 	/**
-	 * Get the current value as a string.
+	 * Skip the current token taking into account if it's an object or a list
+	 * and in that case consuming everything until the object or list ends.
 	 *
-	 * @return
+	 * @throws IOException
 	 */
-	String readString()
+	void skip()
 		throws IOException;
+
+	/**
+	 * Advance to the next token and then skip the value. This will call
+	 * {@link #next()} followed by {@link #skip()}. The use case here is most
+	 * commonly when the {@link #current() current token} is {@link Token#KEY}
+	 * and a serializer wishes to skip value that follows.
+	 *
+	 * @throws IOException
+	 */
+	default void skipNext()
+		throws IOException
+	{
+		next();
+		skip();
+	}
 
 	/**
 	 * Read any value from the input. The types returned by this method will
@@ -91,6 +108,14 @@ public interface StreamingInput
 	 * @throws IOException
 	 */
 	Object readDynamic()
+		throws IOException;
+
+	/**
+	 * Get the current value as a string.
+	 *
+	 * @return
+	 */
+	String readString()
 		throws IOException;
 
 	/**

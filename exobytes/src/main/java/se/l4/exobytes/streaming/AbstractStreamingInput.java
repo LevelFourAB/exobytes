@@ -11,18 +11,61 @@ import se.l4.exobytes.SerializationException;
 public abstract class AbstractStreamingInput
 	implements StreamingInput
 {
-	private Token token;
+	protected Token current;
 
 	protected int level;
+	protected boolean didReadValue;
 
 	public AbstractStreamingInput()
 	{
 	}
 
 	@Override
+	public Token peek()
+		throws IOException
+	{
+		if((current == Token.KEY || current == Token.VALUE) && ! didReadValue)
+		{
+			throw new IOException("Can not peek next token, current token is not fully consumed");
+		}
+
+		return peek0();
+	}
+
+	/**
+	 * Peek the next token.
+	 *
+	 * @return
+	 * @throws IOException
+	 */
+	protected abstract Token peek0()
+		throws IOException;
+
+	@Override
+	public Token current()
+	{
+		if(current == null)
+		{
+			throw new IllegalStateException("next() has not been called, no token available");
+		}
+
+		return current;
+	}
+
+	@Override
 	public Token next()
 		throws IOException
 	{
+		if(current == Token.END_OF_STREAM)
+		{
+			throw new IOException("Tried reading past end of stream");
+		}
+
+		if((current == Token.KEY || current == Token.VALUE) && ! didReadValue)
+		{
+			skipKeyOrValue();
+		}
+
 		Token token = next0();
 		switch(token)
 		{
@@ -34,13 +77,23 @@ public abstract class AbstractStreamingInput
 			case LIST_START:
 				level++;
 				break;
+			case VALUE:
+			case KEY:
+				didReadValue = false;
+				break;
 			default: // Do nothing
 				break;
 		}
 
-		return this.token = token;
+		return this.current = token;
 	}
 
+	/**
+	 * Read the next token.
+	 *
+	 * @return
+	 * @throws IOException
+	 */
 	protected abstract Token next0()
 		throws IOException;
 
@@ -67,74 +120,59 @@ public abstract class AbstractStreamingInput
 	}
 
 	@Override
-	public void skipValue()
-		throws IOException
-	{
-		if(token != Token.KEY)
-		{
-			throw raiseException("Value skipping can only be used with when token is " + Token.KEY);
-		}
-
-		switch(peek())
-		{
-			case LIST_START:
-			case LIST_END:
-			case OBJECT_START:
-			case OBJECT_END:
-				next();
-				skip();
-				break;
-			default:
-				next();
-				break;
-		}
-	}
-
-	@Override
 	public void skip()
 		throws IOException
 	{
-		Token start = token;
-		Token stop;
-		switch(token)
+		switch(current())
 		{
 			case LIST_START:
-				stop = Token.LIST_END;
-				break;
 			case OBJECT_START:
-				stop = Token.OBJECT_END;
+				int depth = 1;
+
+				while(depth != 0)
+				{
+					switch(next())
+					{
+						case OBJECT_START:
+						case LIST_START:
+							depth++;
+							break;
+						case OBJECT_END:
+						case LIST_END:
+							depth--;
+							break;
+					}
+				}
 				break;
+			case KEY:
+			case NULL:
 			case VALUE:
+				if(! didReadValue)
+				{
+					skipKeyOrValue();
+				}
 				return;
 			default:
-				throw raiseException("Can only skip when start of object, start of list or value, token is now " + token);
-		}
-
-		int currentLevel = level;
-		Token next = peek();
-		while(true)
-		{
-			// Loop until no more tokens or if we stopped and the level has been reset
-			if(next == null)
-			{
-				throw raiseException("No more tokens, but end of skipped value not found. Started at " + start + " and tried to find " + stop);
-			}
-			else if(next == stop && level == currentLevel)
-			{
-				// Consume this last token
-				next();
-				break;
-			}
-
-			// Read peeked value and peek for next one
-			next();
-			next = peek();
+				throw raiseException("Can only skip when start of object, start of list or value, token is now " + current);
 		}
 	}
 
-	@Override
-	public Token current()
+	/**
+	 * Skip the current null token.
+	 *
+	 * @throws IOException
+	 */
+	protected abstract void skipKeyOrValue()
+		throws IOException;
+
+	/**
+	 * Mark the current value as read.
+	 *
+	 * @throws IOException
+	 */
+	protected void markValueRead()
+		throws IOException
 	{
-		return token;
+		didReadValue = true;
 	}
 }

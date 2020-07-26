@@ -92,7 +92,7 @@ public class DynamicSerializer
 				}
 				else
 				{
-					in.skipValue();
+					in.skipNext();
 				}
 			}
 

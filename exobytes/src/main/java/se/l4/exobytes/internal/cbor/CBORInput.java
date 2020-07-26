@@ -31,10 +31,10 @@ public class CBORInput
 	private boolean[] listOrMap;
 	private int level;
 
-	private boolean didReadValue;
 	private OptionalInt length;
 
 	public CBORInput(InputStream in)
+		throws IOException
 	{
 		this.in = in;
 
@@ -44,26 +44,21 @@ public class CBORInput
 		listOrMap[0] = true;
 		remainingReads[0] = -1;
 
-		peekedByte = -2;
-
 		length = OptionalInt.empty();
+
+		peekedByte = in.read();
+		readType();
 	}
 
 	@Override
-	public Token peek()
+	protected Token peek0()
 		throws IOException
 	{
-		if(peekedByte == -2)
-		{
-			peekedByte = in.read();
-			readType();
-		}
-
 		if(remainingReads[level] == 0)
 		{
 			/*
 			 * If there are no more values to read in the list or object
-			 * emulate an end.
+			 * emulate an end token.
 			 */
 			return listOrMap[level] ? Token.LIST_END : Token.OBJECT_END;
 		}
@@ -93,14 +88,10 @@ public class CBORInput
 			case CborConstants.MAJOR_TYPE_BYTE_STRING:
 			case CborConstants.MAJOR_TYPE_TEXT_STRING:
 			case CborConstants.MAJOR_TYPE_TAGGED:
-				// TODO: This needs to return KEY for every other item in a map
-				if(! listOrMap[level])
+				if(! listOrMap[level] && remainingReads[level] % 2 == 0)
 				{
-					int r = remainingReads[level] % 2;
-					if(r == 0)
-					{
-						return Token.KEY;
-					}
+					// Reading an object and the next token is the key
+					return Token.KEY;
 				}
 
 				return Token.VALUE;
@@ -168,6 +159,43 @@ public class CBORInput
 		throws IOException
 	{
 		in.close();
+	}
+
+	@Override
+	protected void skipKeyOrValue()
+		throws IOException
+	{
+		switch(majorType())
+		{
+			case CborConstants.MAJOR_TYPE_UNSIGNED_INT:
+			case CborConstants.MAJOR_TYPE_NEGATIVE_INT:
+				skipLength();
+				break;
+			case CborConstants.MAJOR_TYPE_BYTE_STRING:
+				skipByteArray();
+				break;
+			case CborConstants.MAJOR_TYPE_TEXT_STRING:
+				skipString();
+				break;
+			case CborConstants.MAJOR_TYPE_SIMPLE:
+				switch(currentByte & 31)
+				{
+					case CborConstants.SIMPLE_TYPE_HALF:
+						skipBytes(2);
+						break;
+					case CborConstants.SIMPLE_TYPE_FLOAT:
+						skipBytes(4);
+						break;
+					case CborConstants.SIMPLE_TYPE_DOUBLE:
+						skipBytes(8);
+						break;
+					case CborConstants.SIMPLE_TYPE_TRUE:
+					case CborConstants.SIMPLE_TYPE_FALSE:
+						break;
+				}
+		}
+
+		markValueRead();
 	}
 
 	@Override
@@ -313,7 +341,7 @@ public class CBORInput
 		}
 		else if(isSimpleType(CborConstants.SIMPLE_TYPE_DOUBLE))
 		{
-			return (float) readRawDouble();
+			result = (float) readRawDouble();
 		}
 		else
 		{
@@ -408,6 +436,35 @@ public class CBORInput
 		return result;
 	}
 
+	private void skipString()
+		throws IOException
+	{
+		int length = getLengthAsInt();
+		if(length == CborConstants.AI_INDEFINITE)
+		{
+			while(peekedByte != 0xff)
+			{
+				currentByte = read();
+				if(! isMajorType(CborConstants.MAJOR_TYPE_TEXT_STRING))
+				{
+					throw raiseException("Expected chunked string, but could not read substring");
+				}
+
+				int subLength = getLengthAsInt();
+				skipBytes(subLength);
+			}
+
+			if(read() != 0xff)
+			{
+				throw raiseException("Expected end of chunked string");
+			}
+		}
+		else if(length > 0)
+		{
+			skipBytes(length);
+		}
+	}
+
 	@Override
 	public byte[] readByteArray()
 		throws IOException
@@ -422,11 +479,11 @@ public class CBORInput
 		int length = getLengthAsInt();
 		if(length == 0)
 		{
+			markValueRead();
 			return EMPTY_BYTES;
 		}
 		else if(length == CborConstants.AI_INDEFINITE)
 		{
-			StringBuilder builder = new StringBuilder();
 			byte[] data = EMPTY_BYTES;
 			while(peekedByte != 0xff)
 			{
@@ -441,8 +498,6 @@ public class CBORInput
 				int offset = data.length;
 				data = Arrays.copyOf(data, data.length + subLength);
 				readFully(data, offset, data.length);
-
-				builder.append(new String(data, StandardCharsets.UTF_8));
 			}
 
 			if(read() != 0xff)
@@ -450,6 +505,7 @@ public class CBORInput
 				throw raiseException("Expected end of chunked bytes");
 			}
 
+			markValueRead();
 			return data;
 		}
 		else
@@ -458,6 +514,35 @@ public class CBORInput
 			readFully(data, 0, length);
 			markValueRead();
 			return data;
+		}
+	}
+
+	private void skipByteArray()
+		throws IOException
+	{
+		int length = getLengthAsInt();
+		if(length == CborConstants.AI_INDEFINITE)
+		{
+			while(peekedByte != 0xff)
+			{
+				currentByte = read();
+				if(! isMajorType(CborConstants.MAJOR_TYPE_BYTE_STRING))
+				{
+					throw raiseException("Expected chunked bytes, but could not read byte chunk");
+				}
+
+				int subLength = getLengthAsInt();
+				skipBytes(subLength);
+			}
+
+			if(read() != 0xff)
+			{
+				throw raiseException("Expected end of chunked bytes");
+			}
+		}
+		else if(length > 0)
+		{
+			skipBytes(length);
 		}
 	}
 
@@ -485,6 +570,23 @@ public class CBORInput
 				throw new EOFException("Expected to read " + len + " bytes, but could only read " + n);
 			}
 			n += count;
+		}
+
+		peekedByte = in.read();
+	}
+
+	/**
+	 * Skip a certain amount of bytes taking the peeked byte into account.
+	 *
+	 * @param length
+	 * @throws IOException
+	 */
+	private void skipBytes(int length)
+		throws IOException
+	{
+		for(int i=0, n=length-1; i<n; i++)
+		{
+			in.read();
 		}
 
 		peekedByte = in.read();
@@ -601,6 +703,37 @@ public class CBORInput
 		}
 	}
 
+	private void skipLength()
+		throws IOException
+	{
+		switch(currentByte & 31)
+		{
+			case CborConstants.AI_ONE_BYTE:
+				read();
+				break;
+			case CborConstants.AI_TWO_BYTES:
+				read();
+				read();
+				break;
+			case CborConstants.AI_FOUR_BYTES:
+				read();
+				read();
+				read();
+				read();
+				break;
+			case CborConstants.AI_EIGHT_BYTES:
+				read();
+				read();
+				read();
+				read();
+				read();
+				read();
+				read();
+				read();
+				break;
+		}
+	}
+
 	private void increaseLevel(int expectedCount, boolean isList)
 	{
 		level++;
@@ -630,10 +763,10 @@ public class CBORInput
 		return v;
 	}
 
-	private void markValueRead()
+	protected void markValueRead()
 		throws IOException
 	{
-		didReadValue = true;
+		super.markValueRead();
 
 		int count = remainingReads[level];
 		if(count == 0)

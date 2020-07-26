@@ -904,4 +904,339 @@ public abstract class StreamingFormatTest
 			assertThat((double) in.readFloat(), is((double) Float.MAX_VALUE));
 		}
 	}
+
+	@Test
+	public void testNextConsumesObjectStartAndEnd()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeObjectStart();
+			out.writeObjectEnd();
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.OBJECT_START);
+			in.next(Token.OBJECT_END);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testNextConsumesListStartAndEnd()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeListStart();
+			out.writeListEnd();
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.LIST_START);
+			in.next(Token.LIST_END);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testNextConsumesNull()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeNull();
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.NULL);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testNextConsumesStringValue()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeString("value");
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testNextConsumesByteValue()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeByte((byte) 10);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testNextConsumesCharValue()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeChar((char) 10);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testNextConsumesShortValue()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeShort((short) 10);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testNextConsumesIntValue()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeInt(10);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testNextConsumesLongValue()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeLong(10);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testNextConsumesBooleanValue()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeBoolean(false);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testNextConsumesFloatValue()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeFloat(22.2f);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testNextConsumesDoubleValue()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeDouble(22.2);
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testNextConsumesByteArrayValue()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeBytes(new byte[] { 0x01, 0x02, 0x03 });
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testNextConsumesObjectWithMultipleKeys()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeObjectStart();
+			out.writeString("key1");
+			out.writeString("value");
+			out.writeString("key2");
+			out.writeInt(100);
+			out.writeObjectEnd();
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.OBJECT_START);
+			in.next(Token.KEY);
+			in.next(Token.VALUE);
+			in.next(Token.KEY);
+			in.next(Token.VALUE);
+			in.next(Token.OBJECT_END);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testPeekAfterValueRead()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeString("value");
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+			in.next(Token.VALUE);
+			in.readString();
+			assertThat(in.peek(), is(Token.END_OF_STREAM));
+			assertThat(in.next(), is(Token.END_OF_STREAM));
+		}
+	}
+
+	@Test
+	public void testPeekWithoutReadOrSkipFails()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeString("value");
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			assertThat(in.peek(), is(Token.VALUE));
+			in.next(Token.VALUE);
+			assertThrows(IOException.class, () -> {
+				in.peek();
+			});
+		}
+	}
+
+	@Test
+	public void testPeekAfterObjectStart()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeObjectStart();
+			out.writeString("key1");
+			out.writeString("value");
+			out.writeString("key2");
+			out.writeInt(100);
+			out.writeObjectEnd();
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.OBJECT_START);
+			assertThat(in.peek(), is(Token.KEY));
+			in.next(Token.KEY);
+			in.next(Token.VALUE);
+			in.next(Token.KEY);
+			in.next(Token.VALUE);
+			in.next(Token.OBJECT_END);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testPeekAfterObjectFirstKey()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeObjectStart();
+			out.writeString("key1");
+			out.writeString("value");
+			out.writeString("key2");
+			out.writeInt(100);
+			out.writeObjectEnd();
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.OBJECT_START);
+			in.next(Token.KEY);
+			in.skip();
+			assertThat(in.peek(), is(Token.VALUE));
+			in.next(Token.VALUE);
+			in.next(Token.KEY);
+			in.next(Token.VALUE);
+			in.next(Token.OBJECT_END);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+
+	@Test
+	public void testSkipObject()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeObjectStart();
+			out.writeString("key1");
+			out.writeString("value");
+			out.writeString("key2");
+			out.writeInt(100);
+			out.writeObjectEnd();
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.OBJECT_START);
+			in.skip();
+			in.next(Token.END_OF_STREAM);
+		}
+	}
 }

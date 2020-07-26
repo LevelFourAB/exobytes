@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.function.Function;
 
+import se.l4.commons.io.IOFunction;
 import se.l4.exobytes.internal.cbor.CBORInput;
 import se.l4.exobytes.internal.cbor.CBOROutput;
 import se.l4.exobytes.internal.streaming.JsonInput;
@@ -63,8 +64,8 @@ public interface StreamingFormat
 	 * @return
 	 */
 	static StreamingFormat create(
-		Function<InputStream, StreamingInput> input,
-		Function<OutputStream, StreamingOutput> output
+		IOFunction<InputStream, StreamingInput> input,
+		IOFunction<OutputStream, StreamingOutput> output
 	)
 	{
 		return new StreamingFormat()

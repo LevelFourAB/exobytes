@@ -96,7 +96,7 @@ public class ReflectionOnlySingleFactorySerializer<T>
 			}
 			else
 			{
-				in.skipValue();
+				in.skipNext();
 			}
 		}
 
