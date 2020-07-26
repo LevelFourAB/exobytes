@@ -9,6 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -446,6 +448,97 @@ public abstract class StreamingFormatTest
 			in.next(Token.VALUE);
 			assertThat(in.readInt(), is(74749));
 			in.next(Token.LIST_END);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testSymmetryBytesAsInputStreamNoRead()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			try(OutputStream o = out.writeBytes())
+			{
+				for(int i=0; i<100; i++)
+				{
+					o.write(i);
+				}
+
+				o.flush();
+
+				for(int i=0; i<100; i++)
+				{
+					o.write(i);
+				}
+			}
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			try(InputStream i = in.asInputStream())
+			{
+			}
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testSymmetryBytesAsInputStreamRead()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			try(OutputStream stream = out.writeBytes())
+			{
+				for(int i=0; i<100; i++)
+				{
+					stream.write(i);
+				}
+
+				stream.flush();
+
+				for(int i=100; i<200; i++)
+				{
+					stream.write(i);
+				}
+			}
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.VALUE);
+			try(InputStream stream = in.asInputStream())
+			{
+				/*
+				 * This splits the read into 3 buffer reads and 2 reads that
+				 * should force chunked streams to do a split read and load at
+				 * some point.
+				 */
+
+				byte[] buf = new byte[66];
+
+				stream.readNBytes(buf, 0, 66);
+				for(int i=0; i<66; i++)
+				{
+					assertThat((int) buf[i], is(i));
+				}
+
+				assertThat(stream.read(), is(66));
+
+				stream.readNBytes(buf, 0, 66);
+				for(int i=0; i<66; i++)
+				{
+					assertThat((int) buf[i] & 0xff, is(67 + i));
+				}
+
+				stream.readNBytes(buf, 0, 66);
+				for(int i=0; i<66; i++)
+				{
+					assertThat((int) buf[i] & 0xff, is(133 + i));
+				}
+
+				assertThat(stream.read(), is(199));
+			}
 			in.next(Token.END_OF_STREAM);
 		}
 	}

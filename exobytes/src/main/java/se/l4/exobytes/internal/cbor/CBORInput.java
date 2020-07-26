@@ -1,11 +1,14 @@
 package se.l4.exobytes.internal.cbor;
 
+import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.OptionalInt;
+
+import javax.naming.ldap.Control;
 
 import se.l4.exobytes.streaming.AbstractStreamingInput;
 import se.l4.exobytes.streaming.StreamingInput;
@@ -550,8 +553,89 @@ public class CBORInput
 	public InputStream asInputStream()
 		throws IOException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		checkReadable();
+
+		if(! isMajorType(CborConstants.MAJOR_TYPE_BYTE_STRING))
+		{
+			throw raiseException("Can not read bytes");
+		}
+
+		int length = getLengthAsInt();
+		if(length == 0)
+		{
+			markValueRead();
+			return new ByteArrayInputStream(EMPTY_BYTES);
+		}
+		else if(length == CborConstants.AI_INDEFINITE)
+		{
+			return new CBORChunkedInputStream(new CBORChunkedInputStream.Control()
+			{
+				@Override
+				public int readChunkLength()
+					throws IOException
+				{
+					if(peekedByte == 0xff)
+					{
+						return -1;
+					}
+
+					currentByte = read();
+					if(! isMajorType(CborConstants.MAJOR_TYPE_BYTE_STRING))
+					{
+						throw raiseException("Expected chunked bytes, but could not read byte chunk");
+					}
+
+					return getLengthAsInt();
+				}
+
+				@Override
+				public int read()
+					throws IOException
+				{
+					return CBORInput.this.read();
+				}
+
+				@Override
+				public int read(byte[] buf, int offset, int length)
+					throws IOException
+				{
+					if(peekedByte == -1) return -1;
+					if(length == 0) return 0;
+
+					buf[offset] = (byte) peekedByte;
+
+					int read = in.read(buf, offset + 1, length - 1) + 1;
+					peekedByte = in.read();
+					return read;
+				}
+
+				@Override
+				public void skip(int bytes)
+					throws IOException
+				{
+					skipBytes(bytes);
+				}
+
+				@Override
+				public void close()
+					throws IOException
+				{
+					if(read() != 0xff)
+					{
+						throw raiseException("Expected end of chunked bytes");
+					}
+
+					markValueRead();
+				}
+			});
+		}
+		else
+		{
+			byte[] data = new byte[length];
+			readFully(data, 0, length);
+			markValueRead();
+			return new ByteArrayInputStream(data);
+		}
 	}
 
 	private void readFully(byte[] buffer, int offset, int len)
