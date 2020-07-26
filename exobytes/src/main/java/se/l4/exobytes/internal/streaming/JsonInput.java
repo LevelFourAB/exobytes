@@ -206,7 +206,7 @@ public class JsonInput
 	}
 
 	@Override
-	public Object readDynamic()
+	protected Object readDynamic0()
 		throws IOException
 	{
 		if(current() == Token.NULL)

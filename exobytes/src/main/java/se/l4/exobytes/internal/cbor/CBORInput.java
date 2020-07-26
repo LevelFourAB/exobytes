@@ -199,7 +199,7 @@ public class CBORInput
 	}
 
 	@Override
-	public Object readDynamic()
+	protected Object readDynamic0()
 		throws IOException
 	{
 		switch(majorType())

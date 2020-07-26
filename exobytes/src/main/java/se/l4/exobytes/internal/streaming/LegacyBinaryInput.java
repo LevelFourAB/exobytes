@@ -239,7 +239,7 @@ public class LegacyBinaryInput
 		return buffer;
 	}
 
-	public Object readDynamic()
+	protected Object readDynamic0()
 		throws IOException
 	{
 		switch(currentValueByte)

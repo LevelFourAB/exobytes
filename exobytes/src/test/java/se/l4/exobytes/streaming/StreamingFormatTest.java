@@ -1,5 +1,6 @@
 package se.l4.exobytes.streaming;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -8,6 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
@@ -1218,7 +1221,6 @@ public abstract class StreamingFormatTest
 		}
 	}
 
-
 	@Test
 	public void testSkipObject()
 		throws IOException
@@ -1238,5 +1240,33 @@ public abstract class StreamingFormatTest
 			in.skip();
 			in.next(Token.END_OF_STREAM);
 		}
+	}
+
+	@Test
+	@SuppressWarnings({ "unchecked" })
+	public void testReadDynamicObject()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeObjectStart();
+			out.writeString("key1");
+			out.writeString("value");
+			out.writeString("key2");
+			out.writeInt(100);
+			out.writeObjectEnd();
+		});
+
+		Object value;
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.OBJECT_START);
+			value = in.readDynamic();
+			in.next(Token.END_OF_STREAM);
+		}
+
+		assertThat(value, instanceOf(Map.class));
+		Map<String, Object> asMap = (Map<String, Object>) value;
+		assertThat(asMap.get("key1"), is("value"));
+		assertThat(((Number) asMap.get("key2")).longValue(), is(100l));
 	}
 }

@@ -1,6 +1,10 @@
 package se.l4.exobytes.streaming;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import se.l4.exobytes.SerializationException;
 
@@ -163,6 +167,54 @@ public abstract class AbstractStreamingInput
 	 * @throws IOException
 	 */
 	protected abstract void skipKeyOrValue()
+		throws IOException;
+
+	@Override
+	public Object readDynamic()
+		throws IOException
+	{
+		switch(current)
+		{
+			case OBJECT_START:
+				Map<Object, Object> map = new HashMap<>();
+
+				while(peek() != Token.OBJECT_END)
+				{
+					next(Token.KEY);
+					Object key = readDynamic0();
+					next();
+					Object value = readDynamic();
+					map.put(key, value);
+				}
+
+				next(Token.OBJECT_END);
+
+				return map;
+			case LIST_START:
+				List<Object> list = new ArrayList<>();
+				while(peek() != Token.LIST_END)
+				{
+					next();
+					list.add(readDynamic());
+				}
+				return list;
+			case NULL:
+				return null;
+			case KEY:
+			case VALUE:
+				return readDynamic0();
+			default:
+				throw raiseException("Unable to read a value");
+		}
+	}
+
+	/**
+	 * Dynamically read a single value from the input.
+	 *
+	 * @return
+	 * @throws IOException
+	 */
+	protected abstract Object readDynamic0()
 		throws IOException;
 
 	/**
