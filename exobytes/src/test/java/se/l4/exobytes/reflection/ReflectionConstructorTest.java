@@ -1,6 +1,6 @@
 package se.l4.exobytes.reflection;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import se.l4.exobytes.Expose;
 import se.l4.exobytes.Serializer;

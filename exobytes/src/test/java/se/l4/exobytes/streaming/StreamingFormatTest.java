@@ -10,7 +10,7 @@ import java.io.IOException;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import se.l4.commons.io.IOConsumer;
 import se.l4.commons.io.IOSupplier;

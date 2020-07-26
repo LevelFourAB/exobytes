@@ -1,6 +1,6 @@
 package se.l4.exobytes.reflection;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 import se.l4.commons.types.Types;
 import se.l4.commons.types.mapping.OutputDeduplicator;
@@ -14,7 +14,7 @@ public class ReflectionTest
 {
 	protected Serializers collection;
 
-	@Before
+	@BeforeEach
 	public void beforeTests()
 	{
 		collection = Serializers.create()

@@ -1,13 +1,13 @@
 package se.l4.exobytes;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class DefaultSerializersTest
 {
 	private Serializers serializers;
 
-	@Before
+	@BeforeEach
 	public void before()
 	{
 		serializers = Serializers.create()

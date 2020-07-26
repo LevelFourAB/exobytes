@@ -4,7 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 import se.l4.commons.io.IOConsumer;
 import se.l4.commons.io.IOSupplier;
@@ -19,10 +19,17 @@ public abstract class SerializerTest
 {
 	protected Serializers serializers;
 
-	@Before
+	@BeforeEach
 	public void provideSerializers()
 	{
 		serializers = Serializers.create()
+			.build();
+	}
+
+	protected Serializers emptySerializers()
+	{
+		return Serializers.create()
+			.empty()
 			.build();
 	}
 

@@ -7,7 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import se.l4.commons.io.IOConsumer;
 import se.l4.exobytes.internal.cbor.CBOROutput;

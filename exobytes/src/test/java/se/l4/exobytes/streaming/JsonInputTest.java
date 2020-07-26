@@ -3,15 +3,14 @@ package se.l4.exobytes.streaming;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import se.l4.exobytes.internal.streaming.JsonInput;
 import se.l4.exobytes.internal.streaming.JsonOutput;
@@ -373,12 +372,12 @@ public class JsonInputTest
 					if(key.equals("key1"))
 					{
 						input.next();
-						assertEquals("value1", input.readString());
+						assertThat(input.readString(), is("value1"));
 					}
 					else if(key.equals("key3"))
 					{
 						input.next();
-						assertEquals("value3", input.readString());
+						assertThat(input.readString(), is("value3"));
 					}
 					else
 					{
