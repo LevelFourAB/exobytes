@@ -16,8 +16,6 @@ public abstract class AbstractStreamingInput
 	implements StreamingInput
 {
 	protected Token current;
-
-	protected int level;
 	protected boolean didReadValue;
 
 	public AbstractStreamingInput()
@@ -71,24 +69,7 @@ public abstract class AbstractStreamingInput
 		}
 
 		Token token = next0();
-		switch(token)
-		{
-			case OBJECT_END:
-			case LIST_END:
-				level--;
-				break;
-			case OBJECT_START:
-			case LIST_START:
-				level++;
-				break;
-			case VALUE:
-			case KEY:
-				didReadValue = false;
-				break;
-			default: // Do nothing
-				break;
-		}
-
+		didReadValue = false;
 		return this.current = token;
 	}
 
@@ -145,11 +126,14 @@ public abstract class AbstractStreamingInput
 						case LIST_END:
 							depth--;
 							break;
+						default:
+							// Ignore - nothing special to do in this case
 					}
 				}
 				break;
-			case KEY:
 			case NULL:
+				break;
+			case KEY:
 			case VALUE:
 				if(! didReadValue)
 				{

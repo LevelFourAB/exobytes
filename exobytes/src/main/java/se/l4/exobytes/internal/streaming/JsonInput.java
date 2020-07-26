@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.OptionalInt;
 
@@ -23,15 +24,17 @@ public class JsonInput
 	extends AbstractStreamingInput
 {
 	private static final char NULL = 0;
+	private final int LEVELS = 20;
 
 	private final Reader in;
 
 	private final char[] buffer;
 	private int position;
 	private int limit;
+	private int level;
 
-	private final boolean[] lists;
-	private final String[] names;
+	private boolean[] lists;
+	private String[] names;
 
 	public JsonInput(InputStream in)
 		throws IOException
@@ -44,8 +47,8 @@ public class JsonInput
 	{
 		this.in = in;
 
-		lists = new boolean[20];
-		names = new String[20];
+		lists = new boolean[LEVELS];
+		names = new String[LEVELS];
 		buffer = new char[1024];
 	}
 
@@ -103,12 +106,13 @@ public class JsonInput
 				char c = peekChar();
 				if(c == ',') read();
 
+				level--;
 				return token;
 			}
 			case OBJECT_START:
 			case LIST_START:
 				readNext();
-				lists[level + 1] = token == Token.LIST_START;
+				increaseLevel(token == Token.LIST_START);
 				return token;
 			case NULL:
 			{
@@ -121,12 +125,22 @@ public class JsonInput
 				markValueRead();
 				return token;
 			}
-			case KEY:
-			case VALUE:
+			default:
 				return token;
 		}
+	}
 
-		return Token.END_OF_STREAM;
+	private void increaseLevel(boolean isList)
+	{
+		level++;
+		if(lists.length == level)
+		{
+			// Grow lists when needed
+			lists = Arrays.copyOf(lists, level * 2);
+			names = Arrays.copyOf(names, level * 2);
+		}
+
+		lists[level] = isList;
 	}
 
 	@Override
@@ -364,6 +378,7 @@ public class JsonInput
 
 		if(current == Token.KEY)
 		{
+			names[level] = s;
 			char next = readNext();
 			if(next != ':')
 			{
