@@ -3,6 +3,7 @@ package se.l4.exobytes.streaming;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.OptionalInt;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -199,6 +200,21 @@ public interface StreamingInput
 	 */
 	InputStream readByteStream()
 		throws IOException;
+
+	/**
+	 * Get the current binary value and copy it into the given output stream.
+	 *
+	 * @param out
+	 * @throws IOException
+	 */
+	default long readByteStreamInto(OutputStream out)
+		throws IOException
+	{
+		try(InputStream in = readByteStream())
+		{
+			return in.transferTo(out);
+		}
+	}
 
 	/**
 	 * Read an object using the given serializer.

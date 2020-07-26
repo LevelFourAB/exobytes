@@ -3,6 +3,7 @@ package se.l4.exobytes.streaming;
 import java.io.Closeable;
 import java.io.Flushable;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
@@ -189,6 +190,43 @@ public interface StreamingOutput
 		throws IOException
 	{
 		return writeByteStream();
+	}
+
+	/**
+	 * Copy data from an {@link InputStream} to this output. Works using
+	 * {@link #writeByteStream()} and copying data.
+	 *
+	 * @param in
+	 * @return
+	 * @throws IOException
+	 */
+	default long writeByteStream(InputStream in)
+		throws IOException
+	{
+		try(OutputStream out = writeByteStream())
+		{
+			return in.transferTo(out);
+		}
+	}
+
+	/**
+	 * Copy data from an {@link InputStream} to this output. Works using
+	 * {@link #writeByteStream()} and copying data.
+	 *
+	 * @param in
+	 * @param chunkSize
+	 *   control the size of the chunks if this output supports them
+	 * @return
+	 *   the number of bytes written
+	 * @throws IOException
+	 */
+	default long writeByteStream(InputStream in, int chunkSize)
+		throws IOException
+	{
+		try(OutputStream out = writeByteStream(chunkSize))
+		{
+			return in.transferTo(out);
+		}
 	}
 
 	/**
