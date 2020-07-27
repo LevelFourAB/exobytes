@@ -5,7 +5,7 @@ import java.util.Map;
 import org.eclipse.collections.api.map.MapIterable;
 
 import se.l4.exobytes.QualifiedName;
-import se.l4.exobytes.ReflectionSerializer;
+import se.l4.exobytes.internal.reflection.properties.SerializableProperty;
 
 /**
  * Information about a type used with {@link ReflectionSerializer}.
@@ -15,23 +15,23 @@ public class TypeInfo<T>
 {
 	private final Class<T> type;
 	private final QualifiedName name;
-	private final FieldDefinition[] fields;
-	private final MapIterable<String, FieldDefinition> fieldMap;
+	private final SerializableProperty[] properties;
+	private final MapIterable<String, SerializableProperty> propertyMap;
 	private final FactoryDefinition<T>[] factories;
 
 	public TypeInfo(
 		Class<T> type,
 		QualifiedName qualifiedName,
 		FactoryDefinition<T>[] factories,
-		MapIterable<String, FieldDefinition> fieldMap,
-		FieldDefinition[] fields
+		MapIterable<String, SerializableProperty> propertyMap,
+		SerializableProperty[] properties
 	)
 	{
 		this.type = type;
 		this.name = qualifiedName;
 		this.factories = factories;
-		this.fieldMap = fieldMap;
-		this.fields = fields;
+		this.propertyMap = propertyMap;
+		this.properties = properties;
 	}
 
 	public Class<T> getType()
@@ -44,14 +44,14 @@ public class TypeInfo<T>
 		return name;
 	}
 
-	public FieldDefinition[] getAllFields()
+	public SerializableProperty[] getProperties()
 	{
-		return fields;
+		return properties;
 	}
 
-	public FieldDefinition getField(String name)
+	public SerializableProperty getProperty(String name)
 	{
-		return fieldMap.get(name);
+		return propertyMap.get(name);
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class TypeInfo<T>
 
 	public FactoryDefinition<T> findSingleFactoryWithEverything()
 	{
-		int fields = this.getAllFields().length;
+		int fields = this.properties.length;
 		FactoryDefinition<T> result = null;
 		for(FactoryDefinition<T> def : factories)
 		{

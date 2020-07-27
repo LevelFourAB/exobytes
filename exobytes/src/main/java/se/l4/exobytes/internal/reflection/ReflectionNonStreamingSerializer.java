@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import se.l4.exobytes.QualifiedName;
 import se.l4.exobytes.Serializer;
+import se.l4.exobytes.internal.reflection.properties.SerializableProperty;
 import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.StreamingOutput;
 import se.l4.exobytes.streaming.Token;
@@ -25,7 +26,7 @@ public class ReflectionNonStreamingSerializer<T>
 	public ReflectionNonStreamingSerializer(TypeInfo<T> type)
 	{
 		this.type = type;
-		this.size = type.getAllFields().length;
+		this.size = type.getProperties().length;
 	}
 
 	@Override
@@ -47,15 +48,15 @@ public class ReflectionNonStreamingSerializer<T>
 			in.next(Token.KEY);
 			String key = in.readString();
 
-			FieldDefinition def = type.getField(key);
-			if(def == null)
+			SerializableProperty property = type.getProperty(key);
+			if(property == null)
 			{
 				// No such field, skip the entire value
 				in.skipNext();
 			}
 			else
 			{
-				data.put(key, def.read(in));
+				data.put(key, property.read(in));
 			}
 		}
 
@@ -67,10 +68,10 @@ public class ReflectionNonStreamingSerializer<T>
 		// Transfer any other fields
 		for(Map.Entry<String, Object> entry : data.entrySet())
 		{
-			FieldDefinition def = type.getField(entry.getKey());
-			if(! def.isReadOnly())
+			SerializableProperty property = type.getProperty(entry.getKey());
+			if(! property.isReadOnly())
 			{
-				def.set(instance, entry.getValue());
+				property.set(instance, entry.getValue());
 			}
 		}
 
@@ -83,9 +84,9 @@ public class ReflectionNonStreamingSerializer<T>
 	{
 		stream.writeObjectStart();
 
-		for(FieldDefinition def : type.getAllFields())
+		for(SerializableProperty property : type.getProperties())
 		{
-			def.write(object, stream);
+			property.write(object, stream);
 		}
 
 		stream.writeObjectEnd();

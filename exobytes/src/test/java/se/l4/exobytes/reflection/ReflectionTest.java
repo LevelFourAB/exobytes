@@ -4,11 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 
 import se.l4.commons.types.Types;
 import se.l4.commons.types.mapping.OutputDeduplicator;
-import se.l4.exobytes.ReflectionSerializer;
 import se.l4.exobytes.SerializationTestHelper;
 import se.l4.exobytes.Serializer;
 import se.l4.exobytes.Serializers;
 import se.l4.exobytes.internal.TypeEncounterImpl;
+import se.l4.exobytes.internal.reflection.ReflectionSerializer;
 
 public class ReflectionTest
 {

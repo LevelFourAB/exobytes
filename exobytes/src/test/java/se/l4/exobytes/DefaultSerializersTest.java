@@ -3,6 +3,8 @@ package se.l4.exobytes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import se.l4.exobytes.internal.reflection.ReflectionSerializer;
+
 public class DefaultSerializersTest
 {
 	private Serializers serializers;

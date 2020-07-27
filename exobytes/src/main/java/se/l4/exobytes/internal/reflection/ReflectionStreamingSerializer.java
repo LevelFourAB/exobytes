@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import se.l4.exobytes.QualifiedName;
 import se.l4.exobytes.Serializer;
+import se.l4.exobytes.internal.reflection.properties.SerializableProperty;
 import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.StreamingOutput;
 import se.l4.exobytes.streaming.Token;
@@ -42,15 +43,15 @@ public class ReflectionStreamingSerializer<T>
 			in.next(Token.KEY);
 			String key = in.readString();
 
-			FieldDefinition def = type.getField(key);
-			if(def == null)
+			SerializableProperty property = type.getProperty(key);
+			if(property == null)
 			{
 				// No such field, skip the entire value
 				in.skipNext();
 			}
 			else
 			{
-				def.read(instance, in);
+				property.read(in, instance);
 			}
 		}
 
@@ -64,9 +65,9 @@ public class ReflectionStreamingSerializer<T>
 	{
 		stream.writeObjectStart();
 
-		for(FieldDefinition def : type.getAllFields())
+		for(SerializableProperty property : type.getProperties())
 		{
-			def.write(object, stream);
+			property.write(object, stream);
 		}
 
 		stream.writeObjectEnd();

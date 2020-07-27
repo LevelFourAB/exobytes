@@ -79,6 +79,12 @@ public class ReflectionConstructorTest
 				return false;
 			return true;
 		}
+
+		@Override
+		public String toString()
+		{
+			return getClass().getSimpleName() + "{field=" + field + "}";
+		}
 	}
 
 	public static class B
@@ -136,6 +142,12 @@ public class ReflectionConstructorTest
 			else if(!field2.equals(other.field2))
 				return false;
 			return true;
+		}
+
+		@Override
+		public String toString()
+		{
+			return getClass().getSimpleName() + "{field=" + field + ", field2=" + field2 + "}";
 		}
 	}
 

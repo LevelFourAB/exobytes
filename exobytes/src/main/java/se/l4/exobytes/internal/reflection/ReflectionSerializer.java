@@ -1,4 +1,4 @@
-package se.l4.exobytes;
+package se.l4.exobytes.internal.reflection;
 
 import java.lang.reflect.Field;
 import java.util.Optional;
@@ -9,12 +9,16 @@ import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.api.map.MutableMap;
 
-import se.l4.exobytes.internal.reflection.FactoryDefinition;
-import se.l4.exobytes.internal.reflection.FieldDefinition;
-import se.l4.exobytes.internal.reflection.ReflectionNonStreamingSerializer;
-import se.l4.exobytes.internal.reflection.ReflectionOnlySingleFactorySerializer;
-import se.l4.exobytes.internal.reflection.ReflectionStreamingSerializer;
-import se.l4.exobytes.internal.reflection.TypeInfo;
+import se.l4.exobytes.Expose;
+import se.l4.exobytes.Named;
+import se.l4.exobytes.QualifiedName;
+import se.l4.exobytes.SerializationException;
+import se.l4.exobytes.Serializer;
+import se.l4.exobytes.SerializerResolver;
+import se.l4.exobytes.Serializers;
+import se.l4.exobytes.SkipDefaultValue;
+import se.l4.exobytes.TypeEncounter;
+import se.l4.exobytes.internal.reflection.properties.SerializableProperty;
 import se.l4.commons.types.reflect.AnnotationLocator;
 import se.l4.commons.types.reflect.ConstructorRef;
 import se.l4.commons.types.reflect.FieldRef;
@@ -48,8 +52,8 @@ public class ReflectionSerializer<T>
 		TypeRef type = encounter.getType();
 		Serializers collection = encounter.getCollection();
 
-		MutableMap<String, FieldDefinition> builder = Maps.mutable.empty();
-		MutableMap<String, FieldDefinition> nonRenamedFields = Maps.mutable.empty();
+		MutableMap<String, SerializableProperty> builder = Maps.mutable.empty();
+		MutableMap<String, SerializableProperty> nonRenamedFields = Maps.mutable.empty();
 
 		for(FieldRef field : type.getDeclaredFields())
 		{
@@ -59,7 +63,7 @@ public class ReflectionSerializer<T>
 			}
 
 			// Resolve the serializer to use for the field
-			Serializer<?> serializer = collection.get(field.getType());
+			Serializer<?> serializer = encounter.get(field.getType());
 			boolean skipIfDefault = field.getAnnotation(AnnotationLocator.meta(SkipDefaultValue.class)).isPresent();
 
 			// Force the field to be accessible
@@ -68,15 +72,15 @@ public class ReflectionSerializer<T>
 
 			// Define how we access this field
 			String name = getName(reflectiveField);
-			FieldDefinition def = new FieldDefinition(reflectiveField, name, serializer, field.getType().getErasedType(), skipIfDefault);
-			builder.put(name, def);
-			nonRenamedFields.put(reflectiveField.getName(), def);
+			SerializableProperty property = SerializableProperty.resolveBestForField(name, reflectiveField, serializer, skipIfDefault);
+			builder.put(name, property);
+			nonRenamedFields.put(reflectiveField.getName(), property);
 		}
 
 		// Create field map and cache
-		ImmutableMap<String, FieldDefinition> fields = builder.toImmutable();
-		ImmutableMap<String, FieldDefinition> nonRenamed = nonRenamedFields.toImmutable();
-		FieldDefinition[] fieldsCache = fields.valuesView().toArray(new FieldDefinition[fields.size()]);
+		ImmutableMap<String, SerializableProperty> fields = builder.toImmutable();
+		ImmutableMap<String, SerializableProperty> nonRenamed = nonRenamedFields.toImmutable();
+		SerializableProperty[] fieldsCache = fields.valuesView().toArray(new SerializableProperty[fields.size()]);
 
 		// Get all of the factories
 		boolean hasSerializerInFactory = false;

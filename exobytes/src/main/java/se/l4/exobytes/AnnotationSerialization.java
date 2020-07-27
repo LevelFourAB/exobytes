@@ -6,6 +6,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import se.l4.exobytes.internal.reflection.ReflectionSerializer;
+
 /**
  * Annotation that can be used to activate reflection based serializing for
  * a type.

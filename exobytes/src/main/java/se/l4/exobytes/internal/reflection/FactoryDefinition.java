@@ -16,6 +16,7 @@ import se.l4.exobytes.Expose;
 import se.l4.exobytes.Factory;
 import se.l4.exobytes.SerializationException;
 import se.l4.exobytes.Serializers;
+import se.l4.exobytes.internal.reflection.properties.SerializableProperty;
 import se.l4.commons.types.InstanceException;
 import se.l4.commons.types.Types;
 import se.l4.commons.types.reflect.ConstructorRef;
@@ -49,8 +50,8 @@ public class FactoryDefinition<T>
 	public static <T> FactoryDefinition<T> resolve(
 		Serializers collection,
 		TypeRef parentType,
-		MapIterable<String, FieldDefinition> fields,
-		MapIterable<String, FieldDefinition> nonRenamed,
+		MapIterable<String, SerializableProperty> fields,
+		MapIterable<String, SerializableProperty> nonRenamed,
 		ConstructorRef constructor
 	)
 	{
@@ -88,7 +89,7 @@ public class FactoryDefinition<T>
 				if(names != null && i < names.length)
 				{
 					String name = names[i];
-					FieldDefinition def = nonRenamed.get(name);
+					SerializableProperty def = nonRenamed.get(name);
 					if(def != null)
 					{
 						hasSerializedFields = true;
@@ -120,7 +121,7 @@ public class FactoryDefinition<T>
 						parentType.getErasedType() + ")");
 				}
 
-				FieldDefinition def = fields.get(expose.get().value());
+				SerializableProperty def = fields.get(expose.get().value());
 				if(def == null)
 				{
 					throw new SerializationException(expose + " was used on a " +
@@ -144,7 +145,7 @@ public class FactoryDefinition<T>
 				if(i < names.length && names[i] != null)
 				{
 					String name = names[i];
-					FieldDefinition def = nonRenamed.get(name);
+					SerializableProperty def = nonRenamed.get(name);
 					if(def != null)
 					{
 						args.add(new SerializedArgument(def.getType(), def.getName()));

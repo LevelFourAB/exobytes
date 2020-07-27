@@ -9,6 +9,7 @@ import java.util.TreeMap;
 import se.l4.commons.types.Types;
 import se.l4.exobytes.QualifiedName;
 import se.l4.exobytes.Serializer;
+import se.l4.exobytes.internal.reflection.properties.SerializableProperty;
 import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.StreamingOutput;
 import se.l4.exobytes.streaming.Token;
@@ -26,7 +27,7 @@ public class ReflectionOnlySingleFactorySerializer<T>
 	private final Object[] defaultArguments;
 
 	private final String[] names;
-	private final FieldDefinition[] fields;
+	private final SerializableProperty[] fields;
 	private final int[] mapping;
 
 	public ReflectionOnlySingleFactorySerializer(TypeInfo<T> type, FactoryDefinition<T> factory)
@@ -52,13 +53,13 @@ public class ReflectionOnlySingleFactorySerializer<T>
 		this.defaultArguments = defaultArguments;
 
 		String[] names = new String[tempMapping.size()];
-		FieldDefinition[] fields = new FieldDefinition[tempMapping.size()];
+		SerializableProperty[] fields = new SerializableProperty[tempMapping.size()];
 		int[] mapping = new int[tempMapping.size()];
 		int i = 0;
 		for(Map.Entry<String, Integer> e : tempMapping.entrySet())
 		{
 			names[i] = e.getKey();
-			fields[i] = type.getField(e.getKey());
+			fields[i] = type.getProperty(e.getKey());
 			mapping[i] = e.getValue();
 
 			i++;
@@ -110,7 +111,7 @@ public class ReflectionOnlySingleFactorySerializer<T>
 	{
 		stream.writeObjectStart();
 
-		for(FieldDefinition def : type.getAllFields())
+		for(SerializableProperty def : type.getProperties())
 		{
 			def.write(object, stream);
 		}
