@@ -278,7 +278,7 @@ public class JsonInput
 				return false;
 		}
 
-		throw raiseException("Expected " + ValueType.BOOLEAN + " but found " + value);
+		throw raiseException("Expected boolean but found " + value);
 	}
 
 	@Override

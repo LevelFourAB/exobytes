@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.OptionalInt;
 
 import se.l4.exobytes.streaming.AbstractStreamingInput;
+import se.l4.exobytes.streaming.StreamingFormat;
 import se.l4.exobytes.streaming.Token;
 
 /**
@@ -281,7 +282,7 @@ public class LegacyBinaryInput
 				markValueRead();
 				return b == 1;
 			default:
-				throw raiseException("Expected " + ValueType.BOOLEAN + ", but found " + valueType(currentValueByte));
+				throw raiseException("Expected boolean, but found " + valueType(currentValueByte));
 		}
 	}
 
@@ -292,7 +293,7 @@ public class LegacyBinaryInput
 		int value = readInt();
 		if(value < Byte.MIN_VALUE || value > Byte.MAX_VALUE)
 		{
-			throw raiseException("Expected " + ValueType.BYTE + " but " + value + " is outside valid range");
+			throw raiseException("Expected byte, but " + value + " is outside valid range");
 		}
 		return (byte) value;
 	}
@@ -304,7 +305,7 @@ public class LegacyBinaryInput
 		int value = readInt();
 		if(value < Short.MIN_VALUE || value > Short.MAX_VALUE)
 		{
-			throw raiseException("Expected " + ValueType.SHORT + " but " + value + " is outside valid range");
+			throw raiseException("Expected short, but " + value + " is outside valid range");
 		}
 		return (short) value;
 	}
@@ -316,7 +317,7 @@ public class LegacyBinaryInput
 		int value = readInt();
 		if(value < Character.MIN_VALUE || value > Character.MAX_VALUE)
 		{
-			throw raiseException("Expected " + ValueType.CHAR + " but " + value + " is outside valid range");
+			throw raiseException("Expected char, but " + value + " is outside valid range");
 		}
 		return (char) value;
 	}
@@ -353,12 +354,12 @@ public class LegacyBinaryInput
 				long v = readLong();
 				if(v < Integer.MIN_VALUE || v > Integer.MAX_VALUE)
 				{
-					throw raiseException("Expected " + ValueType.INTEGER + " but " + v + " is outside valid range");
+					throw raiseException("Expected int, but " + v + " is outside valid range");
 				}
 				return (int) v;
 
 			default:
-				throw raiseException("Expected " + ValueType.INTEGER + ", but found " + valueType(currentValueByte));
+				throw raiseException("Expected int, but found " + valueType(currentValueByte));
 		}
 	}
 
@@ -394,7 +395,7 @@ public class LegacyBinaryInput
 				return readInt();
 
 			default:
-				throw raiseException("Expected " + ValueType.LONG + ", but found " + valueType(currentValueByte));
+				throw raiseException("Expected long, but found " + valueType(currentValueByte));
 		}
 	}
 
@@ -415,7 +416,7 @@ public class LegacyBinaryInput
 				return (float) d;
 
 			default:
-				throw raiseException("Expected " + ValueType.FLOAT + ", but found " + valueType(currentValueByte));
+				throw raiseException("Expected float, but found " + valueType(currentValueByte));
 		}
 	}
 
@@ -436,7 +437,7 @@ public class LegacyBinaryInput
 				return f;
 
 			default:
-				throw raiseException("Expected " + ValueType.DOUBLE + ", but found " + valueType(currentValueByte));
+				throw raiseException("Expected double, but found " + valueType(currentValueByte));
 		}
 	}
 
@@ -452,7 +453,7 @@ public class LegacyBinaryInput
 				markValueRead();
 				return s;
 			default:
-				throw raiseException("Expected " + ValueType.STRING + ", but found " + valueType(currentValueByte));
+				throw raiseException("Expected string, but found " + valueType(currentValueByte));
 		}
 	}
 
@@ -467,7 +468,7 @@ public class LegacyBinaryInput
 				markValueRead();
 				return b;
 			default:
-				throw raiseException("Expected " + ValueType.BYTES + ", but found " + valueType(currentValueByte));
+				throw raiseException("Expected bytes, but found " + valueType(currentValueByte));
 		}
 	}
 
@@ -485,31 +486,31 @@ public class LegacyBinaryInput
 		peekedByte = in.read();
 	}
 
-	private ValueType valueType(int b)
+	private String valueType(int b)
 		throws IOException
 	{
 		switch(b)
 		{
 			case LegacyBinaryOutput.TAG_BOOLEAN:
-				return ValueType.BOOLEAN;
+				return "boolean";
 			case LegacyBinaryOutput.TAG_DOUBLE:
-				return ValueType.DOUBLE;
+				return "double";
 			case LegacyBinaryOutput.TAG_FLOAT:
-				return ValueType.FLOAT;
+				return "float";
 			case LegacyBinaryOutput.TAG_INT:
 			case LegacyBinaryOutput.TAG_POSITIVE_INT:
 			case LegacyBinaryOutput.TAG_NEGATIVE_INT:
-				return ValueType.INTEGER;
+				return "int";
 			case LegacyBinaryOutput.TAG_LONG:
 			case LegacyBinaryOutput.TAG_POSITIVE_LONG:
 			case LegacyBinaryOutput.TAG_NEGATIVE_LONG:
-				return ValueType.LONG;
+				return "long";
 			case LegacyBinaryOutput.TAG_NULL:
-				return ValueType.NULL;
+				return "null";
 			case LegacyBinaryOutput.TAG_STRING:
-				return ValueType.STRING;
+				return "string";
 			case LegacyBinaryOutput.TAG_BYTE_ARRAY:
-				return ValueType.BYTES;
+				return "byte array";
 			default:
 				throw raiseException("Unexpected value type, no idea what to do (read byte was " + b + ")");
 		}
