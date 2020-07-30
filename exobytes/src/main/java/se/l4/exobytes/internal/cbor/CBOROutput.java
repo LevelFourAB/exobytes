@@ -2,7 +2,6 @@ package se.l4.exobytes.internal.cbor;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import se.l4.commons.io.ChunkOutputStream;
@@ -18,6 +17,9 @@ public class CBOROutput
 
 	private final OutputStream out;
 
+	private byte[] buffer;
+	private int index;
+
 	/**
 	 * If the current level is using an indeterminate length and needs a break.
 	 */
@@ -28,6 +30,8 @@ public class CBOROutput
 	{
 		this.out = out;
 
+		this.buffer = new byte[32];
+
 		remainingWrites = new int[LEVELS];
 		remainingWrites[0] = -1;
 	}
@@ -36,6 +40,7 @@ public class CBOROutput
 	public void close()
 		throws IOException
 	{
+		flushBuffer();
 		out.close();
 	}
 
@@ -43,6 +48,7 @@ public class CBOROutput
 	public void flush()
 		throws IOException
 	{
+		flushBuffer();
 		out.flush();
 	}
 
@@ -105,7 +111,8 @@ public class CBOROutput
 	{
 		consumeWrite();
 
-		out.write((CborConstants.MAJOR_TYPE_SIMPLE << 5) | (b ? CborConstants.SIMPLE_TYPE_TRUE : CborConstants.SIMPLE_TYPE_FALSE));
+		ensure(1);
+		buffer[index++] = (byte) ((CborConstants.MAJOR_TYPE_SIMPLE << 5) | (b ? CborConstants.SIMPLE_TYPE_TRUE : CborConstants.SIMPLE_TYPE_FALSE));
 	}
 
 	@Override
@@ -114,7 +121,7 @@ public class CBOROutput
 	{
 		consumeWrite();
 
-		out.write((CborConstants.MAJOR_TYPE_SIMPLE << 5) | CborConstants.SIMPLE_TYPE_NULL);
+		buffer[index++] = (byte) ((CborConstants.MAJOR_TYPE_SIMPLE << 5) | CborConstants.SIMPLE_TYPE_NULL);
 	}
 
 	@Override
@@ -124,11 +131,13 @@ public class CBOROutput
 		consumeWrite();
 
 		int bits = Float.floatToRawIntBits(number);
-		out.write((CborConstants.MAJOR_TYPE_SIMPLE << 5) | CborConstants.SIMPLE_TYPE_FLOAT);
-		out.write((bits >> 24) & 0xff);
-		out.write((bits >> 16) & 0xff);
-		out.write((bits >> 8) & 0xff);
-		out.write(bits & 0xff);
+
+		ensure(5);
+		buffer[index++] = (byte) ((CborConstants.MAJOR_TYPE_SIMPLE << 5) | CborConstants.SIMPLE_TYPE_FLOAT);
+		buffer[index++] = (byte) ((bits >> 24) & 0xff);
+		buffer[index++] = (byte) ((bits >> 16) & 0xff);
+		buffer[index++] = (byte) ((bits >> 8) & 0xff);
+		buffer[index++] = (byte) (bits & 0xff);
 	}
 
 	@Override
@@ -138,15 +147,17 @@ public class CBOROutput
 		consumeWrite();
 
 		long bits = Double.doubleToRawLongBits(number);
-		out.write((CborConstants.MAJOR_TYPE_SIMPLE << 5) | CborConstants.SIMPLE_TYPE_DOUBLE);
-		out.write((byte) ((bits >> 56) & 0xff));
-		out.write((byte) ((bits >> 48) & 0xff));
-		out.write((byte) ((bits >> 40) & 0xff));
-		out.write((byte) ((bits >> 32) & 0xff));
-		out.write((byte) ((bits >> 24) & 0xff));
-		out.write((byte) ((bits >> 16) & 0xff));
-		out.write((byte) ((bits >> 8) & 0xff));
-		out.write((byte) (bits & 0xff));
+
+		ensure(9);
+		buffer[index++] = (byte) ((CborConstants.MAJOR_TYPE_SIMPLE << 5) | CborConstants.SIMPLE_TYPE_DOUBLE);
+		buffer[index++] = (byte) ((bits >> 56) & 0xff);
+		buffer[index++] = (byte) ((bits >> 48) & 0xff);
+		buffer[index++] = (byte) ((bits >> 40) & 0xff);
+		buffer[index++] = (byte) ((bits >> 32) & 0xff);
+		buffer[index++] = (byte) ((bits >> 24) & 0xff);
+		buffer[index++] = (byte) ((bits >> 16) & 0xff);
+		buffer[index++] = (byte) ((bits >> 8) & 0xff);
+		buffer[index++] = (byte) (bits & 0xff);
 	}
 
 	@Override
@@ -155,10 +166,137 @@ public class CBOROutput
 	{
 		consumeWrite();
 
-		// TODO: Optimization with better algorithm and chunking
-		byte[] data = value.getBytes(StandardCharsets.UTF_8);
-		writeMajorTypeAndLength(CborConstants.MAJOR_TYPE_TEXT_STRING, data.length);
-		out.write(data);
+		// TODO: There is probably a point where a huge string is better written streaming
+
+		int length = value.length();
+		int byteLength = calculateUTF8Length(value);
+		writeMajorTypeAndLength(CborConstants.MAJOR_TYPE_TEXT_STRING, byteLength);
+
+		if(length == byteLength)
+		{
+			writeStringASCII(value);
+		}
+		else
+		{
+			writeStringUTF8(value, byteLength);
+		}
+	}
+
+	private void writeStringASCII(String s)
+		throws IOException
+	{
+		int length = s.length();
+		ensure(length);
+		for(int i=0; i<length; i++)
+		{
+			buffer[index++] = (byte) s.charAt(i);
+		}
+	}
+
+	private void writeStringUTF8(String value, int byteLength)
+		throws IOException
+	{
+		ensure(byteLength);
+		byte[] buffer = this.buffer;
+
+		int length = value.length();
+
+		int writeIdx = index;
+		int charIdx = 0;
+
+		/*
+		 * Write as many pure ASCII characters as possible. As soon as a char
+		 * that needs multi byte encoding is seen stop.
+		 */
+		while(charIdx < length)
+		{
+			char c = value.charAt(charIdx);
+			if(c >= 0x80) break;
+
+			buffer[writeIdx++] = (byte) c;
+			charIdx++;
+		}
+
+		/*
+		 * Write the remaining characters that may be a mix of multi-byte and
+		 * non multi-byte chars.
+		 */
+		while(charIdx < length)
+		{
+			char c = value.charAt(charIdx++);
+
+			if(c < 0x80)
+			{
+				buffer[writeIdx++] = (byte) c;
+			}
+			else if(c < 0x800)
+			{
+				buffer[writeIdx++] = (byte) (0xc0 | c >> 6 & 0x1f);
+				buffer[writeIdx++] = (byte) (0x80 | c >> 0 & 0x3f);
+			}
+			else if(! Character.isSurrogate(c))
+			{
+				buffer[writeIdx++] = (byte) (0xe0 | c >> 12 & 0x0f);
+				buffer[writeIdx++] = (byte) (0x80 | c >> 6 & 0x3f);
+				buffer[writeIdx++] = (byte) (0x80 | c >> 0 & 0x3f);
+			}
+			else
+			{
+				char c2 = value.charAt(charIdx++);
+
+				// TODO: This needs quick sanity check if the one in calculateUTF8Length is not enough
+
+				int codePoint = Character.toCodePoint(c, c2);
+				buffer[writeIdx++] = (byte) ((0xf0) | (codePoint >>> 18));
+				buffer[writeIdx++] = (byte) (0x80 | (0x3f & (codePoint >>> 12)));
+				buffer[writeIdx++] = (byte) (0x80 | (0x3f & (codePoint >>> 6)));
+				buffer[writeIdx++] = (byte) (0x80 | (0x3f & codePoint));
+			}
+		}
+
+		index = writeIdx;
+	}
+
+	private int calculateUTF8Length(String value)
+		throws IOException
+	{
+		int length = value.length();
+		int result = length;
+
+		int i =0;
+		while(i < length && value.charAt(i) < 0x80)
+		{
+			i++;
+		}
+
+		while(i < length)
+		{
+			char c = value.charAt(i);
+
+			if(c < 0x800)
+			{
+				result += ((0x7f - c) >>> 31);
+			}
+			else
+			{
+				result += 2;
+
+				if(Character.isSurrogate(c))
+				{
+					int codePoint = Character.codePointAt(value, i);
+					if(codePoint < Character.MIN_SUPPLEMENTARY_CODE_POINT)
+					{
+						throw new IOException();
+					}
+
+					i++;
+				}
+			}
+
+			i++;
+		}
+
+		return result;
 	}
 
 	@Override
@@ -166,7 +304,7 @@ public class CBOROutput
 		throws IOException
 	{
 		writeMajorTypeAndLength(CborConstants.MAJOR_TYPE_BYTE_STRING, data.length);
-		out.write(data);
+		write(data, 0, data.length);
 	}
 
 	@Override
@@ -180,10 +318,12 @@ public class CBOROutput
 	public OutputStream writeByteStream(int chunkSize)
 		throws IOException
 	{
-		out.write(CborConstants.MAJOR_TYPE_BYTE_STRING << 5 | CborConstants.AI_INDEFINITE);
+		ensure(1);
+		buffer[index++] = (byte) (CborConstants.MAJOR_TYPE_BYTE_STRING << 5 | CborConstants.AI_INDEFINITE);
+
 		return new ChunkOutputStream(chunkSize, (chunk, offset, len) -> {
 			writeMajorTypeAndLength(CborConstants.MAJOR_TYPE_BYTE_STRING, len);
-			out.write(chunk, offset, len);
+			write(chunk, offset, len);
 		})
 		{
 			@Override
@@ -204,7 +344,9 @@ public class CBOROutput
 		consumeWrite();
 
 		increaseLevel(-1);
-		out.write(CborConstants.MAJOR_TYPE_ARRAY << 5 | CborConstants.AI_INDEFINITE);
+
+		ensure(1);
+		buffer[index++] = (byte) (CborConstants.MAJOR_TYPE_ARRAY << 5 | CborConstants.AI_INDEFINITE);
 	}
 
 	@Override
@@ -234,7 +376,9 @@ public class CBOROutput
 		consumeWrite();
 
 		increaseLevel(-1);
-		out.write(CborConstants.MAJOR_TYPE_MAP << 5 | CborConstants.AI_INDEFINITE);
+
+		ensure(1);
+		buffer[index++] = (byte) (CborConstants.MAJOR_TYPE_MAP << 5 | CborConstants.AI_INDEFINITE);
 	}
 
 	@Override
@@ -276,26 +420,30 @@ public class CBOROutput
 		int symbol = majorType << 5;
 		if(length < 24)
 		{
-			out.write(symbol | length);
+			ensure(1);
+			buffer[index++] = (byte) (symbol | length);
 		}
 		else if(length < 256)
 		{
-			out.write(symbol | CborConstants.AI_ONE_BYTE);
-			out.write(length);
+			ensure(2);
+			buffer[index++] = (byte) (symbol | CborConstants.AI_ONE_BYTE);
+			buffer[index++] = (byte) (length);
 		}
 		else if(length < 65536)
 		{
-			out.write(symbol | CborConstants.AI_TWO_BYTES);
-			out.write((length >> 8) & 0xff);
-			out.write(length & 0xff);
+			ensure(3);
+			buffer[index++] = (byte) (symbol | CborConstants.AI_TWO_BYTES);
+			buffer[index++] = (byte) ((length >> 8) & 0xff);
+			buffer[index++] = (byte) (length & 0xff);
 		}
 		else
 		{
-			out.write(symbol | CborConstants.AI_FOUR_BYTES);
-			out.write((length >> 24) & 0xff);
-			out.write((length >> 16) & 0xff);
-			out.write((length >> 8) & 0xff);
-			out.write(length & 0xff);
+			ensure(5);
+			buffer[index++] = (byte) (symbol | CborConstants.AI_FOUR_BYTES);
+			buffer[index++] = (byte) ((length >> 24) & 0xff);
+			buffer[index++] = (byte) ((length >> 16) & 0xff);
+			buffer[index++] = (byte) ((length >> 8) & 0xff);
+			buffer[index++] = (byte) (length & 0xff);
 		}
 	}
 
@@ -309,26 +457,34 @@ public class CBOROutput
 		}
 		else if(length < 4294967296l)
 		{
-			out.write(symbol | CborConstants.AI_FOUR_BYTES);
-			out.write((byte) ((length >> 24) & 0xff));
-			out.write((byte) ((length >> 16) & 0xff));
-			out.write((byte) ((length >> 8) & 0xff));
-			out.write((byte) (length & 0xff));
+			ensure(5);
+			buffer[index++] = (byte) (symbol | CborConstants.AI_FOUR_BYTES);
+			buffer[index++] = (byte) ((length >> 24) & 0xff);
+			buffer[index++] = (byte) ((length >> 16) & 0xff);
+			buffer[index++] = (byte) ((length >> 8) & 0xff);
+			buffer[index++] = (byte) (length & 0xff);
 		}
 		else
 		{
-			out.write(symbol | CborConstants.AI_EIGHT_BYTES);
-			out.write((byte) ((length >> 56) & 0xff));
-			out.write((byte) ((length >> 48) & 0xff));
-			out.write((byte) ((length >> 40) & 0xff));
-			out.write((byte) ((length >> 32) & 0xff));
-			out.write((byte) ((length >> 24) & 0xff));
-			out.write((byte) ((length >> 16) & 0xff));
-			out.write((byte) ((length >> 8) & 0xff));
-			out.write((byte) (length & 0xff));
+			ensure(9);
+			buffer[index++] = (byte) (symbol | CborConstants.AI_EIGHT_BYTES);
+			buffer[index++] = (byte) ((length >> 56) & 0xff);
+			buffer[index++] = (byte) ((length >> 48) & 0xff);
+			buffer[index++] = (byte) ((length >> 40) & 0xff);
+			buffer[index++] = (byte) ((length >> 32) & 0xff);
+			buffer[index++] = (byte) ((length >> 24) & 0xff);
+			buffer[index++] = (byte) ((length >> 16) & 0xff);
+			buffer[index++] = (byte) ((length >> 8) & 0xff);
+			buffer[index++] = (byte) (length & 0xff);
 		}
 	}
 
+	/**
+	 * Consume a write verifying that there are writes still available if this
+	 * a fixed-size map or array.
+	 *
+	 * @throws IOException
+	 */
 	private void consumeWrite()
 		throws IOException
 	{
@@ -381,9 +537,55 @@ public class CBOROutput
 		return remaining == -1;
 	}
 
+	/**
+	 * Write a break after an indeterminate map, list, byte string or text
+	 * string.
+	 *
+	 * @throws IOException
+	 */
 	private void writeBreak()
 		throws IOException
 	{
-		out.write(CborConstants.MAJOR_TYPE_SIMPLE << 5 | CborConstants.SIMPLE_TYPE_BREAK);
+		ensure(1);
+		buffer[index++] = (byte) (CborConstants.MAJOR_TYPE_SIMPLE << 5 | CborConstants.SIMPLE_TYPE_BREAK);
+	}
+
+	private void ensure(int numberOfBytes)
+		throws IOException
+	{
+		if(buffer.length > index + numberOfBytes)
+		{
+			return;
+		}
+
+		// TODO: Do we want to automatically flush?
+		if(index > 512)
+		{
+			flushBuffer();
+		}
+
+		int length = buffer.length;
+		if(length < numberOfBytes)
+		{
+			length = numberOfBytes;
+		}
+		buffer = Arrays.copyOf(buffer, buffer.length + length);
+	}
+
+	private void flushBuffer()
+		throws IOException
+	{
+		if(index == 0) return;
+
+		out.write(buffer, 0, index);
+		index = 0;
+	}
+
+	private void write(byte[] data, int offset, int length)
+		throws IOException
+	{
+		ensure(length);
+		System.arraycopy(data, offset, buffer, index, length);
+		index += length;
 	}
 }
