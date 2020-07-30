@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.OptionalInt;
 
@@ -32,7 +31,8 @@ public class CBORInput
 	private boolean[] listOrMap;
 	private int level;
 
-	private OptionalInt length;
+	private int length;
+	private char[] reusableChars = new char[64];
 
 	public CBORInput(InputStream in)
 		throws IOException
@@ -45,7 +45,7 @@ public class CBORInput
 		listOrMap[0] = true;
 		remainingReads[0] = -1;
 
-		length = OptionalInt.empty();
+		length = -1;
 
 		peekedByte = in.read();
 		readType();
@@ -105,54 +105,77 @@ public class CBORInput
 	protected Token next0()
 		throws IOException
 	{
-		Token nextToken = peek();
-		currentByte = peekedByte;
-
-		switch(nextToken)
+		if(remainingReads[level] == 0)
 		{
-			case NULL:
-				markValueRead();
-				peekedByte = in.read();
-				length = OptionalInt.empty();
-				break;
-			case LIST_START:
+			/*
+			 * If there are no more values to read in the list or object
+			 * emulate an end token.
+			 */
+			length = -1;
+			readType();
+
+			return listOrMap[level--] ? Token.LIST_END : Token.OBJECT_END;
+		}
+
+		if(peekedByte == -1)
+		{
+			return Token.END_OF_STREAM;
+		}
+
+		currentByte = peekedByte;
+		switch(peekedByte >> 5)
+		{
+			case CborConstants.MAJOR_TYPE_ARRAY:
 				markValueRead();
 				peekedByte = in.read();
 				increaseLevel(isIndeterminateLength() ? -2 : getLengthAsInt(), true);
-				break;
-			case OBJECT_START:
+				return Token.LIST_START;
+			case CborConstants.MAJOR_TYPE_MAP:
 				markValueRead();
 				peekedByte = in.read();
 				increaseLevel(isIndeterminateLength() ? -2 : getLengthAsInt(), false);
-				break;
-			case LIST_END:
-			case OBJECT_END:
-				length = OptionalInt.empty();
-
-				if(remainingReads[level] != 0)
+				return Token.OBJECT_START;
+			case CborConstants.MAJOR_TYPE_SIMPLE:
+				switch(peekedByte)
 				{
-					// Peek the next byte if this wasn't a synthetic end event
-					peekedByte = in.read();
+					case 246:
+						markValueRead();
+						peekedByte = in.read();
+						length = -1;
+						return Token.NULL;
+					case 255:
+						length = -1;
+
+						// Peek the next byte if this wasn't a synthetic end event
+						peekedByte = in.read();
+
+						readType();
+
+						return listOrMap[level--] ? Token.LIST_END : Token.OBJECT_END;
 				}
-
-				readType();
-
-				level--;
-				break;
-			default:
-				length = OptionalInt.empty();
+			case CborConstants.MAJOR_TYPE_UNSIGNED_INT:
+			case CborConstants.MAJOR_TYPE_NEGATIVE_INT:
+			case CborConstants.MAJOR_TYPE_BYTE_STRING:
+			case CborConstants.MAJOR_TYPE_TEXT_STRING:
+				length = -1;
 
 				peekedByte = in.read();
-				break;
+				if(! listOrMap[level] && remainingReads[level] % 2 == 0)
+				{
+					// Reading an object and the next token is the key
+					return Token.KEY;
+				}
+
+				return Token.VALUE;
 		}
 
-		return nextToken;
+		throw raiseException("Unsupported CBOR stream encountered byte " + currentByte);
 	}
 
 	@Override
 	public OptionalInt getLength()
 	{
-		return length;
+		return length < 0 ? OptionalInt.empty() : OptionalInt.of(length);
 	}
 
 	@Override
@@ -235,24 +258,22 @@ public class CBORInput
 	public boolean readBoolean()
 		throws IOException
 	{
-		checkReadable();
-
-		boolean result;
-		if(isSimpleType(CborConstants.SIMPLE_TYPE_TRUE))
-		{
-			result = true;
-		}
-		else if(isSimpleType(CborConstants.SIMPLE_TYPE_FALSE))
-		{
-			result = false;
-		}
-		else
+		if(! isMajorType(CborConstants.MAJOR_TYPE_SIMPLE))
 		{
 			throw raiseException("Unable to read boolean");
 		}
 
-		markValueRead();
-		return result;
+		switch(currentByte & 31)
+		{
+			case CborConstants.SIMPLE_TYPE_TRUE:
+				markValueRead();
+				return true;
+			case CborConstants.SIMPLE_TYPE_FALSE:
+				markValueRead();
+				return false;
+			default:
+				throw raiseException("Unable to read boolean");
+		}
 	}
 
 	@Override
@@ -280,32 +301,30 @@ public class CBORInput
 	public int readInt()
 		throws IOException
 	{
-		checkReadable();
-
-		int result;
-		if(isMajorType(CborConstants.MAJOR_TYPE_UNSIGNED_INT))
+		int majorType = majorType();
+		switch(majorType)
 		{
-			result = getLengthAsInt();
+			case CborConstants.MAJOR_TYPE_UNSIGNED_INT:
+			{
+				int result = getLengthAsInt();
+				markValueRead();
+				return result;
+			}
+			case CborConstants.MAJOR_TYPE_NEGATIVE_INT:
+			{
+				int result = -1 - getLengthAsInt();
+				markValueRead();
+				return result;
+			}
+			default:
+				throw raiseException("Unable to read int");
 		}
-		else if(isMajorType(CborConstants.MAJOR_TYPE_NEGATIVE_INT))
-		{
-			result = -1 - getLengthAsInt();
-		}
-		else
-		{
-			throw raiseException("Unable to read int");
-		}
-
-		markValueRead();
-		return result;
 	}
 
 	@Override
 	public long readLong()
 		throws IOException
 	{
-		checkReadable();
-
 		long result;
 		if(isMajorType(CborConstants.MAJOR_TYPE_UNSIGNED_INT))
 		{
@@ -328,66 +347,54 @@ public class CBORInput
 	public float readFloat()
 		throws IOException
 	{
-		checkReadable();
-
-		float result;
-		if(isSimpleType(CborConstants.SIMPLE_TYPE_HALF))
-		{
-			// TODO: Support for half values
-			throw raiseException("Half-values are not supported");
-		}
-		else if(isSimpleType(CborConstants.SIMPLE_TYPE_FLOAT))
-		{
-			result = readRawFloat();
-		}
-		else if(isSimpleType(CborConstants.SIMPLE_TYPE_DOUBLE))
-		{
-			result = (float) readRawDouble();
-		}
-		else
+		if(! isMajorType(CborConstants.MAJOR_TYPE_SIMPLE))
 		{
 			throw raiseException("Unable to read float");
 		}
 
-		markValueRead();
-		return result;
+		switch(currentByte & 31)
+		{
+			case CborConstants.SIMPLE_TYPE_FLOAT:
+				float f = readRawFloat();
+				markValueRead();
+				return f;
+			case CborConstants.SIMPLE_TYPE_DOUBLE:
+				double d = readRawDouble();
+				markValueRead();
+				return (float) d;
+			default:
+				throw raiseException("Unable to read float");
+		}
 	}
 
 	@Override
 	public double readDouble()
 		throws IOException
 	{
-		checkReadable();
-
-		double result;
-		if(isSimpleType(CborConstants.SIMPLE_TYPE_HALF))
+		if(! isMajorType(CborConstants.MAJOR_TYPE_SIMPLE))
 		{
-			// TODO: Support for half values
-			throw raiseException("Half-values are not supported");
-		}
-		else if(isSimpleType(CborConstants.SIMPLE_TYPE_FLOAT))
-		{
-			result = readRawFloat();
-		}
-		else if(isSimpleType(CborConstants.SIMPLE_TYPE_DOUBLE))
-		{
-			result = readRawDouble();
-		}
-		else
-		{
-			throw raiseException("Unable to read float");
+			throw raiseException("Unable to read double");
 		}
 
-		markValueRead();
-		return result;
+		switch(currentByte & 31)
+		{
+			case CborConstants.SIMPLE_TYPE_FLOAT:
+				double f = readRawFloat();
+				markValueRead();
+				return f;
+			case CborConstants.SIMPLE_TYPE_DOUBLE:
+				double d = readRawDouble();
+				markValueRead();
+				return d;
+			default:
+				throw raiseException("Unable to read double");
+		}
 	}
 
 	@Override
 	public String readString()
 		throws IOException
 	{
-		checkReadable();
-
 		if(! isMajorType(CborConstants.MAJOR_TYPE_TEXT_STRING))
 		{
 			throw raiseException("Can not read string");
@@ -411,11 +418,7 @@ public class CBORInput
 				}
 
 				int subLength = getLengthAsInt();
-
-				byte[] data = new byte[subLength];
-				readFully(data, 0, data.length);
-
-				builder.append(new String(data, StandardCharsets.UTF_8));
+				builder.append(readString(subLength));
 			}
 
 			if(read() != 0xff)
@@ -427,14 +430,113 @@ public class CBORInput
 		}
 		else
 		{
-			byte[] data = new byte[length];
-			readFully(data, 0, data.length);
-
-			result = new String(data, StandardCharsets.UTF_8);
+			result = readString(length);
 		}
 
 		markValueRead();
 		return result;
+	}
+
+	private String readString(int byteLength)
+		throws IOException
+	{
+		char[] chars = this.reusableChars;
+
+		int offset = 0;
+		int c = peekedByte;
+		while(offset < byteLength)
+		{
+			if(c >= 0x80)
+			{
+				break;
+			}
+
+			if(chars.length == offset)
+			{
+				chars = this.reusableChars = Arrays.copyOf(chars, chars.length * 2);
+			}
+
+			chars[offset++] = (char) c;
+			c = in.read();
+		}
+
+		int read = offset;
+		while(read < byteLength)
+		{
+			if((c & 0x80) == 0)
+			{
+				if(chars.length == offset)
+				{
+					chars = this.reusableChars = Arrays.copyOf(chars, chars.length * 2);
+				}
+
+				read += 1;
+				chars[offset++] = (char) c;
+			}
+			else if((c & 0xe0) == 0xc0)
+			{
+				if(chars.length == offset)
+				{
+					chars = this.reusableChars = Arrays.copyOf(chars, chars.length * 2);
+				}
+
+				read += 2;
+				chars[offset++] = (char) (((c & 0x1f) << 6)
+					| (in.read() & 0x3f));
+			}
+			else if((c & 0xf0) == 0xe0)
+			{
+				if(chars.length == offset)
+				{
+					chars = this.reusableChars = Arrays.copyOf(chars, chars.length * 2);
+				}
+
+				read += 3;
+				chars[offset++] = (char) (((c & 0x0f) << 12)
+					| (in.read() & 0x3f) << 6
+					| (in.read() & 0x3f));
+			}
+			else
+			{
+				int v;
+				if((c & 0xf8) == 0xf0)
+				{
+					if(chars.length == offset)
+					{
+						chars = this.reusableChars = Arrays.copyOf(chars, chars.length * 2);
+					}
+
+					v = ((c & 0x07) << 18)
+						| ((in.read() & 0x3f) << 12)
+						| ((in.read() & 0x3f) << 6)
+						| (in.read() & 0x3F);
+
+					read += 4;
+				}
+				else
+				{
+					throw raiseException("Tried reading a string but encountered invalid UTF-8 sequence");
+				}
+
+				if(v > 0x10000)
+				{
+					// This is a surrogate - let's read the next char
+					int supplement = v - 0x10000;
+					chars[offset++] = (char) ((supplement >> 10) | 0xd800);
+					chars[offset++] = (char) ((supplement & 0x3ff) | 0xdc00);
+				}
+				else
+				{
+					chars[offset++] = (char) v;
+				}
+			}
+
+			c = in.read();
+		}
+
+		peekedByte = c;
+
+		return new String(chars, 0, offset);
 	}
 
 	private void skipString()
@@ -470,8 +572,6 @@ public class CBORInput
 	public byte[] readByteArray()
 		throws IOException
 	{
-		checkReadable();
-
 		if(! isMajorType(CborConstants.MAJOR_TYPE_BYTE_STRING))
 		{
 			throw raiseException("Can not read bytes");
@@ -551,8 +651,6 @@ public class CBORInput
 	public InputStream readByteStream()
 		throws IOException
 	{
-		checkReadable();
-
 		if(! isMajorType(CborConstants.MAJOR_TYPE_BYTE_STRING))
 		{
 			throw raiseException("Can not read bytes");
@@ -698,15 +796,6 @@ public class CBORInput
 		return Double.longBitsToDouble(l);
 	}
 
-	private void checkReadable()
-		throws IOException
-	{
-		if(currentByte == -1)
-		{
-			throw new EOFException();
-		}
-	}
-
 	private int majorType()
 	{
 		return currentByte >> 5;
@@ -715,11 +804,6 @@ public class CBORInput
 	private boolean isMajorType(int majorType)
 	{
 		return currentByte >> 5 == majorType;
-	}
-
-	private boolean isSimpleType(int simpleType)
-	{
-		return currentByte >> 5 == CborConstants.MAJOR_TYPE_SIMPLE && (currentByte & 31) == simpleType;
 	}
 
 	private boolean isIndeterminateLength()
@@ -791,27 +875,16 @@ public class CBORInput
 		switch(currentByte & 31)
 		{
 			case CborConstants.AI_ONE_BYTE:
-				read();
+				skipBytes(1);
 				break;
 			case CborConstants.AI_TWO_BYTES:
-				read();
-				read();
+				skipBytes(2);
 				break;
 			case CborConstants.AI_FOUR_BYTES:
-				read();
-				read();
-				read();
-				read();
+				skipBytes(4);
 				break;
 			case CborConstants.AI_EIGHT_BYTES:
-				read();
-				read();
-				read();
-				read();
-				read();
-				read();
-				read();
-				read();
+				skipBytes(8);
 				break;
 		}
 	}
@@ -829,7 +902,7 @@ public class CBORInput
 		listOrMap[level] = isList;
 		remainingReads[level] = isList ? expectedCount : expectedCount * 2;
 
-		length = expectedCount < 0 ? OptionalInt.empty() : OptionalInt.of(expectedCount);
+		length = expectedCount;
 	}
 
 	private int read()

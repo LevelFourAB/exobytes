@@ -104,6 +104,13 @@ public class CBORChunkedInputStream
 		int read(byte[] buf, int offset, int length)
 			throws IOException;
 
+		/**
+		 * Skip a certain number of bytes. Used when closing a stream that is
+		 * not fully read.
+		 *
+		 * @param bytes
+		 * @throws IOException
+		 */
 		void skip(int bytes)
 			throws IOException;
 
