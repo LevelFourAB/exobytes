@@ -6,6 +6,10 @@ package se.l4.exobytes.streaming;
 public enum Token
 {
 	/**
+	 * Unknown token, reading has not started yet.
+	 */
+	UNKNOWN,
+	/**
 	 * Start of a list.
 	 */
 	LIST_START,

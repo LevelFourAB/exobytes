@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.util.OptionalInt;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import se.l4.exobytes.SerializationException;
 import se.l4.exobytes.Serializer;
 
 /**
@@ -68,6 +69,14 @@ public interface StreamingInput
 	 */
 	@NonNull
 	Token current();
+
+	/**
+	 * Verify that the current token is the expected token. Will throw a
+	 * {@link SerializationException} if this is not the case.
+	 *
+	 * @param expected
+	 */
+	void current(@NonNull Token expected);
 
 	/**
 	 * Get the length of the current list or object.

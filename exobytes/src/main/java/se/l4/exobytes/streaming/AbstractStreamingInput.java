@@ -20,13 +20,14 @@ public abstract class AbstractStreamingInput
 
 	public AbstractStreamingInput()
 	{
+		current = Token.UNKNOWN;
 	}
 
 	@Override
 	public Token peek()
 		throws IOException
 	{
-		if((current == Token.KEY || current == Token.VALUE) && ! didReadValue)
+		if(! didReadValue && (current == Token.KEY || current == Token.VALUE))
 		{
 			throw new IOException("Can not peek next token, current token is not fully consumed");
 		}
@@ -46,12 +47,16 @@ public abstract class AbstractStreamingInput
 	@Override
 	public Token current()
 	{
-		if(current == null)
-		{
-			throw new IllegalStateException("next() has not been called, no token available");
-		}
-
 		return current;
+	}
+
+	@Override
+	public void current(Token expected)
+	{
+		if(current != expected)
+		{
+			throw raiseSerializationException("Expected " + expected + " but currently " + current);
+		}
 	}
 
 	@Override
@@ -63,7 +68,7 @@ public abstract class AbstractStreamingInput
 			throw new IOException("Tried reading past end of stream");
 		}
 
-		if((current == Token.KEY || current == Token.VALUE) && ! didReadValue)
+		if(! didReadValue && (current == Token.KEY || current == Token.VALUE))
 		{
 			skipKeyOrValue();
 		}
@@ -99,7 +104,7 @@ public abstract class AbstractStreamingInput
 		Token t = next();
 		if(t != expected)
 		{
-			throw raiseException("Expected "+ expected + " but got " + t);
+			throw raiseSerializationException("Expected "+ expected + " but got " + t);
 		}
 		return t;
 	}
