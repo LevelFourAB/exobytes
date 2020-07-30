@@ -50,6 +50,8 @@ public class JsonInput
 		lists = new boolean[LEVELS];
 		names = new String[LEVELS];
 		buffer = new char[1024];
+
+		lists[0] = true;
 	}
 
 	@Override
