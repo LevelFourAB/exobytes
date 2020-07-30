@@ -429,6 +429,238 @@ public abstract class StreamingFormatTest
 	}
 
 	@Test
+	public void testSymmetryObjectBooleanBoolean()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeObjectStart();
+			out.writeString("key1");
+			out.writeBoolean(false);
+			out.writeString("key2");
+			out.writeBoolean(true);
+			out.writeObjectEnd();
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.OBJECT_START);
+			in.next(Token.KEY);
+			assertThat(in.readString(), is("key1"));
+			in.next(Token.VALUE);
+			assertThat(in.readBoolean(), is(false));
+			in.next(Token.KEY);
+			assertThat(in.readString(), is("key2"));
+			in.next(Token.VALUE);
+			assertThat(in.readBoolean(), is(true));
+			in.next(Token.OBJECT_END);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testSymmetryObjectByteByte()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeObjectStart();
+			out.writeString("key1");
+			out.writeByte((byte) -20);
+			out.writeString("key2");
+			out.writeByte((byte) 20);
+			out.writeObjectEnd();
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.OBJECT_START);
+			in.next(Token.KEY);
+			assertThat(in.readString(), is("key1"));
+			in.next(Token.VALUE);
+			assertThat(in.readByte(), is((byte) -20));
+			in.next(Token.KEY);
+			assertThat(in.readString(), is("key2"));
+			in.next(Token.VALUE);
+			assertThat(in.readByte(), is((byte) 20));
+			in.next(Token.OBJECT_END);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testSymmetryObjectShortShort()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeObjectStart();
+			out.writeString("key1");
+			out.writeShort((short) -20);
+			out.writeString("key2");
+			out.writeShort((short) 20);
+			out.writeObjectEnd();
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.OBJECT_START);
+			in.next(Token.KEY);
+			assertThat(in.readString(), is("key1"));
+			in.next(Token.VALUE);
+			assertThat(in.readShort(), is((short) -20));
+			in.next(Token.KEY);
+			assertThat(in.readString(), is("key2"));
+			in.next(Token.VALUE);
+			assertThat(in.readShort(), is((short) 20));
+			in.next(Token.OBJECT_END);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testSymmetryObjectCharChar()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeObjectStart();
+			out.writeString("key1");
+			out.writeChar((char) 20);
+			out.writeString("key2");
+			out.writeChar((char) 220);
+			out.writeObjectEnd();
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.OBJECT_START);
+			in.next(Token.KEY);
+			assertThat(in.readString(), is("key1"));
+			in.next(Token.VALUE);
+			assertThat(in.readChar(), is((char) 20));
+			in.next(Token.KEY);
+			assertThat(in.readString(), is("key2"));
+			in.next(Token.VALUE);
+			assertThat(in.readChar(), is((char) 220));
+			in.next(Token.OBJECT_END);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testSymmetryObjectIntInt()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeObjectStart();
+			out.writeString("key1");
+			out.writeInt(-20);
+			out.writeString("key2");
+			out.writeInt(20);
+			out.writeObjectEnd();
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.OBJECT_START);
+			in.next(Token.KEY);
+			assertThat(in.readString(), is("key1"));
+			in.next(Token.VALUE);
+			assertThat(in.readInt(), is(-20));
+			in.next(Token.KEY);
+			assertThat(in.readString(), is("key2"));
+			in.next(Token.VALUE);
+			assertThat(in.readInt(), is(20));
+			in.next(Token.OBJECT_END);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testSymmetryObjectLongLong()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeObjectStart();
+			out.writeString("key1");
+			out.writeLong(-20);
+			out.writeString("key2");
+			out.writeLong(20);
+			out.writeObjectEnd();
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.OBJECT_START);
+			in.next(Token.KEY);
+			assertThat(in.readString(), is("key1"));
+			in.next(Token.VALUE);
+			assertThat(in.readLong(), is(-20l));
+			in.next(Token.KEY);
+			assertThat(in.readString(), is("key2"));
+			in.next(Token.VALUE);
+			assertThat(in.readLong(), is(20l));
+			in.next(Token.OBJECT_END);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testSymmetryObjectFloatFloat()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeObjectStart();
+			out.writeString("key1");
+			out.writeFloat(-22.2f);
+			out.writeString("key2");
+			out.writeFloat(22.2f);
+			out.writeObjectEnd();
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.OBJECT_START);
+			in.next(Token.KEY);
+			assertThat(in.readString(), is("key1"));
+			in.next(Token.VALUE);
+			assertThat(in.readFloat(), is(-22.2f));
+			in.next(Token.KEY);
+			assertThat(in.readString(), is("key2"));
+			in.next(Token.VALUE);
+			assertThat(in.readFloat(), is(22.2f));
+			in.next(Token.OBJECT_END);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
+	public void testSymmetryObjectDoubleDouble()
+		throws IOException
+	{
+		IOSupplier<StreamingInput> in0 = write(out -> {
+			out.writeObjectStart();
+			out.writeString("key1");
+			out.writeDouble(-22.2);
+			out.writeString("key2");
+			out.writeDouble(22.2);
+			out.writeObjectEnd();
+		});
+
+		try(StreamingInput in = in0.get())
+		{
+			in.next(Token.OBJECT_START);
+			in.next(Token.KEY);
+			assertThat(in.readString(), is("key1"));
+			in.next(Token.VALUE);
+			assertThat(in.readDouble(), is(-22.2));
+			in.next(Token.KEY);
+			assertThat(in.readString(), is("key2"));
+			in.next(Token.VALUE);
+			assertThat(in.readDouble(), is(22.2));
+			in.next(Token.OBJECT_END);
+			in.next(Token.END_OF_STREAM);
+		}
+	}
+
+	@Test
 	public void testSymmetryListEmpty()
 		throws IOException
 	{
