@@ -7,13 +7,11 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.Test;
 
 import se.l4.exobytes.internal.streaming.JsonInput;
-import se.l4.exobytes.internal.streaming.JsonOutput;
 
 /**
  * Test for {@link JsonInput}. Runs a set of JSON documents and makes sure
@@ -462,342 +460,364 @@ public class JsonInputTest
 	public void testWriteEmptyObject()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeObjectStart();
-		out.writeObjectEnd();
+		byte[] data = writeToBytes(out -> {
+			out.writeObjectStart();
+			out.writeObjectEnd();
+		});
 
-		assertStream(out, "{}");
+		assertString(data, "{}");
 	}
 
 	@Test
 	public void testWriteEmptyList()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeListStart();
-		out.writeListEnd();
+		byte[] data = writeToBytes(out -> {
+			out.writeListStart();
+			out.writeListEnd();
+		});
 
-		assertStream(out, "[]");
+		assertString(data, "[]");
 	}
 
 	@Test
 	public void testWriteString()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeString("value");
+		byte[] data = writeToBytes(out -> {
+			out.writeString("value");
+		});
 
-		assertStream(out, "\"value\"");
+		assertString(data, "\"value\"");
 	}
 
 	@Test
 	public void testWriteChar()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeChar('v');
+		byte[] data = writeToBytes(out -> {
+			out.writeChar('v');
+		});
 
-		assertStream(out, "\"v\"");
+		assertString(data, "\"v\"");
 	}
 
 	@Test
 	public void testWriteInt()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeInt(12);
+		byte[] data = writeToBytes(out -> {
+			out.writeInt(12);
+		});
 
-		assertStream(out, "12");
+		assertString(data, "12");
+	}
+
+	@Test
+	public void testWriteNegativeInt()
+		throws IOException
+	{
+		byte[] data = writeToBytes(out -> {
+			out.writeInt(-12);
+		});
+
+		assertString(data, "-12");
 	}
 
 	@Test
 	public void testWriteLong()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeLong(12l);
+		byte[] data = writeToBytes(out -> {
+			out.writeLong(12l);
+		});
 
-		assertStream(out, "12");
+		assertString(data, "12");
 	}
 
 	@Test
 	public void testWriteFloat()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeFloat(12.0f);
+		byte[] data = writeToBytes(out -> {
+			out.writeFloat(12.0f);
+		});
 
-		assertStream(out, "12.0");
+		assertString(data, "12.0");
 	}
 
 	@Test
 	public void testWriteFloatMax()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeFloat(Float.MAX_VALUE);
+		byte[] data = writeToBytes(out -> {
+			out.writeFloat(Float.MAX_VALUE);
+		});
 
-		assertStream(out, "3.4028235E38");
+		assertString(data, "3.4028235E38");
 	}
 
 	@Test
 	public void testWriteDouble()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeDouble(12.2);
+		byte[] data = writeToBytes(out -> {
+			out.writeDouble(12.2);
+		});
 
-		assertStream(out, "12.2");
+		assertString(data, "12.2");
 	}
 
 	@Test
 	public void testWriteShort()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeShort((short) 12);
+		byte[] data = writeToBytes(out -> {
+			out.writeShort((short) 12);
+		});
 
-		assertStream(out, "12");
+		assertString(data, "12");
 	}
 
 	@Test
 	public void testWriteKeyValueString()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeObjectStart();
-		out.writeString("key");
-		out.writeString("value");
-		out.writeObjectEnd();
+		byte[] data = writeToBytes(out -> {
+			out.writeObjectStart();
+			out.writeString("key");
+			out.writeString("value");
+			out.writeObjectEnd();
+		});
 
-		assertStream(out, "{\"key\":\"value\"}");
+		assertString(data, "{\"key\":\"value\"}");
 	}
 
 	@Test
 	public void testWriteKeyValueInt()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeObjectStart();
-		out.writeString("key");
-		out.writeInt(12);
-		out.writeObjectEnd();
+		byte[] data = writeToBytes(out -> {
+			out.writeObjectStart();
+			out.writeString("key");
+			out.writeInt(12);
+			out.writeObjectEnd();
+		});
 
-		assertStream(out, "{\"key\":12}");
+		assertString(data, "{\"key\":12}");
 	}
 
 	@Test
 	public void testWriteKeyValueLong()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeObjectStart();
-		out.writeString("key");
-		out.writeLong(12l);
-		out.writeObjectEnd();
+		byte[] data = writeToBytes(out -> {
+			out.writeObjectStart();
+			out.writeString("key");
+			out.writeLong(12l);
+			out.writeObjectEnd();
+		});
 
-		assertStream(out, "{\"key\":12}");
+		assertString(data, "{\"key\":12}");
 	}
 
 	@Test
 	public void testWriteKeyValueShort()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeObjectStart();
-		out.writeString("key");
-		out.writeInt((short) 12);
-		out.writeObjectEnd();
+		byte[] data = writeToBytes(out -> {
+			out.writeObjectStart();
+			out.writeString("key");
+			out.writeInt((short) 12);
+			out.writeObjectEnd();
+		});
 
-		assertStream(out, "{\"key\":12}");
+		assertString(data, "{\"key\":12}");
 	}
 
 	@Test
 	public void testWriteKeyValueFloat()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeObjectStart();
-		out.writeString("key");
-		out.writeFloat(3.14f);
-		out.writeObjectEnd();
+		byte[] data = writeToBytes(out -> {
+			out.writeObjectStart();
+			out.writeString("key");
+			out.writeFloat(3.14f);
+			out.writeObjectEnd();
+		});
 
-		assertStream(out, "{\"key\":3.14}");
+		assertString(data, "{\"key\":3.14}");
 	}
 
 	@Test
 	public void testWriteKeyValueDouble()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeObjectStart();
-		out.writeString("key");
-		out.writeDouble(3.14);
-		out.writeObjectEnd();
+		byte[] data = writeToBytes(out -> {
+			out.writeObjectStart();
+			out.writeString("key");
+			out.writeDouble(3.14);
+			out.writeObjectEnd();
+		});
 
-		assertStream(out, "{\"key\":3.14}");
+		assertString(data, "{\"key\":3.14}");
 	}
 
 	@Test
 	public void testWriteKeyValueObject()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeObjectStart();
-		out.writeString("key");
-		out.writeObjectStart();
-		out.writeObjectEnd();
-		out.writeObjectEnd();
+		byte[] data = writeToBytes(out -> {
+			out.writeObjectStart();
+			out.writeString("key");
+			out.writeObjectStart();
+			out.writeObjectEnd();
+			out.writeObjectEnd();
+		});
 
-		assertStream(out, "{\"key\":{}}");
+		assertString(data, "{\"key\":{}}");
 	}
 
 	@Test
 	public void testWriteKeyValueList()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeObjectStart();
-		out.writeString("key");
-		out.writeListStart();
-		out.writeListEnd();
-		out.writeObjectEnd();
+		byte[] data = writeToBytes(out -> {
+			out.writeObjectStart();
+			out.writeString("key");
+			out.writeListStart();
+			out.writeListEnd();
+			out.writeObjectEnd();
+		});
 
-		assertStream(out, "{\"key\":[]}");
+		assertString(data, "{\"key\":[]}");
 	}
 
 	@Test
 	public void testObjectMultipleKeys()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeObjectStart();
-		out.writeString("key1");
-		out.writeString("value1");
-		out.writeString("key2");
-		out.writeLong(12l);
-		out.writeObjectEnd();
+		byte[] data = writeToBytes(out -> {
+			out.writeObjectStart();
+			out.writeString("key1");
+			out.writeString("value1");
+			out.writeString("key2");
+			out.writeLong(12l);
+			out.writeObjectEnd();
+		});
 
-		assertStream(out, "{\"key1\":\"value1\",\"key2\":12}");
+		assertString(data, "{\"key1\":\"value1\",\"key2\":12}");
 	}
 
 	@Test
 	public void testWriteListString()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeListStart();
-		out.writeString("value");
-		out.writeListEnd();
+		byte[] data = writeToBytes(out -> {
+			out.writeListStart();
+			out.writeString("value");
+			out.writeListEnd();
+		});
 
-		assertStream(out, "[\"value\"]");
+		assertString(data, "[\"value\"]");
 	}
 
 	@Test
 	public void testWriteListInt()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeListStart();
-		out.writeInt(12);
-		out.writeListEnd();
+		byte[] data = writeToBytes(out -> {
+			out.writeListStart();
+			out.writeInt(12);
+			out.writeListEnd();
+		});
 
-		assertStream(out, "[12]");
+		assertString(data, "[12]");
 	}
 
 	@Test
 	public void testWriteListLong()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeListStart();
-		out.writeLong(12l);
-		out.writeListEnd();
+		byte[] data = writeToBytes(out -> {
+			out.writeListStart();
+			out.writeLong(12l);
+			out.writeListEnd();
+		});
 
-		assertStream(out, "[12]");
+		assertString(data, "[12]");
 	}
 
 	@Test
 	public void testWriteListShort()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeListStart();
-		out.writeShort((short) 12);
-		out.writeListEnd();
+		byte[] data = writeToBytes(out -> {
+			out.writeListStart();
+			out.writeShort((short) 12);
+			out.writeListEnd();
+		});
 
-		assertStream(out, "[12]");
+		assertString(data, "[12]");
 	}
 
 	@Test
 	public void testWriteListFloat()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeListStart();
-		out.writeFloat(3.14f);
-		out.writeListEnd();
+		byte[] data = writeToBytes(out -> {
+			out.writeListStart();
+			out.writeFloat(3.14f);
+			out.writeListEnd();
+		});
 
-		assertStream(out, "[3.14]");
+		assertString(data, "[3.14]");
 	}
 
 	@Test
 	public void testWriteListDouble()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeListStart();
-		out.writeDouble(3.14);
-		out.writeListEnd();
+		byte[] data = writeToBytes(out -> {
+			out.writeListStart();
+			out.writeDouble(3.14);
+			out.writeListEnd();
+		});
 
-		assertStream(out, "[3.14]");
+		assertString(data, "[3.14]");
 	}
 
 	@Test
 	public void testWriteListMixed()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeListStart();
-		out.writeInt(12);
-		out.writeString("value");
-		out.writeListEnd();
+		byte[] data = writeToBytes(out -> {
+			out.writeListStart();
+			out.writeInt(12);
+			out.writeString("value");
+			out.writeListEnd();
+		});
 
-		assertStream(out, "[12,\"value\"]");
+		assertString(data, "[12,\"value\"]");
 	}
 
 	@Test
 	public void testWriteByteArray()
 		throws IOException
 	{
-		StreamingOutput out = createOutput();
-		out.writeByteArray("kaka".getBytes(StandardCharsets.UTF_8));
+		byte[] data = writeToBytes(out -> {
+			out.writeByteArray("kaka".getBytes(StandardCharsets.UTF_8));
+		});
 
-		assertStream(out, "\"a2FrYQ==\"");
+		assertString(data, "\"a2FrYQ==\"");
 	}
 
-	private StreamingOutput createOutput()
-	{
-		return new TestJsonOutput();
-	}
 
-	private void assertStream(StreamingOutput output, String value)
+	private void assertString(byte[] data, String value)
 	{
-		((TestJsonOutput) output).verify(value);
-	}
-
-	private static class TestJsonOutput
-		extends JsonOutput
-	{
-		public TestJsonOutput()
-		{
-			super(new StringWriter());
-		}
-
-		public void verify(String expected)
-		{
-			String value = ((StringWriter) writer).toString();
-			assertThat(value, is(expected));
-		}
+		assertThat(
+			new String(data, StandardCharsets.UTF_8),
+			is(value)
+		);
 	}
 }
