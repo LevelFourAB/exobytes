@@ -11,7 +11,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.codec.DecoderException;
@@ -42,6 +41,18 @@ public abstract class StreamingFormatTest
 		return () -> format().createInput(new ByteArrayInputStream(input));
 	}
 
+	protected byte[] writeToBytes(IOConsumer<StreamingOutput> output)
+		throws IOException
+	{
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		try(StreamingOutput out = format().createOutput(stream))
+		{
+			output.accept(out);
+		}
+
+		return stream.toByteArray();
+	}
+
 	protected StreamingInput toInput(String hex)
 	{
 		try
@@ -53,6 +64,11 @@ public abstract class StreamingFormatTest
 		{
 			throw new RuntimeException(e);
 		}
+	}
+
+	protected String toHex(byte[] data)
+	{
+		return Hex.encodeHexString(data);
 	}
 
 	protected void assertBinary(byte[] data, String hex)

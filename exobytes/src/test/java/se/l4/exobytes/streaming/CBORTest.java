@@ -3,13 +3,11 @@ package se.l4.exobytes.streaming;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
 import org.junit.jupiter.api.Test;
 
-import se.l4.commons.io.IOConsumer;
 import se.l4.exobytes.internal.cbor.CBOROutput;
 
 public class CBORTest
@@ -19,18 +17,6 @@ public class CBORTest
 	protected StreamingFormat format()
 	{
 		return StreamingFormat.CBOR;
-	}
-
-	protected byte[] writeToBytes(IOConsumer<StreamingOutput> output)
-		throws IOException
-	{
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		try(StreamingOutput out = format().createOutput(stream))
-		{
-			output.accept(out);
-		}
-
-		return stream.toByteArray();
 	}
 
 	@Test
