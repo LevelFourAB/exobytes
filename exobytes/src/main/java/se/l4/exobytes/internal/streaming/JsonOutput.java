@@ -3,9 +3,6 @@ package se.l4.exobytes.internal.streaming;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import se.l4.exobytes.streaming.StreamingOutput;
@@ -19,12 +16,12 @@ public class JsonOutput
 {
 	private static final int HEX_MASK = (1 << 4) - 1;
 
-	private static final char[] DIGITS = {
+	private static final byte[] DIGITS = {
 		'0', '1', '2', '3', '4', '5', '6', '7',
 		'8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
 	};
 
-	private final static char[] BASE64 = {
+	private final static byte[] BASE64 = {
 		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
 		'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
@@ -34,16 +31,17 @@ public class JsonOutput
 
 	private static final int LEVELS = 20;
 
-	protected final Writer writer;
+	protected final OutputStream out1;
 	private final boolean beautify;
+
+	private byte[] buffer;
+	private int index;
 
 	private boolean[] lists;
 	private boolean[] hasData;
 
 	private int level;
 	private boolean nextKey;
-
-	private final char[] encoded;
 
 	/**
 	 * Create a JSON streamer that will write to the given output.
@@ -64,109 +62,29 @@ public class JsonOutput
 	 */
 	public JsonOutput(OutputStream out, boolean beautify)
 	{
-		this(new OutputStreamWriter(out, StandardCharsets.UTF_8), beautify);
-	}
-
-	/**
-	 * Create a JSON streamer that will write to the given output.
-	 *
-	 * @param out
-	 */
-	public JsonOutput(Writer writer)
-	{
-		this(writer, false);
-	}
-
-	/**
-	 * Create a JSON streamer that will write to the given output, optionally
-	 * with beautification of the generated JSON.
-	 *
-	 * @param out
-	 * @param beautify
-	 */
-	public JsonOutput(Writer writer, boolean beautify)
-	{
-		this.writer = writer;
+		this.out1 = out;
 		this.beautify = beautify;
+
+		this.buffer = new byte[32];
 
 		lists = new boolean[LEVELS];
 		hasData = new boolean[LEVELS];
-
-		encoded = new char[4];
 	}
 
 	@Override
 	public void close()
 		throws IOException
 	{
-		flush();
-		writer.close();
+		flushBuffer();
+		out1.close();
 	}
 
-	/**
-	 * Escape and write the given string.
-	 *
-	 * @param in
-	 * @throws IOException
-	 */
-	private void writeEscaped(String in)
+	@Override
+	public void flush()
 		throws IOException
 	{
-		for(int i=0, n=in.length(); i<n; i++)
-		{
-			char c = in.charAt(i);
-			if(c == '"' || c == '\\')
-			{
-				writer.write('\\');
-				writer.write(c);
-			}
-			else if(c == '\r')
-			{
-				writer.write('\\');
-				writer.write('r');
-			}
-			else if(c == '\n')
-			{
-				writer.write('\\');
-				writer.write('n');
-			}
-			else if(c == '\t')
-			{
-				writer.write('\\');
-				writer.write('t');
-			}
-			else if(c == '\b')
-			{
-				writer.write('\\');
-				writer.write('b');
-			}
-			else if(c == '\f')
-			{
-				writer.write('\\');
-				writer.write('f');
-			}
-			else if(c <= 0x1F)
-			{
-				writer.write('\\');
-				writer.write('u');
-
-				int v = c;
-				int pos = 4;
-				do
-				{
-					encoded[--pos] = DIGITS[v & HEX_MASK];
-					v >>>= 4;
-				}
-				while (v != 0);
-
-				for(int j=0; j<pos; j++) writer.write('0');
-				writer.write(encoded, pos, 4 - pos);
-			}
-			else
-			{
-				writer.write(c);
-			}
-		}
+		flushBuffer();
+		out1.flush();
 	}
 
 	/**
@@ -204,11 +122,12 @@ public class JsonOutput
 
 		if(beautify && hasData[level])
 		{
-			writer.write('\n');
+			ensure(level);
+			buffer[index++] = '\n';
 
 			for(int i=0; i<level; i++)
 			{
-				writer.write("\t");
+				buffer[index++] = '\t';
 			}
 		}
 	}
@@ -242,17 +161,22 @@ public class JsonOutput
 			return;
 		}
 
-		if(hasData[level]) writer.write(',');
+		if(hasData[level])
+		{
+			ensure(1);
+			buffer[index++] = ',';
+		}
 
 		hasData[level] = true;
 
 		if(beautify && level > 0)
 		{
-			writer.write('\n');
+			ensure(level);
+			buffer[index++] = '\n';
 
 			for(int i=0; i<level; i++)
 			{
-				writer.write('\t');
+				buffer[index++] = '\t';
 			}
 		}
 	}
@@ -264,7 +188,8 @@ public class JsonOutput
 		startWrite();
 		failKey();
 
-		writer.write('{');
+		ensure(1);
+		buffer[index++] = '{';
 
 		increaseLevel(false);
 	}
@@ -275,11 +200,12 @@ public class JsonOutput
 	{
 		if(! nextKey)
 		{
-			throw new IOException("Trying to end an object without writing a key");
+			throw new IOException("Trying to end an object without writing a value");
 		}
 
 		decreaseLevel();
-		writer.write('}');
+		ensure(1);
+		buffer[index++] = '}';
 	}
 
 	@Override
@@ -289,7 +215,8 @@ public class JsonOutput
 		startWrite();
 		failKey();
 
-		writer.write('[');
+		ensure(1);
+		buffer[index++] = '[';
 
 		increaseLevel(true);
 	}
@@ -300,44 +227,100 @@ public class JsonOutput
 	{
 		failKey();
 		decreaseLevel();
-		writer.write(']');
+
+		ensure(1);
+		buffer[index++] = ']';
 	}
 
 	@Override
 	public void writeString(String value)
 		throws IOException
 	{
+		startWrite();
+
+		ensure(1);
+		buffer[index++] = '"';
+
+		for(int i=0, n=value.length(); i<n; i++)
+		{
+			char c = value.charAt(i);
+			switch(c)
+			{
+				case '"':
+					ensure(2);
+					buffer[index++] = '\\';
+					buffer[index++] = '"';
+					break;
+				case '\\':
+					ensure(2);
+					buffer[index++] = '\\';
+					buffer[index++] = '\\';
+					break;
+				case '\r':
+					ensure(2);
+					buffer[index++] = '\\';
+					buffer[index++] = 'r';
+					break;
+				case '\n':
+					ensure(2);
+					buffer[index++] = '\\';
+					buffer[index++] = 'n';
+					break;
+				case '\t':
+					ensure(2);
+					buffer[index++] = '\\';
+					buffer[index++] = 't';
+					break;
+				case '\b':
+					ensure(2);
+					buffer[index++] = '\\';
+					buffer[index++] = 'b';
+					break;
+				case '\f':
+					ensure(2);
+					buffer[index++] = '\\';
+					buffer[index++] = 'f';
+					break;
+				default:
+					if(c <= 0x1F)
+					{
+						ensure(6);
+						buffer[index++] = '\\';
+						buffer[index++] = 'u';
+						buffer[index++] = '0';
+						buffer[index++] = '0';
+						buffer[index++] = DIGITS[(c >> 4) & HEX_MASK];
+						buffer[index++] = DIGITS[c & HEX_MASK];
+					}
+					else if(c >= 127)
+					{
+						ensure(6);
+						buffer[index++] = '\\';
+						buffer[index++] = 'u';
+						buffer[index++] = DIGITS[(c >> 12) & HEX_MASK];
+						buffer[index++] = DIGITS[(c >> 8) & HEX_MASK];
+						buffer[index++] = DIGITS[(c >> 4) & HEX_MASK];
+						buffer[index++] = DIGITS[c & HEX_MASK];
+					}
+					else
+					{
+						ensure(1);
+						buffer[index++] = (byte) c;
+					}
+			}
+		}
+
+		ensure(1);
+		buffer[index++] = '"';
+
 		if(nextKey)
 		{
-			if(value == null)
-			{
-				throw new IOException("Tried writing a null key");
-			}
-
-			startWrite();
-
-			writer.write('"');
-			writeEscaped(value);
-			writer.write('"');
-			writer.write(':');
-
 			nextKey = false;
+			ensure(1);
+			buffer[index++] = ':';
 		}
 		else
 		{
-			startWrite();
-
-			if(value == null)
-			{
-				writer.write("null");
-			}
-			else
-			{
-				writer.write('"');
-				writeEscaped(value);
-				writer.write('"');
-			}
-
 			nextKey = ! lists[level];
 		}
 	}
@@ -348,13 +331,10 @@ public class JsonOutput
 		startWrite();
 		failKey();
 
-		if(value == null)
+		ensure(value.length());
+		for(int i=0, n=value.length(); i<n; i++)
 		{
-			writer.write("null");
-		}
-		else
-		{
-			writer.write(value);
+			buffer[index++] = (byte) value.charAt(i);
 		}
 	}
 
@@ -411,7 +391,26 @@ public class JsonOutput
 	public void writeBoolean(boolean bool)
 		throws IOException
 	{
-		writeUnescaped(Boolean.toString(bool));
+		startWrite();
+		failKey();
+
+		if(bool)
+		{
+			ensure(4);
+			buffer[index++] = 't';
+			buffer[index++] = 'r';
+			buffer[index++] = 'u';
+			buffer[index++] = 'e';
+		}
+		else
+		{
+			ensure(5);
+			buffer[index++] = 'f';
+			buffer[index++] = 'a';
+			buffer[index++] = 'l';
+			buffer[index++] = 's';
+			buffer[index++] = 'e';
+		}
 	}
 
 	@Override
@@ -423,11 +422,12 @@ public class JsonOutput
 
 		if(data == null)
 		{
-			writer.write("null");
+			writeRawNull();
 			return;
 		}
 
-		writer.write('"');
+		ensure(1);
+		buffer[index++] = '"';
 
 		int i = 0;
 		for(int n=data.length - 2; i<n; i+=3)
@@ -440,7 +440,8 @@ public class JsonOutput
 			write(data, i, data.length - i);
 		}
 
-		writer.write('"');
+		ensure(1);
+		buffer[index++] = '"';
 	}
 
 	@Override
@@ -470,31 +471,32 @@ public class JsonOutput
 	private void write(byte[] data, int pos, int len)
 		throws IOException
 	{
-		char[] chars = BASE64;
+		byte[] chars = BASE64;
 
 		int loc = (len > 0 ? (data[pos] << 24) >>> 8 : 0) |
 			(len > 1 ? (data[pos+1] << 24) >>> 16 : 0) |
 			(len > 2 ? (data[pos+2] << 24) >>> 24 : 0);
 
+		ensure(4);
 		switch(len)
 		{
 			case 3:
-				writer.write(chars[loc >>> 18]);
-				writer.write(chars[(loc >>> 12) & 0x3f]);
-				writer.write(chars[(loc >>> 6) & 0x3f]);
-				writer.write(chars[loc & 0x3f]);
+				buffer[index++] = chars[loc >>> 18];
+				buffer[index++] =  chars[(loc >>> 12) & 0x3f];
+				buffer[index++] =  chars[(loc >>> 6) & 0x3f];
+				buffer[index++] =  chars[loc & 0x3f];
 				break;
 			case 2:
-				writer.write(chars[loc >>> 18]);
-				writer.write(chars[(loc >>> 12) & 0x3f]);
-				writer.write(chars[(loc >>> 6) & 0x3f]);
-				writer.write('=');
+				buffer[index++] = chars[loc >>> 18];
+				buffer[index++] =  chars[(loc >>> 12) & 0x3f];
+				buffer[index++] =  chars[(loc >>> 6) & 0x3f];
+				buffer[index++] = '=';
 				break;
 			case 1:
-				writer.write(chars[loc >>> 18]);
-				writer.write(chars[(loc >>> 12) & 0x3f]);
-				writer.write('=');
-				writer.write('=');
+				buffer[index++] = chars[loc >>> 18];
+				buffer[index++] = chars[(loc >>> 12) & 0x3f];
+				buffer[index++] = '=';
+				buffer[index++] =  '=';
 		}
 	}
 
@@ -502,12 +504,50 @@ public class JsonOutput
 	public void writeNull()
 		throws IOException
 	{
-		writeUnescaped(null);
+		startWrite();
+		failKey();
+
+		writeRawNull();
 	}
 
-	@Override
-	public void flush() throws IOException
+	private void writeRawNull()
+		throws IOException
 	{
-		writer.flush();
+		ensure(4);
+		buffer[index++] = 'n';
+		buffer[index++] = 'u';
+		buffer[index++] = 'l';
+		buffer[index++] = 'l';
+	}
+
+	private void ensure(int numberOfBytes)
+		throws IOException
+	{
+		if(buffer.length > index + numberOfBytes)
+		{
+			return;
+		}
+
+		// TODO: Do we want to automatically flush?
+		if(index > 512)
+		{
+			flushBuffer();
+		}
+
+		int length = buffer.length;
+		if(length < numberOfBytes)
+		{
+			length = numberOfBytes;
+		}
+		buffer = Arrays.copyOf(buffer, buffer.length + length);
+	}
+
+	private void flushBuffer()
+		throws IOException
+	{
+		if(index == 0) return;
+
+		out1.write(buffer, 0, index);
+		index = 0;
 	}
 }
