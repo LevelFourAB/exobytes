@@ -7,6 +7,9 @@ import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.StreamingOutput;
 import se.l4.exobytes.streaming.Token;
 
+/**
+ * Property for a {@link Field} that contains a {@link String}.
+ */
 public class StringFieldProperty
 	extends FieldProperty
 {
@@ -20,15 +23,21 @@ public class StringFieldProperty
 	}
 
 	@Override
+	public void readAndSet(StreamingInput in, Object obj)
+		throws IOException
+	{
+		set(obj, read(in));
+	}
+
+	@Override
 	public Object read(StreamingInput in)
 		throws IOException
 	{
-		if(in.peek() == Token.NULL)
+		if(in.next() == Token.NULL)
 		{
 			return null;
 		}
 
-		in.next(Token.VALUE);
 		return in.readString();
 	}
 
@@ -43,6 +52,13 @@ public class StringFieldProperty
 		}
 
 		out.writeString(name);
-		out.writeString(value);
+		if(value == null)
+		{
+			out.writeNull();
+		}
+		else
+		{
+			out.writeString(value);
+		}
 	}
 }

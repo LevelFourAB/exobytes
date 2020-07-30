@@ -51,7 +51,7 @@ public class ReflectionStreamingSerializer<T>
 			}
 			else
 			{
-				property.read(in, instance);
+				property.readAndSet(in, instance);
 			}
 		}
 

@@ -8,6 +8,9 @@ import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.StreamingOutput;
 import se.l4.exobytes.streaming.Token;
 
+/**
+ * Property for a {@link Field} that contains a {@code float}.
+ */
 public class FloatFieldProperty
 	extends FieldProperty
 {
@@ -24,28 +27,25 @@ public class FloatFieldProperty
 	public Object read(StreamingInput in)
 		throws IOException
 	{
-		if(in.peek() == Token.NULL)
+		if(in.next() == Token.NULL)
 		{
 			return 0.0f;
 		}
 
-		in.next(Token.VALUE);
 		return in.readFloat();
 	}
 
 	@Override
-	public void read(StreamingInput in, Object obj)
+	public void readAndSet(StreamingInput in, Object obj)
 		throws IOException
 	{
 		float value;
-		if(in.peek() == Token.NULL)
+		if(in.next() == Token.NULL)
 		{
-			in.next();
 			value = 0.0f;
 		}
 		else
 		{
-			in.next(Token.VALUE);
 			value = in.readFloat();
 		}
 

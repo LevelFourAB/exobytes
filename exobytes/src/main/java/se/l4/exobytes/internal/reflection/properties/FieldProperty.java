@@ -6,7 +6,6 @@ import java.lang.reflect.Modifier;
 
 import se.l4.commons.types.Types;
 import se.l4.exobytes.SerializationException;
-import se.l4.exobytes.streaming.StreamingInput;
 
 /**
  * {@link SerializableProperty} that works on a {@link Field} within a class.
@@ -25,13 +24,6 @@ public abstract class FieldProperty
 		super(name, field.getType(), Modifier.isFinal(field.getModifiers()), skipIfDefault);
 
 		this.field = field;
-	}
-
-	@Override
-	public void read(StreamingInput in, Object obj)
-		throws IOException
-	{
-		set(obj, read(in));
 	}
 
 	@Override

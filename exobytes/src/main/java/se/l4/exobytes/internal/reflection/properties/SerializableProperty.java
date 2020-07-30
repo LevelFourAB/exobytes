@@ -97,7 +97,7 @@ public abstract class SerializableProperty
 	 * @param obj
 	 * @throws IOException
 	 */
-	public abstract void read(StreamingInput in, Object obj)
+	public abstract void readAndSet(StreamingInput in, Object obj)
 		throws IOException;
 
 	/**

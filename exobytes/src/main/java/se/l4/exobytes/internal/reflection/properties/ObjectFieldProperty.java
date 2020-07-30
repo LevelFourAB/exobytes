@@ -9,6 +9,9 @@ import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.StreamingOutput;
 import se.l4.exobytes.streaming.Token;
 
+/**
+ * Property for a {@link Field} that works using a {@link Serializer}.
+ */
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class ObjectFieldProperty
 	extends FieldProperty
@@ -53,7 +56,7 @@ public class ObjectFieldProperty
 	}
 
 	@Override
-	public void read(StreamingInput in, Object obj)
+	public void readAndSet(StreamingInput in, Object obj)
 		throws IOException
 	{
 		set(obj, read(in));

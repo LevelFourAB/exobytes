@@ -8,6 +8,9 @@ import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.StreamingOutput;
 import se.l4.exobytes.streaming.Token;
 
+/**
+ * Property for a {@link Field} that contains a {@code byte}.
+ */
 public class ByteFieldProperty
 	extends FieldProperty
 {
@@ -26,27 +29,23 @@ public class ByteFieldProperty
 	{
 		if(in.peek() == Token.NULL)
 		{
-			in.next(Token.NULL);
 			return (byte) 0;
 		}
 
-		in.next(Token.VALUE);
 		return in.readByte();
 	}
 
 	@Override
-	public void read(StreamingInput in, Object obj)
+	public void readAndSet(StreamingInput in, Object obj)
 		throws IOException
 	{
 		byte value;
-		if(in.peek() == Token.NULL)
+		if(in.next() == Token.NULL)
 		{
-			in.next(Token.NULL);
 			value = 0;
 		}
 		else
 		{
-			in.next(Token.VALUE);
 			value = in.readByte();
 		}
 
