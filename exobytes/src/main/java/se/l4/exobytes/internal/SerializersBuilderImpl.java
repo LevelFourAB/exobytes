@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.ServiceLoader;
 
-import se.l4.commons.types.DefaultInstanceFactory;
-import se.l4.commons.types.InstanceFactory;
 import se.l4.exobytes.Serializers;
 import se.l4.exobytes.Serializers.Builder;
 import se.l4.exobytes.SerializersModule;
 import se.l4.exobytes.collections.CollectionSerializersModule;
 import se.l4.exobytes.standard.StandardSerializersModule;
+import se.l4.ylem.types.instances.DefaultInstanceFactory;
+import se.l4.ylem.types.instances.InstanceFactory;
 
 public class SerializersBuilderImpl
 	implements Serializers.Builder

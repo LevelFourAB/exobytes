@@ -6,7 +6,7 @@ import se.l4.exobytes.Serializer;
 import se.l4.exobytes.SerializerOrResolver;
 import se.l4.exobytes.SerializerResolver;
 import se.l4.exobytes.TypeEncounter;
-import se.l4.commons.types.mapping.Resolver;
+import se.l4.ylem.types.mapping.Resolver;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class SerializerResolverAdapter

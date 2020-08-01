@@ -9,7 +9,6 @@ import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.map.MutableMap;
 
-import se.l4.commons.types.reflect.TypeRef;
 import se.l4.exobytes.SerializationException;
 import se.l4.exobytes.Serializer;
 import se.l4.exobytes.SerializerOrResolver;
@@ -18,6 +17,7 @@ import se.l4.exobytes.TypeEncounter;
 import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.StreamingOutput;
 import se.l4.exobytes.streaming.Token;
+import se.l4.ylem.types.reflect.TypeRef;
 
 /**
  * Resolver that will resolve a serializer for an {@link Enum} that has been

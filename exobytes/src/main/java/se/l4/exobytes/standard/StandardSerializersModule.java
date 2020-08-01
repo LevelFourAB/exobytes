@@ -3,7 +3,6 @@ package se.l4.exobytes.standard;
 import java.util.Optional;
 import java.util.UUID;
 
-import se.l4.commons.io.Bytes;
 import se.l4.exobytes.Serializers;
 import se.l4.exobytes.SerializersModule;
 
@@ -30,6 +29,5 @@ public class StandardSerializersModule
 		serializers.register(UUID.class, new UuidSerializer());
 
 		serializers.register(Optional.class, new OptionalSerializer());
-		serializers.register(Bytes.class, new BytesSerializer());
 	}
 }

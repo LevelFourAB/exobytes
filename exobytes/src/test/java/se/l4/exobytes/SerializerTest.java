@@ -6,11 +6,11 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.BeforeEach;
 
-import se.l4.commons.io.IOConsumer;
-import se.l4.commons.io.IOSupplier;
 import se.l4.exobytes.streaming.StreamingFormat;
 import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.StreamingOutput;
+import se.l4.ylem.io.IOConsumer;
+import se.l4.ylem.io.IOSupplier;
 
 /**
  * Abstract base class that provides an instance of {@link Serializers}.

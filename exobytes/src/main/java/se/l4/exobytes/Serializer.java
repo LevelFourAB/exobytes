@@ -1,18 +1,13 @@
 package se.l4.exobytes;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Optional;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.UnknownNullness;
-import se.l4.commons.io.StreamingCodec;
-import se.l4.exobytes.streaming.StreamingFormat;
 import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.StreamingOutput;
-import se.l4.exobytes.streaming.Token;
 
 /**
  * Serializer for a specific class. A serializer is used to read and write
@@ -58,56 +53,6 @@ public interface Serializer<T>
 	default Optional<QualifiedName> getName()
 	{
 		return Optional.empty();
-	}
-
-	/**
-	 * Take this serializer and transform it into a {@link StreamingCodec}.
-	 *
-	 * @param format
-	 * @return
-	 */
-	@NonNull
-	default StreamingCodec<T> toCodec(StreamingFormat format)
-	{
-		return new StreamingCodec<T>()
-		{
-			@Override
-			public T read(InputStream in)
-				throws IOException
-			{
-				try(StreamingInput streamingIn = format.createInput(in))
-				{
-					if(streamingIn.peek() == Token.NULL && ! (Serializer.this instanceof NullHandling))
-					{
-						/*
-						 * If this serializer doesn't handle null values read
-						 * it and return null.
-						 */
-						streamingIn.next(Token.NULL);
-						return null;
-					}
-
-					return Serializer.this.read(streamingIn);
-				}
-			}
-
-			@Override
-			public void write(T item, OutputStream out)
-				throws IOException
-			{
-				try(StreamingOutput streamingOut = format.createOutput(out))
-				{
-					if(item == null && ! (this instanceof NullHandling))
-					{
-						streamingOut.writeNull();
-					}
-					else
-					{
-						Serializer.this.write(item, streamingOut);
-					}
-				}
-			}
-		};
 	}
 
 	/**

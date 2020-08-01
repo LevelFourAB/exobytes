@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-import se.l4.commons.types.Types;
 import se.l4.exobytes.SerializationException;
 
 /**
@@ -32,11 +31,6 @@ public abstract class FieldProperty
 	{
 		try
 		{
-			if(value == null && type.isPrimitive())
-			{
-				value = Types.defaultValue(type);
-			}
-
 			field.set(obj, value);
 		}
 		catch(Exception e)

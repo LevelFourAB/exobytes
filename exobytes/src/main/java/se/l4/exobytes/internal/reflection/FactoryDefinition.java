@@ -17,11 +17,11 @@ import se.l4.exobytes.Factory;
 import se.l4.exobytes.SerializationException;
 import se.l4.exobytes.Serializers;
 import se.l4.exobytes.internal.reflection.properties.SerializableProperty;
-import se.l4.commons.types.InstanceException;
-import se.l4.commons.types.Types;
-import se.l4.commons.types.reflect.ConstructorRef;
-import se.l4.commons.types.reflect.ParameterRef;
-import se.l4.commons.types.reflect.TypeRef;
+import se.l4.ylem.types.instances.InstanceException;
+import se.l4.ylem.types.reflect.ConstructorRef;
+import se.l4.ylem.types.reflect.ParameterRef;
+import se.l4.ylem.types.reflect.TypeRef;
+import se.l4.ylem.types.reflect.Types;
 
 /**
  * Factory that can be used to create an instance of a certain object.

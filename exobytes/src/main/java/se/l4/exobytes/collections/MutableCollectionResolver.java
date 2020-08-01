@@ -8,14 +8,14 @@ import java.util.Optional;
 import java.util.RandomAccess;
 import java.util.function.IntFunction;
 
-import se.l4.commons.types.Types;
-import se.l4.commons.types.reflect.TypeRef;
 import se.l4.exobytes.Serializer;
 import se.l4.exobytes.SerializerResolver;
 import se.l4.exobytes.TypeEncounter;
 import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.StreamingOutput;
 import se.l4.exobytes.streaming.Token;
+import se.l4.ylem.types.reflect.TypeRef;
+import se.l4.ylem.types.reflect.Types;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class MutableCollectionResolver<C extends Collection<?>>

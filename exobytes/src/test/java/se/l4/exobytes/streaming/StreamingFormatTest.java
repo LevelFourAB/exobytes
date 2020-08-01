@@ -17,8 +17,8 @@ import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.junit.jupiter.api.Test;
 
-import se.l4.commons.io.IOConsumer;
-import se.l4.commons.io.IOSupplier;
+import se.l4.ylem.io.IOConsumer;
+import se.l4.ylem.io.IOSupplier;
 
 /**
  * Abstract base class for testing of a {@link StreamingFormat}. Will test

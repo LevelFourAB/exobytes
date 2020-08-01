@@ -2,11 +2,11 @@ package se.l4.exobytes.internal;
 
 import java.io.IOException;
 
-import se.l4.commons.types.reflect.TypeRef;
 import se.l4.exobytes.Serializer;
 import se.l4.exobytes.Serializers;
 import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.StreamingOutput;
+import se.l4.ylem.types.reflect.TypeRef;
 
 /**
  * Serializer that is delayed in that it will not be assigned until the entire

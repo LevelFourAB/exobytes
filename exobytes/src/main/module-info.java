@@ -1,8 +1,9 @@
 module se.l4.exobytes {
 	requires com.github.spotbugs.annotations;
 
-	requires transitive se.l4.commons.types;
-	requires transitive se.l4.commons.io;
+	requires transitive se.l4.ylem.types.reflect;
+	requires transitive se.l4.ylem.types.mapping;
+	requires transitive se.l4.ylem.types.instances;
 
 	exports se.l4.exobytes;
 	exports se.l4.exobytes.collections;

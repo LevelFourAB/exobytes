@@ -9,6 +9,7 @@ import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.api.map.MutableMap;
 
+import se.l4.exobytes.AllowAny;
 import se.l4.exobytes.Expose;
 import se.l4.exobytes.Named;
 import se.l4.exobytes.QualifiedName;
@@ -19,10 +20,10 @@ import se.l4.exobytes.Serializers;
 import se.l4.exobytes.SkipDefaultValue;
 import se.l4.exobytes.TypeEncounter;
 import se.l4.exobytes.internal.reflection.properties.SerializableProperty;
-import se.l4.commons.types.reflect.AnnotationLocator;
-import se.l4.commons.types.reflect.ConstructorRef;
-import se.l4.commons.types.reflect.FieldRef;
-import se.l4.commons.types.reflect.TypeRef;
+import se.l4.ylem.types.reflect.AnnotationLocator;
+import se.l4.ylem.types.reflect.ConstructorRef;
+import se.l4.ylem.types.reflect.FieldRef;
+import se.l4.ylem.types.reflect.TypeRef;
 
 /**
  * Serializer that will use reflection to access fields and methods in a

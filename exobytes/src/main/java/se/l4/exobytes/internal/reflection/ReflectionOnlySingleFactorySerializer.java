@@ -6,13 +6,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 
-import se.l4.commons.types.Types;
 import se.l4.exobytes.QualifiedName;
 import se.l4.exobytes.Serializer;
 import se.l4.exobytes.internal.reflection.properties.SerializableProperty;
 import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.StreamingOutput;
 import se.l4.exobytes.streaming.Token;
+import se.l4.ylem.types.reflect.Types;
 
 /**
  * Serializer that uses a smarter mapping creating instances using a single factory.

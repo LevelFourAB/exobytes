@@ -4,8 +4,8 @@ import java.lang.annotation.Annotation;
 import java.util.Optional;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import se.l4.commons.types.mapping.ResolutionEncounter;
-import se.l4.commons.types.reflect.TypeRef;
+import se.l4.ylem.types.mapping.ResolutionEncounter;
+import se.l4.ylem.types.reflect.TypeRef;
 
 /**
  * Encounter with a specific type during serialization resolution.

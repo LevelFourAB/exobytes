@@ -10,11 +10,11 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
-import se.l4.commons.types.Types;
 import se.l4.exobytes.Serializer;
 import se.l4.exobytes.SerializerTest;
 import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.Token;
+import se.l4.ylem.types.reflect.Types;
 
 public class OptionalSerializerTest
 	extends SerializerTest

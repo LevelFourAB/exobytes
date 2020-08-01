@@ -7,12 +7,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import se.l4.commons.types.Types;
-import se.l4.commons.types.mapping.Mapped;
-import se.l4.commons.types.mapping.MutableTypeMapper;
-import se.l4.commons.types.mapping.OutputDeduplicator;
-import se.l4.commons.types.reflect.TypeRef;
-import se.l4.commons.types.reflect.TypeUsage;
 import se.l4.exobytes.QualifiedName;
 import se.l4.exobytes.SerializationException;
 import se.l4.exobytes.Serializer;
@@ -20,6 +14,12 @@ import se.l4.exobytes.SerializerResolver;
 import se.l4.exobytes.Serializers;
 import se.l4.exobytes.TypeEncounter;
 import se.l4.exobytes.collections.ArraySerializerResolver;
+import se.l4.ylem.types.mapping.Mapped;
+import se.l4.ylem.types.mapping.MutableTypeMapper;
+import se.l4.ylem.types.mapping.OutputDeduplicator;
+import se.l4.ylem.types.reflect.TypeRef;
+import se.l4.ylem.types.reflect.TypeUsage;
+import se.l4.ylem.types.reflect.Types;
 
 /**
  * Default implementation of {@link Serializers}.

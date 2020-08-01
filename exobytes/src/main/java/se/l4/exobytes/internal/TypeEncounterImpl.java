@@ -9,9 +9,9 @@ import se.l4.exobytes.SerializerOrResolver;
 import se.l4.exobytes.SerializerResolver;
 import se.l4.exobytes.Serializers;
 import se.l4.exobytes.TypeEncounter;
-import se.l4.commons.types.mapping.OutputDeduplicator;
-import se.l4.commons.types.reflect.AnnotationLocator;
-import se.l4.commons.types.reflect.TypeRef;
+import se.l4.ylem.types.mapping.OutputDeduplicator;
+import se.l4.ylem.types.reflect.AnnotationLocator;
+import se.l4.ylem.types.reflect.TypeRef;
 
 /**
  * Implementation of {@link TypeEncounter}.

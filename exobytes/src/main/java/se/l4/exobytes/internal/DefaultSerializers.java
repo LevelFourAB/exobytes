@@ -1,8 +1,8 @@
 package se.l4.exobytes.internal;
 
-import se.l4.commons.types.DefaultInstanceFactory;
-import se.l4.commons.types.InstanceFactory;
 import se.l4.exobytes.Serializers;
+import se.l4.ylem.types.instances.DefaultInstanceFactory;
+import se.l4.ylem.types.instances.InstanceFactory;
 
 /**
  * Default implementation of {@link Serializers}.

@@ -6,8 +6,8 @@ import java.util.Optional;
 import se.l4.exobytes.Serializer;
 import se.l4.exobytes.SerializerResolver;
 import se.l4.exobytes.TypeEncounter;
-import se.l4.commons.types.Types;
-import se.l4.commons.types.reflect.TypeRef;
+import se.l4.ylem.types.reflect.TypeRef;
+import se.l4.ylem.types.reflect.Types;
 
 /**
  * Resolver for serializer of {@link Map}.

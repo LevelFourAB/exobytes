@@ -1,10 +1,10 @@
 package se.l4.exobytes.internal;
 
-import se.l4.commons.types.InstanceFactory;
-import se.l4.commons.types.reflect.TypeRef;
 import se.l4.exobytes.SerializationException;
 import se.l4.exobytes.Serializer;
 import se.l4.exobytes.Serializers;
+import se.l4.ylem.types.instances.InstanceFactory;
+import se.l4.ylem.types.reflect.TypeRef;
 
 /**
  * Implementation of {@link Serializers} that wraps another

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-import se.l4.commons.io.ChunkOutputStream;
 import se.l4.exobytes.streaming.StreamingOutput;
 
 /**
@@ -321,7 +320,7 @@ public class CBOROutput
 		ensure(1);
 		buffer[index++] = (byte) (CborConstants.MAJOR_TYPE_BYTE_STRING << 5 | CborConstants.AI_INDEFINITE);
 
-		return new ChunkOutputStream(chunkSize, (chunk, offset, len) -> {
+		return new CBORChunkOutputStream(chunkSize, (chunk, offset, len) -> {
 			writeMajorTypeAndLength(CborConstants.MAJOR_TYPE_BYTE_STRING, len);
 			write(chunk, offset, len);
 		})

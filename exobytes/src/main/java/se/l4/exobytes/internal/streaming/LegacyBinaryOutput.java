@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 
+import se.l4.exobytes.streaming.StreamingFormat;
 import se.l4.exobytes.streaming.StreamingOutput;
 
 /**
