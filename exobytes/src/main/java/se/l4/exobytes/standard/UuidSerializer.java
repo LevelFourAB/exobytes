@@ -16,6 +16,8 @@ import se.l4.exobytes.streaming.Token;
 public final class UuidSerializer
 	implements Serializer<UUID>
 {
+	public static final Serializer<UUID> INSTANCE = new UuidSerializer();
+
 	@Override
 	public Optional<QualifiedName> getName()
 	{

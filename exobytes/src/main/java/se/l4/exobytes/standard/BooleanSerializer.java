@@ -15,6 +15,8 @@ import se.l4.exobytes.streaming.Token;
 public final class BooleanSerializer
 	implements Serializer<Boolean>
 {
+	public static final Serializer<Boolean> INSTANCE = new BooleanSerializer();
+
 	@Override
 	public Optional<QualifiedName> getName()
 	{

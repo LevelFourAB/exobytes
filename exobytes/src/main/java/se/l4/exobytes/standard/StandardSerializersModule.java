@@ -16,17 +16,17 @@ public class StandardSerializersModule
 	@Override
 	public void activate(Serializers serializers)
 	{
-		serializers.register(Boolean.class, new BooleanSerializer());
-		serializers.register(Byte.class, new ByteSerializer());
-		serializers.register(Character.class, new CharacterSerializer());
-		serializers.register(Double.class, new DoubleSerializer());
-		serializers.register(Float.class, new FloatSerializer());
-		serializers.register(Integer.class, new IntSerializer());
-		serializers.register(Long.class, new LongSerializer());
-		serializers.register(Short.class, new ShortSerializer());
-		serializers.register(String.class, new StringSerializer());
-		serializers.register(byte[].class, new ByteArraySerializer());
-		serializers.register(UUID.class, new UuidSerializer());
+		serializers.register(Boolean.class, BooleanSerializer.INSTANCE);
+		serializers.register(Byte.class, ByteSerializer.INSTANCE);
+		serializers.register(Character.class, CharacterSerializer.INSTANCE);
+		serializers.register(Double.class, DoubleSerializer.INSTANCE);
+		serializers.register(Float.class, FloatSerializer.INSTANCE);
+		serializers.register(Integer.class, IntSerializer.INSTANCE);
+		serializers.register(Long.class, LongSerializer.INSTANCE);
+		serializers.register(Short.class, ShortSerializer.INSTANCE);
+		serializers.register(String.class, StringSerializer.INSTANCE);
+		serializers.register(byte[].class, ByteArraySerializer.INSTANCE);
+		serializers.register(UUID.class, UuidSerializer.INSTANCE);
 
 		serializers.register(Optional.class, new OptionalSerializer());
 	}

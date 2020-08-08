@@ -15,6 +15,8 @@ import se.l4.exobytes.streaming.Token;
 public final class ShortSerializer
 	implements Serializer<Short>
 {
+	public static final Serializer<Short> INSTANCE = new ShortSerializer();
+
 	@Override
 	public Optional<QualifiedName> getName()
 	{

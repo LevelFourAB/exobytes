@@ -15,6 +15,8 @@ import se.l4.exobytes.streaming.Token;
 public final class ByteSerializer
 	implements Serializer<Byte>
 {
+	public static final Serializer<Byte> INSTANCE = new ByteSerializer();
+
 	@Override
 	public Optional<QualifiedName> getName()
 	{

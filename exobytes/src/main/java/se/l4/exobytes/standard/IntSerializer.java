@@ -15,6 +15,8 @@ import se.l4.exobytes.streaming.Token;
 public final class IntSerializer
 	implements Serializer<Integer>
 {
+	public static final Serializer<Integer> INSTANCE = new IntSerializer();
+
 	@Override
 	public Optional<QualifiedName> getName()
 	{

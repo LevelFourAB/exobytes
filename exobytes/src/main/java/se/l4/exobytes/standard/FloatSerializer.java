@@ -15,6 +15,8 @@ import se.l4.exobytes.streaming.Token;
 public final class FloatSerializer
 	implements Serializer<Float>
 {
+	public static final Serializer<Float> INSTANCE = new FloatSerializer();
+
 	@Override
 	public Optional<QualifiedName> getName()
 	{

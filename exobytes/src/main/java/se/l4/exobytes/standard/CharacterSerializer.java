@@ -15,6 +15,8 @@ import se.l4.exobytes.streaming.Token;
 public final class CharacterSerializer
 	implements Serializer<Character>
 {
+	public static final Serializer<Character> INSTANCE = new CharacterSerializer();
+
 	@Override
 	public Optional<QualifiedName> getName()
 	{

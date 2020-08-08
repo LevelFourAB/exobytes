@@ -15,6 +15,8 @@ import se.l4.exobytes.streaming.Token;
 public final class DoubleSerializer
 	implements Serializer<Double>
 {
+	public static final Serializer<Double> INSTANCE = new DoubleSerializer();
+
 	@Override
 	public Optional<QualifiedName> getName()
 	{

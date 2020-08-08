@@ -15,6 +15,8 @@ import se.l4.exobytes.streaming.Token;
 public final class LongSerializer
 	implements Serializer<Long>
 {
+	public static final Serializer<Long> INSTANCE = new LongSerializer();
+
 	@Override
 	public Optional<QualifiedName> getName()
 	{

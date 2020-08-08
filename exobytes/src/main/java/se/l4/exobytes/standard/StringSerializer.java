@@ -15,6 +15,8 @@ import se.l4.exobytes.streaming.Token;
 public final class StringSerializer
 	implements Serializer<String>
 {
+	public static final Serializer<String> INSTANCE = new StringSerializer();
+
 	@Override
 	public Optional<QualifiedName> getName()
 	{

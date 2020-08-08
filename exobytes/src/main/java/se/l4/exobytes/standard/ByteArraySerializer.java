@@ -16,6 +16,8 @@ import se.l4.exobytes.streaming.Token;
 public final class ByteArraySerializer
 	implements Serializer<byte[]>
 {
+	public static final Serializer<byte[]> INSTANCE = new ByteArraySerializer();
+
 	@Override
 	public Optional<QualifiedName> getName()
 	{
