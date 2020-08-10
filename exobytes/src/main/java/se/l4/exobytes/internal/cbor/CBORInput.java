@@ -19,8 +19,7 @@ public class CBORInput
 	extends AbstractStreamingInput
 {
 	private static final byte[] EMPTY_BYTES = new byte[0];
-
-	private final int LEVELS = 20;
+	private static final int LEVELS = 20;
 
 	private final InputStream in;
 
@@ -886,6 +885,8 @@ public class CBORInput
 			case CborConstants.AI_EIGHT_BYTES:
 				skipBytes(8);
 				break;
+			default:
+				// Length is within the byte, do nothing
 		}
 	}
 
