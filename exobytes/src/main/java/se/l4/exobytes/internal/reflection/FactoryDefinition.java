@@ -207,7 +207,7 @@ public class FactoryDefinition<T>
 	private static String[] findNamesViaReflection(ConstructorRef c)
 	{
 		return c.getParameters()
-			.collect(p -> p.isNamePresent() ? p.getName() : null)
+			.collect(p -> p.isNamePresent() ? p.getName().get() : null)
 			.toArray(new String[0]);
 	}
 
