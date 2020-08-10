@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
-import edu.umd.cs.findbugs.annotations.UnknownNullness;
 import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.StreamingOutput;
 
@@ -42,7 +41,7 @@ public interface Serializer<T>
 	 * @throws IOException
 	 *   if unable to write the object
 	 */
-	void write(@UnknownNullness T object, @NonNull StreamingOutput out)
+	void write(@NonNull T object, @NonNull StreamingOutput out)
 		throws IOException;
 
 	/**
@@ -61,7 +60,11 @@ public interface Serializer<T>
 	 * {@code null} values are mapped to default values automatically by
 	 * the reflection serializer.
 	 */
-	interface NullHandling
+	interface NullHandling<T>
+		extends Serializer<T>
 	{
+		@Override
+		void write(@Nullable T object, @NonNull StreamingOutput out)
+			throws IOException;
 	}
 }

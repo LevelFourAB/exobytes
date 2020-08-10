@@ -15,7 +15,7 @@ import se.l4.ylem.types.reflect.TypeRef;
  * @param <T>
  */
 public class DelayedSerializer<T>
-	implements Serializer<T>, Serializer.NullHandling
+	implements Serializer.NullHandling<T>
 {
 	private volatile Serializer<T> instance;
 

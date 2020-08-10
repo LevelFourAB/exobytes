@@ -41,7 +41,7 @@ public class OptionalSerializer
 	 * optional.
 	 */
 	static final class Impl<T>
-		implements Serializer<Optional<T>>, Serializer.NullHandling
+		implements Serializer.NullHandling<Optional<T>>
 	{
 		private final Serializer<T> itemSerializer;
 
