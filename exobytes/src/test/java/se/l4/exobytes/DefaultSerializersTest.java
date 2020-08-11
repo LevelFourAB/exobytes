@@ -1,9 +1,12 @@
 package se.l4.exobytes;
 
+import java.io.IOException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import se.l4.exobytes.internal.reflection.ReflectionSerializer;
+import se.l4.exobytes.streaming.StreamingInput;
+import se.l4.exobytes.streaming.StreamingOutput;
 
 public class DefaultSerializersTest
 {
@@ -43,7 +46,7 @@ public class DefaultSerializersTest
 		Serializer<String> string = serializers.get(String.class);
 	}
 
-	@Use(ReflectionSerializer.class)
+	@Use(FakeSerializer.class)
 	public static class ClassWithUse
 	{
 	}
@@ -52,5 +55,22 @@ public class DefaultSerializersTest
 		extends ClassWithUse
 	{
 
+	}
+
+	public static class FakeSerializer
+		implements Serializer<ClassWithUse>
+	{
+		@Override
+		public ClassWithUse read(StreamingInput in)
+			throws IOException
+		{
+			return null;
+		}
+
+		@Override
+		public void write(ClassWithUse object, StreamingOutput out)
+			throws IOException
+		{
+		}
 	}
 }
