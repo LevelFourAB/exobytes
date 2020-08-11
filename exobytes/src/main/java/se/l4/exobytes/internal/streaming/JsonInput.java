@@ -24,7 +24,7 @@ public class JsonInput
 	extends AbstractStreamingInput
 {
 	private static final char NULL = 0;
-	private final int LEVELS = 20;
+	private static final int LEVELS = 20;
 
 	private final Reader in;
 
