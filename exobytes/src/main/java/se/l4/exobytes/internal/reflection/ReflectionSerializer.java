@@ -42,6 +42,8 @@ import se.l4.ylem.types.reflect.TypeRef;
 public class ReflectionSerializer<T>
 	implements SerializerResolver<T>
 {
+	public static final ReflectionSerializer<?> INSTANCE = new ReflectionSerializer<>();
+
 	public ReflectionSerializer()
 	{
 	}

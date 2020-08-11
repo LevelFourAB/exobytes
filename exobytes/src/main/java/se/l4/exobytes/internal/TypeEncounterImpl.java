@@ -9,6 +9,7 @@ import se.l4.exobytes.SerializerOrResolver;
 import se.l4.exobytes.SerializerResolver;
 import se.l4.exobytes.Serializers;
 import se.l4.exobytes.TypeEncounter;
+import se.l4.exobytes.internal.reflection.ReflectionSerializer;
 import se.l4.ylem.types.mapping.OutputDeduplicator;
 import se.l4.ylem.types.reflect.AnnotationLocator;
 import se.l4.ylem.types.reflect.TypeRef;
@@ -89,8 +90,7 @@ public class TypeEncounterImpl
 	@SuppressWarnings({ "unchecked" })
 	public <T> Serializer<T> get(Class<? extends SerializerOrResolver<T>> serializerOrResolver, TypeRef type)
 	{
-		SerializerOrResolver<T> instance = collection.getInstanceFactory()
-			.create(serializerOrResolver);
+		SerializerOrResolver<T> instance = create(serializerOrResolver);
 
 		if(instance instanceof Serializer)
 		{
@@ -104,6 +104,18 @@ public class TypeEncounterImpl
 		{
 			throw new SerializationException("The type " + serializerOrResolver + " does not implement Serializer or SerializerResolver");
 		}
+	}
+
+	@SuppressWarnings({ "unchecked" })
+	private <T> T create(Class<T> type)
+	{
+		if(type == ReflectionSerializer.class)
+		{
+			return (T) ReflectionSerializer.INSTANCE;
+		}
+
+		return collection.getInstanceFactory()
+			.create(type);
 	}
 
 	@Override
