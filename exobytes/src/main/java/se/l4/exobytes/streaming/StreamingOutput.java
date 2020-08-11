@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import se.l4.exobytes.Serializer;
 
 /**
@@ -246,6 +247,7 @@ public interface StreamingOutput
 	 * @param object
 	 * @throws IOException
 	 */
+	@SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
 	default <T> void writeObject(Serializer<T> serializer, T object)
 		throws IOException
 	{

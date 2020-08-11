@@ -3,6 +3,7 @@ package se.l4.exobytes.internal.reflection.properties;
 import java.io.IOException;
 import java.lang.reflect.Field;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import se.l4.exobytes.SerializationException;
 import se.l4.exobytes.Serializer;
 import se.l4.exobytes.streaming.StreamingInput;
@@ -77,6 +78,7 @@ public class ObjectFieldProperty
 	}
 
 	@Override
+	@SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
 	public void write(Object obj, StreamingOutput out)
 		throws IOException
 	{
