@@ -63,7 +63,7 @@ public class CompactDynamicSerializer
 			Optional<? extends Serializer<?>> serializer = collection.getViaName(namespace, name);
 			if(! serializer.isPresent())
 			{
-				throw new SerializationException("No serializer found for `" + name + (namespace != null ? "` in `" + namespace + "`" : "`"));
+				throw new SerializationException("No serializer found for `" + name + ("".equals(namespace) ? "`" : "` in `" + namespace + "`"));
 			}
 
 			result = in.readObject(serializer.get());
