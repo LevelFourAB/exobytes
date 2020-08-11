@@ -111,6 +111,9 @@
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.22.2</version>
+				<configuration>
+					<argLine>--add-opens se.l4.exobytes/se.l4.exobytes=ALL-UNNAMED --add-opens se.l4.exobytes/se.l4.exobytes.standard=ALL-UNNAMED --add-opens se.l4.exobytes/se.l4.exobytes.time=ALL-UNNAMED</argLine>
+				</configuration>
 			</plugin>
 
 			<plugin>
