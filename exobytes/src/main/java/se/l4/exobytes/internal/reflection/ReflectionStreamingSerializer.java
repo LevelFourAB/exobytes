@@ -38,9 +38,14 @@ public class ReflectionStreamingSerializer<T>
 		in.next(Token.OBJECT_START);
 
 		T instance = type.newInstance(null);
-		while(in.peek() != Token.OBJECT_END)
+		while(true)
 		{
-			in.next(Token.KEY);
+			if(in.next() == Token.OBJECT_END)
+			{
+				break;
+			}
+
+			in.current(Token.KEY);
 			String key = in.readString();
 
 			SerializableProperty property = type.getProperty(key);
@@ -55,7 +60,6 @@ public class ReflectionStreamingSerializer<T>
 			}
 		}
 
-		in.next(Token.OBJECT_END);
 		return instance;
 	}
 
