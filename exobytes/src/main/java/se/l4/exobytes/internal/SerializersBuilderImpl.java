@@ -10,6 +10,7 @@ import se.l4.exobytes.Serializers.Builder;
 import se.l4.exobytes.SerializersModule;
 import se.l4.exobytes.collections.CollectionSerializersModule;
 import se.l4.exobytes.standard.StandardSerializersModule;
+import se.l4.exobytes.time.TimeSerializersModule;
 import se.l4.ylem.types.instances.DefaultInstanceFactory;
 import se.l4.ylem.types.instances.InstanceFactory;
 
@@ -75,6 +76,7 @@ public class SerializersBuilderImpl
 		{
 			new StandardSerializersModule().activate(instance);
 			new CollectionSerializersModule().activate(instance);
+			new TimeSerializersModule().activate(instance);
 
 			// Attempt to load any modules exported by other projects
 			for(SerializersModule module : ServiceLoader.load(SerializersModule.class))

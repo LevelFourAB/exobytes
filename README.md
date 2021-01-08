@@ -94,8 +94,8 @@ public class Employee {
   private String name;
 
   @Expose
-  @AsTimestamp
-  private ZonedDateTime hired;
+  @Temporal.Timestamp
+  private LocalDate hired;
 }
 ```
 
@@ -139,5 +139,42 @@ public class StringHolder {
     }
   
   }
+}
+```
+
+## Dates and times
+
+Most types from `java.time` are supported with detailed control of the format
+via `Temporal`-annotations.
+
+```java
+@Expose
+@Temporal.Precision(ChronoUnit.SECONDS)
+@Temporal.Timestamp
+public Instant created;
+
+@Expose
+@Temporal.Format
+public Instant created;
+
+@Expose
+@Temporal.Format(Temporal.StandardFormat.ISO_WEEK_DATE)
+public Instant created;
+
+@Expose
+@Temporal.CustomFormat("yyyy-MM-dd")
+public ZonedDateTime time;
+```
+
+## Composing annotations
+
+Exobytes supports meta annotations, where you can create an annotation that
+in turns is annotated with Exobytes annotations. This functionality makes it
+easy to create standards, such as if you always
+
+```java
+@Temporal.Precision(ChronoUnit.MILLISECONDS)
+@Temporal.Timestamp
+public @interface StorableTimestamp {
 }
 ```
