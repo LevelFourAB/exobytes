@@ -1,41 +1,40 @@
-package se.l4.exobytes.collections.array;
+package se.l4.exobytes.array;
 
 import java.io.IOException;
 import java.util.Arrays;
 
 import se.l4.exobytes.Serializer;
-import se.l4.exobytes.collections.ArraySerializer;
 import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.StreamingOutput;
 import se.l4.exobytes.streaming.Token;
 
 /**
- * Custom serializer for arrays of longs.
+ * Custom serializer for arrays of booleans.
  */
-public final class LongArraySerializer
-	implements Serializer<long[]>
+public final class BooleanArraySerializer
+	implements Serializer<boolean[]>
 {
 	@Override
-	public long[] read(StreamingInput in)
+	public boolean[] read(StreamingInput in)
 		throws IOException
 	{
 		in.next(Token.LIST_START);
 
-		long[] result;
+		boolean[] result;
 		if(in.getLength().isPresent())
 		{
-			result = new long[in.getLength().getAsInt()];
+			result = new boolean[in.getLength().getAsInt()];
 			int length = 0;
 			while(in.peek() != Token.LIST_END)
 			{
 				in.next(Token.VALUE);
-				result[length++] = in.readLong();
+				result[length++] = in.readBoolean();
 			}
 		}
 		else
 		{
 			int length = 0;
-			long[] current = new long[512];
+			boolean[] current = new boolean[512];
 			while(in.peek() != Token.LIST_END)
 			{
 				in.next(Token.VALUE);
@@ -46,7 +45,7 @@ public final class LongArraySerializer
 					current = Arrays.copyOf(current, newSize);
 				}
 
-				current[length++] = in.readLong();
+				current[length++] = in.readBoolean();
 			}
 
 			result = Arrays.copyOf(current, length);
@@ -57,13 +56,13 @@ public final class LongArraySerializer
 	}
 
 	@Override
-	public void write(long[] object, StreamingOutput out)
+	public void write(boolean[] object, StreamingOutput out)
 		throws IOException
 	{
 		out.writeListStart(object.length);
-		for(long v : object)
+		for(boolean v : object)
 		{
-			out.writeLong(v);
+			out.writeBoolean(v);
 		}
 		out.writeListEnd();
 	}

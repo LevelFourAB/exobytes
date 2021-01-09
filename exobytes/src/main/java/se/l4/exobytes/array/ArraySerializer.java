@@ -1,4 +1,4 @@
-package se.l4.exobytes.collections;
+package se.l4.exobytes.array;
 
 import java.io.IOException;
 import java.lang.reflect.Array;

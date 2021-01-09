@@ -1,4 +1,4 @@
-package se.l4.exobytes.collections.array;
+package se.l4.exobytes.array;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -13,23 +13,23 @@ import se.l4.exobytes.SerializerTest;
 import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.Token;
 
-public class IntArraySerializerTest
+public class CharArraySerializerTest
 	extends SerializerTest
 {
 	@Test
 	public void testWrite()
 		throws IOException
 	{
-		Serializer<int[]> serializer = new IntArraySerializer();
+		Serializer<char[]> serializer = new CharArraySerializer();
 
-		StreamingInput in = write(out -> serializer.write(new int[] { 10, -20 }, out))
+		StreamingInput in = write(out -> serializer.write(new char[] { 'a', 'f' }, out))
 			.get();
 
 		assertThat(in.next(), is(Token.LIST_START));
 		assertThat(in.next(), is(Token.VALUE));
-		assertThat(in.readInt(), is(10));
+		assertThat(in.readChar(), is('a'));
 		assertThat(in.next(), is(Token.VALUE));
-		assertThat(in.readInt(), is(-20));
+		assertThat(in.readChar(), is('f'));
 		assertThat(in.next(), is(Token.LIST_END));
 	}
 
@@ -37,45 +37,45 @@ public class IntArraySerializerTest
 	public void testReadFixed()
 		throws IOException
 	{
-		Serializer<int[]> serializer = new IntArraySerializer();
+		Serializer<char[]> serializer = new CharArraySerializer();
 
 		StreamingInput in = write(out -> {
 			out.writeListStart(2);
-			out.writeInt(10);
-			out.writeInt(-20);
+			out.writeChar('a');
+			out.writeChar('f');
 			out.writeListEnd();
 		})
 			.get();
 
-		int[] v = serializer.read(in);
+		char[] v = serializer.read(in);
 		assertThat(in.next(), is(Token.END_OF_STREAM));
 
-		assertThat(v, is(new int[] { 10, -20 }));
+		assertThat(v, is(new char[] { 'a', 'f' }));
 	}
 
 	@Test
 	public void testReadIndeterminate()
 		throws IOException
 	{
-		Serializer<int[]> serializer = new IntArraySerializer();
+		Serializer<char[]> serializer = new CharArraySerializer();
 
 		StreamingInput in = write(out -> {
 			out.writeListStart();
-			out.writeInt(10);
-			out.writeInt(-20);
+			out.writeChar('a');
+			out.writeChar('f');
 			out.writeListEnd();
 		})
 			.get();
 
-		int[] v = serializer.read(in);
+		char[] v = serializer.read(in);
 		assertThat(in.next(), is(Token.END_OF_STREAM));
 
-		assertThat(v, is(new int[] { 10, -20 }));
+		assertThat(v, is(new char[] { 'a', 'f' }));
 	}
 
 	@Test
 	public void testEquality()
 	{
-		EqualsVerifier.forClass(IntArraySerializer.class).verify();
+		EqualsVerifier.forClass(CharArraySerializer.class).verify();
 	}
 }

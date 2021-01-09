@@ -1,41 +1,40 @@
-package se.l4.exobytes.collections.array;
+package se.l4.exobytes.array;
 
 import java.io.IOException;
 import java.util.Arrays;
 
 import se.l4.exobytes.Serializer;
-import se.l4.exobytes.collections.ArraySerializer;
 import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.StreamingOutput;
 import se.l4.exobytes.streaming.Token;
 
 /**
- * Custom serializer for arrays of integers.
+ * Custom serializer for arrays of chars.
  */
-public final class IntArraySerializer
-	implements Serializer<int[]>
+public final class CharArraySerializer
+	implements Serializer<char[]>
 {
 	@Override
-	public int[] read(StreamingInput in)
+	public char[] read(StreamingInput in)
 		throws IOException
 	{
 		in.next(Token.LIST_START);
 
-		int[] result;
+		char[] result;
 		if(in.getLength().isPresent())
 		{
-			result = new int[in.getLength().getAsInt()];
+			result = new char[in.getLength().getAsInt()];
 			int length = 0;
 			while(in.peek() != Token.LIST_END)
 			{
 				in.next(Token.VALUE);
-				result[length++] = in.readInt();
+				result[length++] = in.readChar();
 			}
 		}
 		else
 		{
 			int length = 0;
-			int[] current = new int[512];
+			char[] current = new char[512];
 			while(in.peek() != Token.LIST_END)
 			{
 				in.next(Token.VALUE);
@@ -46,7 +45,7 @@ public final class IntArraySerializer
 					current = Arrays.copyOf(current, newSize);
 				}
 
-				current[length++] = in.readInt();
+				current[length++] = in.readChar();
 			}
 
 			result = Arrays.copyOf(current, length);
@@ -57,13 +56,13 @@ public final class IntArraySerializer
 	}
 
 	@Override
-	public void write(int[] object, StreamingOutput out)
+	public void write(char[] object, StreamingOutput out)
 		throws IOException
 	{
 		out.writeListStart(object.length);
-		for(int v : object)
+		for(char v : object)
 		{
-			out.writeInt(v);
+			out.writeChar(v);
 		}
 		out.writeListEnd();
 	}

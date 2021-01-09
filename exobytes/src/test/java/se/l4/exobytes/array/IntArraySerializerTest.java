@@ -1,4 +1,4 @@
-package se.l4.exobytes.collections.array;
+package se.l4.exobytes.array;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -13,23 +13,23 @@ import se.l4.exobytes.SerializerTest;
 import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.Token;
 
-public class ShortArraySerializerTest
+public class IntArraySerializerTest
 	extends SerializerTest
 {
 	@Test
 	public void testWrite()
 		throws IOException
 	{
-		Serializer<short[]> serializer = new ShortArraySerializer();
+		Serializer<int[]> serializer = new IntArraySerializer();
 
-		StreamingInput in = write(out -> serializer.write(new short[] { 10, -20 }, out))
+		StreamingInput in = write(out -> serializer.write(new int[] { 10, -20 }, out))
 			.get();
 
 		assertThat(in.next(), is(Token.LIST_START));
 		assertThat(in.next(), is(Token.VALUE));
-		assertThat(in.readShort(), is((short) 10));
+		assertThat(in.readInt(), is(10));
 		assertThat(in.next(), is(Token.VALUE));
-		assertThat(in.readShort(), is((short) -20));
+		assertThat(in.readInt(), is(-20));
 		assertThat(in.next(), is(Token.LIST_END));
 	}
 
@@ -37,45 +37,45 @@ public class ShortArraySerializerTest
 	public void testReadFixed()
 		throws IOException
 	{
-		Serializer<short[]> serializer = new ShortArraySerializer();
+		Serializer<int[]> serializer = new IntArraySerializer();
 
 		StreamingInput in = write(out -> {
 			out.writeListStart(2);
-			out.writeShort((short) 10);
-			out.writeShort((short) -20);
+			out.writeInt(10);
+			out.writeInt(-20);
 			out.writeListEnd();
 		})
 			.get();
 
-		short[] v = serializer.read(in);
+		int[] v = serializer.read(in);
 		assertThat(in.next(), is(Token.END_OF_STREAM));
 
-		assertThat(v, is(new short[] { 10, -20 }));
+		assertThat(v, is(new int[] { 10, -20 }));
 	}
 
 	@Test
 	public void testReadIndeterminate()
 		throws IOException
 	{
-		Serializer<short[]> serializer = new ShortArraySerializer();
+		Serializer<int[]> serializer = new IntArraySerializer();
 
 		StreamingInput in = write(out -> {
 			out.writeListStart();
-			out.writeShort((short) 10);
-			out.writeShort((short) -20);
+			out.writeInt(10);
+			out.writeInt(-20);
 			out.writeListEnd();
 		})
 			.get();
 
-		short[] v = serializer.read(in);
+		int[] v = serializer.read(in);
 		assertThat(in.next(), is(Token.END_OF_STREAM));
 
-		assertThat(v, is(new short[] { 10, -20 }));
+		assertThat(v, is(new int[] { 10, -20 }));
 	}
 
 	@Test
 	public void testEquality()
 	{
-		EqualsVerifier.forClass(ShortArraySerializer.class).verify();
+		EqualsVerifier.forClass(IntArraySerializer.class).verify();
 	}
 }

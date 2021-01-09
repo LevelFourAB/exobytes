@@ -1,10 +1,9 @@
-package se.l4.exobytes.collections.array;
+package se.l4.exobytes.array;
 
 import java.io.IOException;
 import java.util.Arrays;
 
 import se.l4.exobytes.Serializer;
-import se.l4.exobytes.collections.ArraySerializer;
 import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.StreamingOutput;
 import se.l4.exobytes.streaming.Token;

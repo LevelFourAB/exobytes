@@ -13,7 +13,7 @@ import se.l4.exobytes.Serializer;
 import se.l4.exobytes.SerializerResolver;
 import se.l4.exobytes.Serializers;
 import se.l4.exobytes.TypeEncounter;
-import se.l4.exobytes.collections.ArraySerializerResolver;
+import se.l4.exobytes.array.ArraySerializerResolver;
 import se.l4.ylem.types.mapping.Mapped;
 import se.l4.ylem.types.mapping.MutableTypeMapper;
 import se.l4.ylem.types.mapping.OutputDeduplicator;

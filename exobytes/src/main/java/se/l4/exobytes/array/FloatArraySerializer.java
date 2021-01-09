@@ -1,41 +1,40 @@
-package se.l4.exobytes.collections.array;
+package se.l4.exobytes.array;
 
 import java.io.IOException;
 import java.util.Arrays;
 
 import se.l4.exobytes.Serializer;
-import se.l4.exobytes.collections.ArraySerializer;
 import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.StreamingOutput;
 import se.l4.exobytes.streaming.Token;
 
 /**
- * Custom serializer for arrays of doubles.
+ * Custom serializer for arrays of floats.
  */
-public final class DoubleArraySerializer
-	implements Serializer<double[]>
+public final class FloatArraySerializer
+	implements Serializer<float[]>
 {
 	@Override
-	public double[] read(StreamingInput in)
+	public float[] read(StreamingInput in)
 		throws IOException
 	{
 		in.next(Token.LIST_START);
 
-		double[] result;
+		float[] result;
 		if(in.getLength().isPresent())
 		{
-			result = new double[in.getLength().getAsInt()];
+			result = new float[in.getLength().getAsInt()];
 			int length = 0;
 			while(in.peek() != Token.LIST_END)
 			{
 				in.next(Token.VALUE);
-				result[length++] = in.readDouble();
+				result[length++] = in.readFloat();
 			}
 		}
 		else
 		{
 			int length = 0;
-			double[] current = new double[512];
+			float[] current = new float[512];
 			while(in.peek() != Token.LIST_END)
 			{
 				in.next(Token.VALUE);
@@ -46,7 +45,7 @@ public final class DoubleArraySerializer
 					current = Arrays.copyOf(current, newSize);
 				}
 
-				current[length++] = in.readDouble();
+				current[length++] = in.readFloat();
 			}
 
 			result = Arrays.copyOf(current, length);
@@ -57,13 +56,13 @@ public final class DoubleArraySerializer
 	}
 
 	@Override
-	public void write(double[] object, StreamingOutput out)
+	public void write(float[] object, StreamingOutput out)
 		throws IOException
 	{
 		out.writeListStart(object.length);
-		for(double v : object)
+		for(float v : object)
 		{
-			out.writeDouble(v);
+			out.writeFloat(v);
 		}
 		out.writeListEnd();
 	}

@@ -1,4 +1,4 @@
-package se.l4.exobytes.collections.array;
+package se.l4.exobytes.array;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;

@@ -1,4 +1,4 @@
-package se.l4.exobytes.collections.array;
+package se.l4.exobytes.array;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -13,23 +13,23 @@ import se.l4.exobytes.SerializerTest;
 import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.Token;
 
-public class BooleanArraySerializerTest
+public class FloatArraySerializerTest
 	extends SerializerTest
 {
 	@Test
 	public void testWrite()
 		throws IOException
 	{
-		Serializer<boolean[]> serializer = new BooleanArraySerializer();
+		Serializer<float[]> serializer = new FloatArraySerializer();
 
-		StreamingInput in = write(out -> serializer.write(new boolean[] { true, false }, out))
+		StreamingInput in = write(out -> serializer.write(new float[] { 4f, 10f }, out))
 			.get();
 
 		assertThat(in.next(), is(Token.LIST_START));
 		assertThat(in.next(), is(Token.VALUE));
-		assertThat(in.readBoolean(), is(true));
+		assertThat(in.readFloat(), is(4f));
 		assertThat(in.next(), is(Token.VALUE));
-		assertThat(in.readBoolean(), is(false));
+		assertThat(in.readFloat(), is(10f));
 		assertThat(in.next(), is(Token.LIST_END));
 	}
 
@@ -37,45 +37,45 @@ public class BooleanArraySerializerTest
 	public void testReadFixed()
 		throws IOException
 	{
-		Serializer<boolean[]> serializer = new BooleanArraySerializer();
+		Serializer<float[]> serializer = new FloatArraySerializer();
 
 		StreamingInput in = write(out -> {
 			out.writeListStart(2);
-			out.writeBoolean(true);
-			out.writeBoolean(false);
+			out.writeFloat(4f);
+			out.writeFloat(10f);
 			out.writeListEnd();
 		})
 			.get();
 
-		boolean[] v = serializer.read(in);
+		float[] v = serializer.read(in);
 		assertThat(in.next(), is(Token.END_OF_STREAM));
 
-		assertThat(v, is(new boolean[] { true, false }));
+		assertThat(v, is(new float[] { 4f, 10f }));
 	}
 
 	@Test
 	public void testReadIndeterminate()
 		throws IOException
 	{
-		Serializer<boolean[]> serializer = new BooleanArraySerializer();
+		Serializer<float[]> serializer = new FloatArraySerializer();
 
 		StreamingInput in = write(out -> {
 			out.writeListStart();
-			out.writeBoolean(true);
-			out.writeBoolean(false);
+			out.writeFloat(4f);
+			out.writeFloat(10f);
 			out.writeListEnd();
 		})
 			.get();
 
-		boolean[] v = serializer.read(in);
+		float[] v = serializer.read(in);
 		assertThat(in.next(), is(Token.END_OF_STREAM));
 
-		assertThat(v, is(new boolean[] { true, false }));
+		assertThat(v, is(new float[] { 4f, 10f }));
 	}
 
 	@Test
 	public void testEquality()
 	{
-		EqualsVerifier.forClass(BooleanArraySerializer.class).verify();
+		EqualsVerifier.forClass(FloatArraySerializer.class).verify();
 	}
 }
