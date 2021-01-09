@@ -17,14 +17,18 @@ import se.l4.exobytes.streaming.Token;
 import se.l4.ylem.types.reflect.TypeRef;
 import se.l4.ylem.types.reflect.Types;
 
+/**
+ * Resolver that can be used to resolve serializers for anything that implements
+ * {@link Collection}.
+ */
 @SuppressWarnings({ "unchecked", "rawtypes" })
-public class MutableCollectionResolver<C extends Collection<?>>
+public class CollectionResolver<C extends Collection<?>>
 	implements SerializerResolver<C>
 {
 	private final Class<C> type;
 	private final IntFunction<? extends C> supplier;
 
-	public MutableCollectionResolver(
+	public CollectionResolver(
 		Class<C> type,
 		IntFunction<? extends C> supplier
 	)
@@ -72,6 +76,7 @@ public class MutableCollectionResolver<C extends Collection<?>>
 			in.next(Token.LIST_START);
 
 			C list = supplier.apply(in.getLength().orElse(16));
+
 			while(in.peek() != Token.LIST_END)
 			{
 				list.add(in.readObject(itemSerializer));

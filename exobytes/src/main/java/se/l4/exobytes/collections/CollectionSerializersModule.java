@@ -28,22 +28,22 @@ public class CollectionSerializersModule
 		serializers.register(Map.class, new MapResolver<>(Map.class, HashMap::new));
 		serializers.register(HashMap.class, new MapResolver<>(HashMap.class, HashMap::new));
 
-		serializers.register(List.class, new MutableCollectionResolver<>(List.class, ArrayList::new));
-		serializers.register(ArrayList.class, new MutableCollectionResolver<>(ArrayList.class, ArrayList::new));
-		serializers.register(LinkedList.class, new MutableCollectionResolver<>(LinkedList.class, l -> new LinkedList<>()));
-		serializers.register(CopyOnWriteArrayList.class, new MutableCollectionResolver<>(CopyOnWriteArrayList.class, l -> new CopyOnWriteArrayList<>()));
+		serializers.register(List.class, new CollectionResolver<>(List.class, ArrayList::new));
+		serializers.register(ArrayList.class, new CollectionResolver<>(ArrayList.class, ArrayList::new));
+		serializers.register(LinkedList.class, new CollectionResolver<>(LinkedList.class, l -> new LinkedList<>()));
+		serializers.register(CopyOnWriteArrayList.class, new CollectionResolver<>(CopyOnWriteArrayList.class, l -> new CopyOnWriteArrayList<>()));
 
-		serializers.register(Set.class, new MutableCollectionResolver<>(Set.class, HashSet::new));
-		serializers.register(HashSet.class, new MutableCollectionResolver<>(HashSet.class, HashSet::new));
-		serializers.register(LinkedHashSet.class, new MutableCollectionResolver<>(LinkedHashSet.class, LinkedHashSet::new));
+		serializers.register(Set.class, new CollectionResolver<>(Set.class, HashSet::new));
+		serializers.register(HashSet.class, new CollectionResolver<>(HashSet.class, HashSet::new));
+		serializers.register(LinkedHashSet.class, new CollectionResolver<>(LinkedHashSet.class, LinkedHashSet::new));
 
-		serializers.register(NavigableSet.class, new MutableCollectionResolver<>(NavigableSet.class, l -> new TreeSet<>()));
-		serializers.register(SortedSet.class, new MutableCollectionResolver<>(SortedSet.class, l -> new TreeSet<>()));
-		serializers.register(TreeSet.class, new MutableCollectionResolver<>(TreeSet.class, l -> new TreeSet<>()));
+		serializers.register(NavigableSet.class, new CollectionResolver<>(NavigableSet.class, l -> new TreeSet<>()));
+		serializers.register(SortedSet.class, new CollectionResolver<>(SortedSet.class, l -> new TreeSet<>()));
+		serializers.register(TreeSet.class, new CollectionResolver<>(TreeSet.class, l -> new TreeSet<>()));
 
-		serializers.register(CopyOnWriteArraySet.class, new MutableCollectionResolver<>(CopyOnWriteArraySet.class, l -> new CopyOnWriteArraySet<>()));
-		serializers.register(ConcurrentSkipListSet.class, new MutableCollectionResolver<>(ConcurrentSkipListSet.class, l -> new ConcurrentSkipListSet<>()));
+		serializers.register(CopyOnWriteArraySet.class, new CollectionResolver<>(CopyOnWriteArraySet.class, l -> new CopyOnWriteArraySet<>()));
+		serializers.register(ConcurrentSkipListSet.class, new CollectionResolver<>(ConcurrentSkipListSet.class, l -> new ConcurrentSkipListSet<>()));
 
-		serializers.register(Queue.class, new MutableCollectionResolver<>(Queue.class, l -> new LinkedList<>()));
+		serializers.register(Queue.class, new CollectionResolver<>(Queue.class, l -> new LinkedList<>()));
 	}
 }
