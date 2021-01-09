@@ -27,7 +27,7 @@ public abstract class AbstractStreamingInput
 	public Token peek()
 		throws IOException
 	{
-		if(! didReadValue && (current == Token.KEY || current == Token.VALUE))
+		if(! didReadValue && current == Token.VALUE)
 		{
 			throw new IOException("Can not peek next token, current token is not fully consumed");
 		}
@@ -68,9 +68,9 @@ public abstract class AbstractStreamingInput
 			throw new IOException("Tried reading past end of stream");
 		}
 
-		if(! didReadValue && (current == Token.KEY || current == Token.VALUE))
+		if(! didReadValue && current == Token.VALUE)
 		{
-			skipKeyOrValue();
+			skipValue();
 		}
 
 		Token token = next0();
@@ -138,11 +138,10 @@ public abstract class AbstractStreamingInput
 				break;
 			case NULL:
 				break;
-			case KEY:
 			case VALUE:
 				if(! didReadValue)
 				{
-					skipKeyOrValue();
+					skipValue();
 				}
 				return;
 			default:
@@ -155,7 +154,7 @@ public abstract class AbstractStreamingInput
 	 *
 	 * @throws IOException
 	 */
-	protected abstract void skipKeyOrValue()
+	protected abstract void skipValue()
 		throws IOException;
 
 	@Override
@@ -169,7 +168,7 @@ public abstract class AbstractStreamingInput
 
 				while(peek() != Token.OBJECT_END)
 				{
-					next(Token.KEY);
+					next();
 					Object key = readDynamic0();
 					next();
 					Object value = readDynamic();
@@ -189,7 +188,6 @@ public abstract class AbstractStreamingInput
 				return list;
 			case NULL:
 				return null;
-			case KEY:
 			case VALUE:
 				return readDynamic0();
 			default:

@@ -56,7 +56,7 @@ public class DynamicSerializer
 			*/
 			while(in.peek() != Token.OBJECT_END)
 			{
-				in.next(Token.KEY);
+				in.next(Token.VALUE);
 				String key = in.readString();
 
 				if("namespace".equals(key))

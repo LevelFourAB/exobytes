@@ -61,7 +61,7 @@ public class LegacyBinaryInput
 			case -1:
 				return Token.END_OF_STREAM;
 			case LegacyBinaryOutput.TAG_KEY:
-				return Token.KEY;
+				return Token.VALUE;
 			case LegacyBinaryOutput.TAG_OBJECT_START:
 				return Token.OBJECT_START;
 			case LegacyBinaryOutput.TAG_OBJECT_END:
@@ -82,7 +82,7 @@ public class LegacyBinaryInput
 		throws IOException
 	{
 		Token current = peek();
-		if(current == Token.KEY || current == Token.VALUE)
+		if(current == Token.VALUE)
 		{
 			// Read actual data of keys and values
 			currentValueByte = peekedByte;
@@ -108,7 +108,7 @@ public class LegacyBinaryInput
 	}
 
 	@Override
-	protected void skipKeyOrValue()
+	protected void skipValue()
 		throws IOException
 	{
 		readDynamic();

@@ -34,7 +34,6 @@ public class JsonInput
 	private int level;
 
 	private boolean[] lists;
-	private String[] names;
 
 	public JsonInput(InputStream in)
 		throws IOException
@@ -48,7 +47,6 @@ public class JsonInput
 		this.in = in;
 
 		lists = new boolean[LEVELS];
-		names = new String[LEVELS];
 		buffer = new char[1024];
 
 		lists[0] = true;
@@ -64,14 +62,7 @@ public class JsonInput
 	@Override
 	protected IOException raiseException(String message)
 	{
-		StringBuilder path = new StringBuilder();
-		for(int i=1; i<level; i++)
-		{
-			if(i > 1) path.append(" > ");
-
-			path.append(names[i]);
-		}
-		return new IOException(message + (level > 0 ? " (at " + path + ")" : ""));
+		return new IOException(message);
 	}
 
 	@Override
@@ -139,7 +130,6 @@ public class JsonInput
 		{
 			// Grow lists when needed
 			lists = Arrays.copyOf(lists, level * 2);
-			names = Arrays.copyOf(names, level * 2);
 		}
 
 		lists[level] = isList;
@@ -152,7 +142,7 @@ public class JsonInput
 	}
 
 	@Override
-	protected void skipKeyOrValue()
+	protected void skipValue()
 		throws IOException
 	{
 		char c = peekChar();
@@ -161,7 +151,7 @@ public class JsonInput
 			// This is a string
 			readString(true);
 
-			if(current == Token.KEY)
+			if(peekChar() == ':')
 			{
 				char next = readNext();
 				if(next != ':')
@@ -378,14 +368,9 @@ public class JsonInput
 	{
 		String s = readString(true);
 
-		if(current == Token.KEY)
+		if(peekChar() == ':')
 		{
-			names[level] = s;
-			char next = readNext();
-			if(next != ':')
-			{
-				throw raiseException("Expected `:`, got `" + next + "`");
-			}
+			readNext();
 		}
 
 		markValueRead();
@@ -680,11 +665,6 @@ public class JsonInput
 			case ']':
 				return Token.LIST_END;
 			case '"':
-				if(current != null && current != Token.KEY && ! lists[level])
-				{
-					return Token.KEY;
-				}
-
 				return Token.VALUE;
 			case 'n':
 				return Token.NULL;

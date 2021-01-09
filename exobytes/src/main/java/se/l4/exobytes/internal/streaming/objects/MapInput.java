@@ -78,7 +78,7 @@ public class MapInput
 			case START:
 				return Token.OBJECT_START;
 			case KEY:
-				return Token.KEY;
+				return Token.VALUE;
 			case VALUE:
 				Token peeked = subInput.peek();
 				if(peeked != Token.END_OF_STREAM)
@@ -164,7 +164,7 @@ public class MapInput
 	}
 
 	@Override
-	protected void skipKeyOrValue()
+	protected void skipValue()
 		throws IOException
 	{
 	}

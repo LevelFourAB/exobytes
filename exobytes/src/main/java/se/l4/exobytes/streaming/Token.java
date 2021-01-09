@@ -26,10 +26,6 @@ public enum Token
 	 */
 	OBJECT_END,
 	/**
-	 * Key, value is available via {@link StreamingInput#getString()}.
-	 */
-	KEY,
-	/**
 	 * Value, available via getters (and {@link StreamingInput#getValue()}).
 	 */
 	VALUE,

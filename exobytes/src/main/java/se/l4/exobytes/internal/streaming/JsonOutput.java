@@ -364,6 +364,25 @@ public class JsonOutput
 		throws IOException
 	{
 		writeUnescaped(Integer.toString(number));
+		/*
+		startWrite();
+		failKey();
+
+		int idx = numberBuf.length;
+		int v = number < 0 ? - number : number;
+		while(v > 0)
+		{
+			numberBuf[--idx] = DIGITS[v % 10];
+			v /= 10;
+		}
+
+		if(number < 0)
+		{
+			numberBuf[--idx] = '-';
+		}
+
+		out.write(numberBuf, idx, numberBuf.length - idx);
+		*/
 	}
 
 	@Override

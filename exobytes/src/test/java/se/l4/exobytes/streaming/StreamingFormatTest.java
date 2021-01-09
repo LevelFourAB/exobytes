@@ -357,11 +357,11 @@ public abstract class StreamingFormatTest
 		try(StreamingInput in = in0.get())
 		{
 			in.next(Token.OBJECT_START);
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			assertThat(in.readString(), is("key1"));
 			in.next(Token.VALUE);
 			assertThat(in.readString(), is("value1"));
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			assertThat(in.readString(), is("key2"));
 			in.next(Token.VALUE);
 			assertThat(in.readLong(), is(12l));
@@ -386,11 +386,11 @@ public abstract class StreamingFormatTest
 		try(StreamingInput in = in0.get())
 		{
 			in.next(Token.OBJECT_START);
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			assertThat(in.readString(), is("key1"));
 			in.next(Token.NULL);
 			assertThat(in.readDynamic(), nullValue());
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			assertThat(in.readString(), is("key2"));
 			in.next(Token.VALUE);
 			assertThat(in.readInt(), is(12));
@@ -415,11 +415,11 @@ public abstract class StreamingFormatTest
 		try(StreamingInput in = in0.get())
 		{
 			in.next(Token.OBJECT_START);
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			assertThat(in.readString(), is("key1"));
 			in.next(Token.VALUE);
 			assertThat(in.readString(), is("value1"));
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			assertThat(in.readString(), is("key2"));
 			in.next(Token.NULL);
 			assertThat(in.readDynamic(), nullValue());
@@ -444,11 +444,11 @@ public abstract class StreamingFormatTest
 		try(StreamingInput in = in0.get())
 		{
 			in.next(Token.OBJECT_START);
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			assertThat(in.readString(), is("key1"));
 			in.next(Token.VALUE);
 			assertThat(in.readBoolean(), is(false));
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			assertThat(in.readString(), is("key2"));
 			in.next(Token.VALUE);
 			assertThat(in.readBoolean(), is(true));
@@ -473,11 +473,11 @@ public abstract class StreamingFormatTest
 		try(StreamingInput in = in0.get())
 		{
 			in.next(Token.OBJECT_START);
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			assertThat(in.readString(), is("key1"));
 			in.next(Token.VALUE);
 			assertThat(in.readByte(), is((byte) -20));
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			assertThat(in.readString(), is("key2"));
 			in.next(Token.VALUE);
 			assertThat(in.readByte(), is((byte) 20));
@@ -502,11 +502,11 @@ public abstract class StreamingFormatTest
 		try(StreamingInput in = in0.get())
 		{
 			in.next(Token.OBJECT_START);
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			assertThat(in.readString(), is("key1"));
 			in.next(Token.VALUE);
 			assertThat(in.readShort(), is((short) -20));
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			assertThat(in.readString(), is("key2"));
 			in.next(Token.VALUE);
 			assertThat(in.readShort(), is((short) 20));
@@ -531,11 +531,11 @@ public abstract class StreamingFormatTest
 		try(StreamingInput in = in0.get())
 		{
 			in.next(Token.OBJECT_START);
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			assertThat(in.readString(), is("key1"));
 			in.next(Token.VALUE);
 			assertThat(in.readChar(), is((char) 20));
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			assertThat(in.readString(), is("key2"));
 			in.next(Token.VALUE);
 			assertThat(in.readChar(), is((char) 220));
@@ -560,11 +560,11 @@ public abstract class StreamingFormatTest
 		try(StreamingInput in = in0.get())
 		{
 			in.next(Token.OBJECT_START);
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			assertThat(in.readString(), is("key1"));
 			in.next(Token.VALUE);
 			assertThat(in.readInt(), is(-20));
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			assertThat(in.readString(), is("key2"));
 			in.next(Token.VALUE);
 			assertThat(in.readInt(), is(20));
@@ -589,11 +589,11 @@ public abstract class StreamingFormatTest
 		try(StreamingInput in = in0.get())
 		{
 			in.next(Token.OBJECT_START);
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			assertThat(in.readString(), is("key1"));
 			in.next(Token.VALUE);
 			assertThat(in.readLong(), is(-20l));
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			assertThat(in.readString(), is("key2"));
 			in.next(Token.VALUE);
 			assertThat(in.readLong(), is(20l));
@@ -618,11 +618,11 @@ public abstract class StreamingFormatTest
 		try(StreamingInput in = in0.get())
 		{
 			in.next(Token.OBJECT_START);
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			assertThat(in.readString(), is("key1"));
 			in.next(Token.VALUE);
 			assertThat(in.readFloat(), is(-22.2f));
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			assertThat(in.readString(), is("key2"));
 			in.next(Token.VALUE);
 			assertThat(in.readFloat(), is(22.2f));
@@ -647,11 +647,11 @@ public abstract class StreamingFormatTest
 		try(StreamingInput in = in0.get())
 		{
 			in.next(Token.OBJECT_START);
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			assertThat(in.readString(), is("key1"));
 			in.next(Token.VALUE);
 			assertThat(in.readDouble(), is(-22.2));
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			assertThat(in.readString(), is("key2"));
 			in.next(Token.VALUE);
 			assertThat(in.readDouble(), is(22.2));
@@ -1464,9 +1464,9 @@ public abstract class StreamingFormatTest
 		try(StreamingInput in = in0.get())
 		{
 			in.next(Token.OBJECT_START);
-			in.next(Token.KEY);
 			in.next(Token.VALUE);
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
+			in.next(Token.VALUE);
 			in.next(Token.VALUE);
 			in.next(Token.OBJECT_END);
 			in.next(Token.END_OF_STREAM);
@@ -1525,10 +1525,10 @@ public abstract class StreamingFormatTest
 		try(StreamingInput in = in0.get())
 		{
 			in.next(Token.OBJECT_START);
-			assertThat(in.peek(), is(Token.KEY));
-			in.next(Token.KEY);
+			assertThat(in.peek(), is(Token.VALUE));
 			in.next(Token.VALUE);
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
+			in.next(Token.VALUE);
 			in.next(Token.VALUE);
 			in.next(Token.OBJECT_END);
 			in.next(Token.END_OF_STREAM);
@@ -1551,11 +1551,11 @@ public abstract class StreamingFormatTest
 		try(StreamingInput in = in0.get())
 		{
 			in.next(Token.OBJECT_START);
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			in.skip();
 			assertThat(in.peek(), is(Token.VALUE));
 			in.next(Token.VALUE);
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			in.next(Token.VALUE);
 			in.next(Token.OBJECT_END);
 			in.next(Token.END_OF_STREAM);

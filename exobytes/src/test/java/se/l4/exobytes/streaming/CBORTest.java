@@ -1724,16 +1724,16 @@ public class CBORTest
 		assertThat(in.peek(), is(Token.OBJECT_START));
 		assertThat(in.next(), is(Token.OBJECT_START));
 
-		assertThat(in.peek(), is(Token.KEY));
-		assertThat(in.next(), is(Token.KEY));
+		assertThat(in.peek(), is(Token.VALUE));
+		assertThat(in.next(), is(Token.VALUE));
 		assertThat(in.readInt(), is(1));
 
 		assertThat(in.peek(), is(Token.VALUE));
 		assertThat(in.next(), is(Token.VALUE));
 		assertThat(in.readInt(), is(2));
 
-		assertThat(in.peek(), is(Token.KEY));
-		assertThat(in.next(), is(Token.KEY));
+		assertThat(in.peek(), is(Token.VALUE));
+		assertThat(in.next(), is(Token.VALUE));
 		assertThat(in.readInt(), is(3));
 
 		assertThat(in.peek(), is(Token.VALUE));
@@ -1753,16 +1753,16 @@ public class CBORTest
 		assertThat(in.peek(), is(Token.OBJECT_START));
 		assertThat(in.next(), is(Token.OBJECT_START));
 
-		assertThat(in.peek(), is(Token.KEY));
-		assertThat(in.next(), is(Token.KEY));
+		assertThat(in.peek(), is(Token.VALUE));
+		assertThat(in.next(), is(Token.VALUE));
 		assertThat(in.readString(), is("a"));
 
 		assertThat(in.peek(), is(Token.VALUE));
 		assertThat(in.next(), is(Token.VALUE));
 		assertThat(in.readInt(), is(1));
 
-		assertThat(in.peek(), is(Token.KEY));
-		assertThat(in.next(), is(Token.KEY));
+		assertThat(in.peek(), is(Token.VALUE));
+		assertThat(in.next(), is(Token.VALUE));
 		assertThat(in.readString(), is("b"));
 
 		assertThat(in.peek(), is(Token.LIST_START));
@@ -1792,16 +1792,16 @@ public class CBORTest
 		assertThat(in.peek(), is(Token.OBJECT_START));
 		assertThat(in.next(), is(Token.OBJECT_START));
 
-		assertThat(in.peek(), is(Token.KEY));
-		assertThat(in.next(), is(Token.KEY));
+		assertThat(in.peek(), is(Token.VALUE));
+		assertThat(in.next(), is(Token.VALUE));
 		assertThat(in.readString(), is("a"));
 
 		assertThat(in.peek(), is(Token.VALUE));
 		assertThat(in.next(), is(Token.VALUE));
 		assertThat(in.readInt(), is(1));
 
-		assertThat(in.peek(), is(Token.KEY));
-		assertThat(in.next(), is(Token.KEY));
+		assertThat(in.peek(), is(Token.VALUE));
+		assertThat(in.next(), is(Token.VALUE));
 		assertThat(in.readString(), is("b"));
 
 		assertThat(in.peek(), is(Token.LIST_START));
@@ -1831,16 +1831,16 @@ public class CBORTest
 		assertThat(in.peek(), is(Token.OBJECT_START));
 		assertThat(in.next(), is(Token.OBJECT_START));
 
-		assertThat(in.peek(), is(Token.KEY));
-		assertThat(in.next(), is(Token.KEY));
+		assertThat(in.peek(), is(Token.VALUE));
+		assertThat(in.next(), is(Token.VALUE));
 		assertThat(in.readString(), is("Fun"));
 
 		assertThat(in.peek(), is(Token.VALUE));
 		assertThat(in.next(), is(Token.VALUE));
 		assertThat(in.readBoolean(), is(true));
 
-		assertThat(in.peek(), is(Token.KEY));
-		assertThat(in.next(), is(Token.KEY));
+		assertThat(in.peek(), is(Token.VALUE));
+		assertThat(in.next(), is(Token.VALUE));
 		assertThat(in.readString(), is("Amt"));
 
 		assertThat(in.peek(), is(Token.VALUE));
@@ -1860,15 +1860,15 @@ public class CBORTest
 		assertThat(in.peek(), is(Token.OBJECT_START));
 		assertThat(in.next(), is(Token.OBJECT_START));
 
-		assertThat(in.peek(), is(Token.KEY));
-		assertThat(in.next(), is(Token.KEY));
+		assertThat(in.peek(), is(Token.VALUE));
+		assertThat(in.next(), is(Token.VALUE));
 		assertThat(in.readString(), is("yum"));
 
 		assertThat(in.peek(), is(Token.NULL));
 		assertThat(in.next(), is(Token.NULL));
 
-		assertThat(in.peek(), is(Token.KEY));
-		assertThat(in.next(), is(Token.KEY));
+		assertThat(in.peek(), is(Token.VALUE));
+		assertThat(in.next(), is(Token.VALUE));
 		assertThat(in.readString(), is("hello"));
 
 		assertThat(in.peek(), is(Token.VALUE));

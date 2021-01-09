@@ -88,12 +88,6 @@ public class CBORInput
 			case CborConstants.MAJOR_TYPE_BYTE_STRING:
 			case CborConstants.MAJOR_TYPE_TEXT_STRING:
 			case CborConstants.MAJOR_TYPE_TAGGED:
-				if(! listOrMap[level] && remainingReads[level] % 2 == 0)
-				{
-					// Reading an object and the next token is the key
-					return Token.KEY;
-				}
-
 				return Token.VALUE;
 		}
 
@@ -159,12 +153,6 @@ public class CBORInput
 				length = -1;
 
 				peekedByte = in.read();
-				if(! listOrMap[level] && remainingReads[level] % 2 == 0)
-				{
-					// Reading an object and the next token is the key
-					return Token.KEY;
-				}
-
 				return Token.VALUE;
 		}
 
@@ -185,7 +173,7 @@ public class CBORInput
 	}
 
 	@Override
-	protected void skipKeyOrValue()
+	protected void skipValue()
 		throws IOException
 	{
 		switch(majorType())

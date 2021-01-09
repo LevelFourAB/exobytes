@@ -154,7 +154,7 @@ public class JsonInputTest
 		try(StreamingInput in = createInput(v))
 		{
 			in.next(Token.OBJECT_START);
-				in.next(Token.KEY);
+				in.next(Token.VALUE);
 				assertThat(in.readString(), is("key"));
 
 				in.next(Token.VALUE);
@@ -172,13 +172,13 @@ public class JsonInputTest
 		try(StreamingInput in = createInput(v))
 		{
 			in.next(Token.OBJECT_START);
-				in.next(Token.KEY);
+				in.next(Token.VALUE);
 				assertThat(in.readString(), is("key1"));
 
 				in.next(Token.VALUE);
 				assertThat(in.readString(), is("value1"));
 
-				in.next(Token.KEY);
+				in.next(Token.VALUE);
 				assertThat(in.readString(), is("key2"));
 
 				in.next(Token.VALUE);
@@ -196,7 +196,7 @@ public class JsonInputTest
 		try(StreamingInput in = createInput(v))
 		{
 			in.next(Token.OBJECT_START);
-				in.next(Token.KEY);
+				in.next(Token.VALUE);
 				assertThat(in.readString(), is("key"));
 
 				in.next(Token.NULL);
@@ -214,13 +214,13 @@ public class JsonInputTest
 		try(StreamingInput in = createInput(v))
 		{
 			in.next(Token.OBJECT_START);
-				in.next(Token.KEY);
+				in.next(Token.VALUE);
 				assertThat(in.readString(), is("key1"));
 
 				in.next(Token.VALUE);
 				assertThat(in.readString(), is("value1"));
 
-				in.next(Token.KEY);
+				in.next(Token.VALUE);
 				assertThat(in.readString(), is("key2"));
 
 				in.next(Token.LIST_START);
@@ -240,17 +240,17 @@ public class JsonInputTest
 		try(StreamingInput in = createInput(v))
 		{
 			in.next(Token.OBJECT_START);
-				in.next(Token.KEY);
+				in.next(Token.VALUE);
 				assertThat(in.readString(), is("languages"));
 
 				in.next(Token.LIST_START);
 				in.next(Token.LIST_END);
 
-				in.next(Token.KEY);
+				in.next(Token.VALUE);
 				assertThat(in.readString(), is("fields"));
 
 				in.next(Token.OBJECT_START);
-					in.next(Token.KEY);
+					in.next(Token.VALUE);
 					assertThat(in.readString(), is("test"));
 
 					in.next(Token.OBJECT_START);
@@ -269,27 +269,27 @@ public class JsonInputTest
 		try(StreamingInput in = createInput(v))
 		{
 			in.next(Token.OBJECT_START);
-				in.next(Token.KEY);
+				in.next(Token.VALUE);
 				assertThat(in.readString(), is("languages"));
 
 				in.next(Token.LIST_START);
 				in.next(Token.LIST_END);
 
-				in.next(Token.KEY);
+				in.next(Token.VALUE);
 				assertThat(in.readString(), is("fields"));
 
 				in.next(Token.OBJECT_START);
-					in.next(Token.KEY);
+					in.next(Token.VALUE);
 					assertThat(in.readString(), is("test"));
 
 					in.next(Token.OBJECT_START);
-						in.next(Token.KEY);
+						in.next(Token.VALUE);
 						assertThat(in.readString(), is("type"));
 
 						in.next(Token.VALUE);
 						assertThat(in.readString(), is("token"));
 
-						in.next(Token.KEY);
+						in.next(Token.VALUE);
 						assertThat(in.readString(), is("primary"));
 
 						in.next(Token.VALUE);
@@ -309,13 +309,13 @@ public class JsonInputTest
 		try(StreamingInput in = createInput(v))
 		{
 			in.next(Token.OBJECT_START);
-				in.next(Token.KEY);
+				in.next(Token.VALUE);
 				assertThat(in.readString(), is("languages"));
 
 				in.next(Token.VALUE);
 				assertThat(in.readBoolean(), is(false));
 
-				in.next(Token.KEY);
+				in.next(Token.VALUE);
 				assertThat(in.readString(), is("fields"));
 
 				in.next(Token.VALUE);
@@ -334,11 +334,11 @@ public class JsonInputTest
 
 		// Fast forward
 		input.next(Token.OBJECT_START);
-		input.next(Token.KEY);
+		input.next(Token.VALUE);
 		input.next(Token.VALUE);
 
 		// Read fields key
-		input.next(Token.KEY);
+		input.next(Token.VALUE);
 		input.next();
 		input.skip();
 
@@ -367,7 +367,7 @@ public class JsonInputTest
 				case OBJECT_END:
 					ended = true;
 					break;
-				case KEY:
+				case VALUE:
 					String key = input.readString();
 					if(key.equals("key1"))
 					{
@@ -447,7 +447,7 @@ public class JsonInputTest
 		{
 			switch(input.next())
 			{
-				case KEY:
+				case VALUE:
 					input.next();
 					input.skip();
 				default:

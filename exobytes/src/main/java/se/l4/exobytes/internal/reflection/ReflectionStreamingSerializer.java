@@ -45,7 +45,7 @@ public class ReflectionStreamingSerializer<T>
 				break;
 			}
 
-			in.current(Token.KEY);
+			in.current(Token.VALUE);
 			String key = in.readString();
 
 			SerializableProperty property = type.getProperty(key);

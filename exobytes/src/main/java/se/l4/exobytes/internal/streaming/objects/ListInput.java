@@ -138,7 +138,7 @@ public class ListInput
 	}
 
 	@Override
-	protected void skipKeyOrValue()
+	protected void skipValue()
 		throws IOException
 	{
 	}

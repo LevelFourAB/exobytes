@@ -45,7 +45,7 @@ public class ReflectionNonStreamingSerializer<T>
 		Map<String, Object> data = new HashMap<>(size);
 		while(in.peek() != Token.OBJECT_END)
 		{
-			in.next(Token.KEY);
+			in.next(Token.VALUE);
 			String key = in.readString();
 
 			SerializableProperty property = type.getProperty(key);
