@@ -29,22 +29,22 @@ public class PeriodSerializers
 			return Optional.empty();
 		}
 
-		if(encounter.getHint(Temporal.Timestamp.class).isPresent())
+		if(encounter.getHint(TemporalHints.Timestamp.class).isPresent())
 		{
-			throw new SerializationException("Temporal.Timestamp is not supported");
+			throw new SerializationException("TemporalHints.Timestamp is not supported");
 		}
 
-		if(encounter.getHint(Temporal.CustomFormat.class).isPresent())
+		if(encounter.getHint(TemporalHints.CustomFormat.class).isPresent())
 		{
-			throw new SerializationException("Temporal.CustomFormat is not supported");
+			throw new SerializationException("TemporalHints.CustomFormat is not supported");
 		}
 
-		Optional<Temporal.Format> format = encounter.getHint(Temporal.Format.class);
+		Optional<TemporalHints.Format> format = encounter.getHint(TemporalHints.Format.class);
 		if(format.isPresent())
 		{
-			if(format.get().value() != Temporal.StandardFormat.DEFAULT)
+			if(format.get().value() != TemporalHints.StandardFormat.DEFAULT)
 			{
-				throw new SerializationException("Only Temporal.StandardFormat.DEFAULT is supported");
+				throw new SerializationException("Only TemporalHints.StandardFormat.DEFAULT is supported");
 			}
 
 			return Optional.of(new PeriodStringSerializer());

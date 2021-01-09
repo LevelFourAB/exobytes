@@ -33,7 +33,7 @@ public class LocalDateTimeTest
 	public void testWriteTimestampDefault()
 		throws IOException
 	{
-		Serializer<LocalDateTime> serializer = serializer(TemporalAnnotations.timestamp());
+		Serializer<LocalDateTime> serializer = serializer(TemporalHints.timestamp());
 
 		StreamingInput in = write(out -> serializer.write(LocalDateTime.of(2011, 12, 3, 10, 15, 30), out)).get();
 
@@ -45,7 +45,7 @@ public class LocalDateTimeTest
 	public void testReadTimestampDefault()
 		throws IOException
 	{
-		Serializer<LocalDateTime> serializer = serializer(TemporalAnnotations.timestamp());
+		Serializer<LocalDateTime> serializer = serializer(TemporalHints.timestamp());
 
 		StreamingInput in = write(out -> out.writeLong(1322907330000l)).get();
 
@@ -60,7 +60,7 @@ public class LocalDateTimeTest
 		throws IOException
 	{
 		Serializer<LocalDateTime> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		LocalDateTime time = LocalDateTime.of(2011, 12, 3, 10, 15, 30);
@@ -75,7 +75,7 @@ public class LocalDateTimeTest
 		throws IOException
 	{
 		Serializer<LocalDateTime> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		StreamingInput in = write(out -> out.writeString("2011-12-03T10:15:30")).get();
@@ -90,7 +90,7 @@ public class LocalDateTimeTest
 		throws IOException
 	{
 		Serializer<LocalDateTime> serializer = serializer(
-			TemporalAnnotations.format(Temporal.StandardFormat.ISO_DATE)
+			TemporalHints.format(TemporalHints.StandardFormat.ISO_DATE)
 		);
 
 		LocalDateTime time = LocalDateTime.of(2011, 12, 3, 10, 15, 30);
@@ -105,7 +105,7 @@ public class LocalDateTimeTest
 		throws IOException
 	{
 		Serializer<LocalDateTime> serializer = serializer(
-			TemporalAnnotations.format(Temporal.StandardFormat.ISO_DATE)
+			TemporalHints.format(TemporalHints.StandardFormat.ISO_DATE)
 		);
 
 		StreamingInput in = write(out -> out.writeString("2011-12-03")).get();
@@ -120,7 +120,7 @@ public class LocalDateTimeTest
 		throws IOException
 	{
 		Serializer<LocalDateTime> serializer = serializer(
-			TemporalAnnotations.format(Temporal.StandardFormat.ISO_TIME)
+			TemporalHints.format(TemporalHints.StandardFormat.ISO_TIME)
 		);
 
 		LocalDateTime time = LocalDateTime.of(2011, 12, 3, 10, 15, 30);
@@ -135,7 +135,7 @@ public class LocalDateTimeTest
 		throws IOException
 	{
 		Serializer<LocalDateTime> serializer = serializer(
-			TemporalAnnotations.format(Temporal.StandardFormat.ISO_TIME)
+			TemporalHints.format(TemporalHints.StandardFormat.ISO_TIME)
 		);
 
 		StreamingInput in = write(out -> out.writeString("10:15:30")).get();

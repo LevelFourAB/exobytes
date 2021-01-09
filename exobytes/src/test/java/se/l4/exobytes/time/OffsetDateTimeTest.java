@@ -34,7 +34,7 @@ public class OffsetDateTimeTest
 	public void testWriteTimestampDefault()
 		throws IOException
 	{
-		Serializer<OffsetDateTime> serializer = serializer(TemporalAnnotations.timestamp());
+		Serializer<OffsetDateTime> serializer = serializer(TemporalHints.timestamp());
 
 		StreamingInput in = write(out -> serializer.write(OffsetDateTime.of(2011, 12, 3, 10, 15, 30, 0, ZoneOffset.UTC), out)).get();
 
@@ -46,7 +46,7 @@ public class OffsetDateTimeTest
 	public void testReadTimestampDefault()
 		throws IOException
 	{
-		Serializer<OffsetDateTime> serializer = serializer(TemporalAnnotations.timestamp());
+		Serializer<OffsetDateTime> serializer = serializer(TemporalHints.timestamp());
 
 		StreamingInput in = write(out -> out.writeLong(1322907330000l)).get();
 
@@ -61,7 +61,7 @@ public class OffsetDateTimeTest
 		throws IOException
 	{
 		Serializer<OffsetDateTime> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		OffsetDateTime time = OffsetDateTime.of(2011, 12, 3, 10, 15, 30, 0, ZoneOffset.ofHours(2));
@@ -76,7 +76,7 @@ public class OffsetDateTimeTest
 		throws IOException
 	{
 		Serializer<OffsetDateTime> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		StreamingInput in = write(out -> out.writeString("2011-12-03T10:15:30+02:00")).get();
@@ -91,7 +91,7 @@ public class OffsetDateTimeTest
 		throws IOException
 	{
 		Serializer<OffsetDateTime> serializer = serializer(
-			TemporalAnnotations.format(Temporal.StandardFormat.ISO_DATE)
+			TemporalHints.format(TemporalHints.StandardFormat.ISO_DATE)
 		);
 
 		OffsetDateTime time = OffsetDateTime.of(2011, 12, 3, 10, 15, 30, 0, ZoneOffset.UTC);
@@ -106,7 +106,7 @@ public class OffsetDateTimeTest
 		throws IOException
 	{
 		Serializer<OffsetDateTime> serializer = serializer(
-			TemporalAnnotations.format(Temporal.StandardFormat.ISO_DATE)
+			TemporalHints.format(TemporalHints.StandardFormat.ISO_DATE)
 		);
 
 		StreamingInput in = write(out -> out.writeString("2011-12-03Z")).get();
@@ -121,7 +121,7 @@ public class OffsetDateTimeTest
 		throws IOException
 	{
 		Serializer<OffsetDateTime> serializer = serializer(
-			TemporalAnnotations.format(Temporal.StandardFormat.ISO_TIME)
+			TemporalHints.format(TemporalHints.StandardFormat.ISO_TIME)
 		);
 
 		OffsetDateTime time = OffsetDateTime.of(2011, 12, 3, 10, 15, 30, 0, ZoneOffset.UTC);
@@ -136,7 +136,7 @@ public class OffsetDateTimeTest
 		throws IOException
 	{
 		Serializer<OffsetDateTime> serializer = serializer(
-			TemporalAnnotations.format(Temporal.StandardFormat.ISO_TIME)
+			TemporalHints.format(TemporalHints.StandardFormat.ISO_TIME)
 		);
 
 		StreamingInput in = write(out -> out.writeString("10:15:30Z")).get();

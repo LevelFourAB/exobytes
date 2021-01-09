@@ -21,7 +21,7 @@ import se.l4.exobytes.TypeEncounter;
 import se.l4.exobytes.streaming.StreamingInput;
 import se.l4.exobytes.streaming.StreamingOutput;
 import se.l4.exobytes.streaming.Token;
-import se.l4.exobytes.time.Temporal.StandardFormat;
+import se.l4.exobytes.time.TemporalHints.StandardFormat;
 
 /**
  * {@link Serializer} implementations that handle {@link TemporalAccessor}.
@@ -40,7 +40,7 @@ public class TemporalSerializers<T extends TemporalAccessor>
 	public TemporalSerializers(
 		Class<T> type,
 		DateTimeFormatter defaultFormatter,
-		ImmutableSet<Temporal.StandardFormat> formatsSupported,
+		ImmutableSet<TemporalHints.StandardFormat> formatsSupported,
 		LongFunction<T> millisToObject,
 		ToLongFunction<T> objectToMillis,
 		TemporalQuery<T> temporalQuery
@@ -87,7 +87,7 @@ public class TemporalSerializers<T extends TemporalAccessor>
 	}
 
 	/**
-	 * Resolve a serializer if {@link Temporal.Timestamp} is present.
+	 * Resolve a serializer if {@link TemporalHints.Timestamp} is present.
 	 *
 	 * @param <T>
 	 * @param encounter
@@ -101,10 +101,10 @@ public class TemporalSerializers<T extends TemporalAccessor>
 		ToLongFunction<T> objectToMillis
 	)
 	{
-		if(encounter.getHint(Temporal.Timestamp.class).isPresent())
+		if(encounter.getHint(TemporalHints.Timestamp.class).isPresent())
 		{
 			// Serializing as a timestamp
-			ChronoUnit precision = encounter.getHint(Temporal.Precision.class)
+			ChronoUnit precision = encounter.getHint(TemporalHints.Precision.class)
 				.map(p -> p.value())
 				.orElse(ChronoUnit.MILLIS);
 
@@ -123,15 +123,15 @@ public class TemporalSerializers<T extends TemporalAccessor>
 		TypeEncounter encounter,
 		TemporalQuery<T> temporalQuery,
 		DateTimeFormatter defaultFormatter,
-		SetIterable<Temporal.StandardFormat> formatsSupported
+		SetIterable<TemporalHints.StandardFormat> formatsSupported
 	)
 	{
-		Optional<Temporal.Format> format = encounter.getHint(Temporal.Format.class);
+		Optional<TemporalHints.Format> format = encounter.getHint(TemporalHints.Format.class);
 		if(format.isPresent())
 		{
 			// Formatting as a known string
-			Temporal.StandardFormat sf = format.get().value();
-			if(sf != Temporal.StandardFormat.DEFAULT && ! formatsSupported.contains(sf))
+			TemporalHints.StandardFormat sf = format.get().value();
+			if(sf != TemporalHints.StandardFormat.DEFAULT && ! formatsSupported.contains(sf))
 			{
 				throw new SerializationException("The formatter " + sf + " is not supported");
 			}
@@ -194,7 +194,7 @@ public class TemporalSerializers<T extends TemporalAccessor>
 			return Optional.of(new FormattingImpl<>(temporalQuery, formatter));
 		}
 
-		Optional<Temporal.CustomFormat> customFormat = encounter.getHint(Temporal.CustomFormat.class);
+		Optional<TemporalHints.CustomFormat> customFormat = encounter.getHint(TemporalHints.CustomFormat.class);
 		if(customFormat.isPresent())
 		{
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern(customFormat.get().value());

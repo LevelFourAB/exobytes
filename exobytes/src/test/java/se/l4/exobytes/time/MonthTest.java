@@ -58,7 +58,7 @@ public class MonthTest
 		throws IOException
 	{
 		Serializer<Month> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		StreamingInput in = write(out -> serializer.write(Month.AUGUST, out)).get();
@@ -72,7 +72,7 @@ public class MonthTest
 		throws IOException
 	{
 		Serializer<Month> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		StreamingInput in = write(out -> out.writeString("08")).get();
@@ -88,7 +88,7 @@ public class MonthTest
 		throws IOException
 	{
 		Serializer<Month> serializer = serializer(
-			TemporalAnnotations.customFormat("M")
+			TemporalHints.customFormat("M")
 		);
 
 		StreamingInput in = write(out -> serializer.write(Month.AUGUST, out)).get();
@@ -102,7 +102,7 @@ public class MonthTest
 		throws IOException
 	{
 		Serializer<Month> serializer = serializer(
-			TemporalAnnotations.customFormat("M")
+			TemporalHints.customFormat("M")
 		);
 
 		StreamingInput in = write(out -> out.writeString("8")).get();

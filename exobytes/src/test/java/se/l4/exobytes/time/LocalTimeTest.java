@@ -31,7 +31,7 @@ public class LocalTimeTest
 	public void testWriteTimestampDefault()
 		throws IOException
 	{
-		Serializer<LocalTime> serializer = serializer(TemporalAnnotations.timestamp());
+		Serializer<LocalTime> serializer = serializer(TemporalHints.timestamp());
 
 		StreamingInput in = write(out -> serializer.write(LocalTime.of(10, 15, 30), out)).get();
 
@@ -43,7 +43,7 @@ public class LocalTimeTest
 	public void testReadTimestampDefault()
 		throws IOException
 	{
-		Serializer<LocalTime> serializer = serializer(TemporalAnnotations.timestamp());
+		Serializer<LocalTime> serializer = serializer(TemporalHints.timestamp());
 
 		StreamingInput in = write(out -> out.writeLong(36930000)).get();
 
@@ -58,7 +58,7 @@ public class LocalTimeTest
 		throws IOException
 	{
 		Serializer<LocalTime> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		LocalTime time = LocalTime.of(10, 15, 30);
@@ -73,7 +73,7 @@ public class LocalTimeTest
 		throws IOException
 	{
 		Serializer<LocalTime> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		StreamingInput in = write(out -> out.writeString("10:15:30")).get();

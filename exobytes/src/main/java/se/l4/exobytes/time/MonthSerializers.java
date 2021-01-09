@@ -39,7 +39,7 @@ public class MonthSerializers
 				encounter,
 				Month::from,
 				FORMATTER,
-				Sets.immutable.of(Temporal.StandardFormat.DEFAULT)
+				Sets.immutable.of(TemporalHints.StandardFormat.DEFAULT)
 			);
 
 		if(result.isPresent())
@@ -47,9 +47,9 @@ public class MonthSerializers
 			return result;
 		}
 
-		if(encounter.getHint(Temporal.Timestamp.class).isPresent())
+		if(encounter.getHint(TemporalHints.Timestamp.class).isPresent())
 		{
-			throw new SerializationException("Temporal.Timestamp is not supported");
+			throw new SerializationException("TemporalHints.Timestamp is not supported");
 		}
 
 		return Optional.of(new MonthIntSerializer());

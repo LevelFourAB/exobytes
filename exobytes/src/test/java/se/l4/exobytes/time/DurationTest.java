@@ -60,7 +60,7 @@ public class DurationTest
 		throws IOException
 	{
 		Serializer<Duration> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		Duration d = Duration.ofDays(2);
@@ -75,7 +75,7 @@ public class DurationTest
 		throws IOException
 	{
 		Serializer<Duration> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		StreamingInput in = write(out -> out.writeString("PT48H")).get();

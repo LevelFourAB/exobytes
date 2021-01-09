@@ -32,7 +32,7 @@ public class MonthDayTest
 		throws IOException
 	{
 		Serializer<MonthDay> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		StreamingInput in = write(out -> serializer.write(MonthDay.of(2, 29), out)).get();
@@ -46,7 +46,7 @@ public class MonthDayTest
 		throws IOException
 	{
 		Serializer<MonthDay> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		StreamingInput in = write(out -> out.writeString("02-29")).get();

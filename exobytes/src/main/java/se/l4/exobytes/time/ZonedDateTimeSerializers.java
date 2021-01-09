@@ -12,7 +12,7 @@ import java.time.temporal.TemporalQueries;
 
 import org.eclipse.collections.api.factory.Sets;
 
-import se.l4.exobytes.time.Temporal.StandardFormat;
+import se.l4.exobytes.time.TemporalHints.StandardFormat;
 
 /**
  * Serializers for {@link ZonedDateTime}.

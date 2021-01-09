@@ -1,11 +1,15 @@
 package se.l4.exobytes.time;
 
+import java.lang.annotation.Annotation;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
-public class Temporal
+/**
+ * Hints related to serialization of {@code java.time} objects.
+ */
+public class TemporalHints
 {
-	private Temporal()
+	private TemporalHints()
 	{
 	}
 
@@ -18,7 +22,7 @@ public class Temporal
 	 *
 	 * <pre>
 	 * {@literal @}Expose
-	 * {@literal @}Temporal.Timestamp
+	 * {@literal @}TemporalHints.Timestamp
 	 * public Instant created;
 	 * </pre>
 	 */
@@ -31,8 +35,8 @@ public class Temporal
 	 *
 	 * <pre>
 	 * {@literal @}Expose
-	 * {@literal @}Temporal.Timestamp
-	 * {@literal @}Temporal.Precision(ChronoUnit.SECONDS)
+	 * {@literal @}TemporalHints.Timestamp
+	 * {@literal @}TemporalHints.Precision(ChronoUnit.SECONDS)
 	 * public Instant created;
 	 * </pre>
 	 */
@@ -68,7 +72,7 @@ public class Temporal
 	/**
 	 * Indicate that this temporal value should use a custom string format.
 	 */
-	@interface CustomFormat
+	public @interface CustomFormat
 	{
 		/**
 		 * The format to use for this temporal value. This format will be used
@@ -82,7 +86,7 @@ public class Temporal
 	 * Standard formats supported. Based on the fields available in
 	 * {@link DateTimeFormatter}.
 	 */
-	enum StandardFormat
+	public enum StandardFormat
 	{
 		/**
 		 * Automatically determine the best formatter to use.
@@ -184,5 +188,105 @@ public class Temporal
 		 * RFC-1123 date-time, such as {@code Tue, 3 Jun 2008 11:05:30 GMT}.
 		 */
 		RFC_1123_DATE_TIME
+	}
+
+	private static final TemporalHints.Timestamp TIMESTAMP = new TemporalHints.Timestamp()
+	{
+		@Override
+		public Class<? extends Annotation> annotationType()
+		{
+			return TemporalHints.Timestamp.class;
+		}
+
+		@Override
+		public String toString()
+		{
+			return "@TemporalHints.Timestamp";
+		}
+	};
+
+	public static TemporalHints.Precision precision(ChronoUnit unit)
+	{
+		return new TemporalHints.Precision()
+		{
+			@Override
+			public Class<? extends Annotation> annotationType()
+			{
+				return TemporalHints.Precision.class;
+			}
+
+			@Override
+			public ChronoUnit value()
+			{
+				return unit;
+			}
+
+			@Override
+			public String toString()
+			{
+				return "@TemporalHints.Precision(value=" + value() + ")";
+			}
+		};
+	}
+
+	/**
+	 * Get an annotation that represents
+	 */
+	public static TemporalHints.Timestamp timestamp()
+	{
+		return TIMESTAMP;
+	}
+
+	public static TemporalHints.Format format()
+	{
+		return format(TemporalHints.StandardFormat.DEFAULT);
+	}
+
+	public static TemporalHints.Format format(TemporalHints.StandardFormat type)
+	{
+		return new TemporalHints.Format()
+		{
+			@Override
+			public Class<? extends Annotation> annotationType()
+			{
+				return TemporalHints.Format.class;
+			}
+
+			@Override
+			public TemporalHints.StandardFormat value()
+			{
+				return type;
+			}
+
+			@Override
+			public String toString()
+			{
+				return "@TemporalHints.Format(value=" + value() + ")";
+			}
+		};
+	}
+
+	public static CustomFormat customFormat(String format)
+	{
+		return new TemporalHints.CustomFormat()
+		{
+			@Override
+			public Class<? extends Annotation> annotationType()
+			{
+				return TemporalHints.CustomFormat.class;
+			}
+
+			@Override
+			public String value()
+			{
+				return format;
+			}
+
+			@Override
+			public String toString()
+			{
+				return "@TemporalHints.CustomFormat(value=" + value() + ")";
+			}
+		};
 	}
 }

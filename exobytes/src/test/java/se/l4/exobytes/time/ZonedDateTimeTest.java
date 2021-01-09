@@ -35,7 +35,7 @@ public class ZonedDateTimeTest
 	public void testWriteTimestampDefault()
 		throws IOException
 	{
-		Serializer<ZonedDateTime> serializer = serializer(TemporalAnnotations.timestamp());
+		Serializer<ZonedDateTime> serializer = serializer(TemporalHints.timestamp());
 
 		ZonedDateTime dt = ZonedDateTime.now(ZoneOffset.UTC);
 		StreamingInput in = write(out -> serializer.write(dt, out)).get();
@@ -48,7 +48,7 @@ public class ZonedDateTimeTest
 	public void testReadTimestampDefault()
 		throws IOException
 	{
-		Serializer<ZonedDateTime> serializer = serializer(TemporalAnnotations.timestamp());
+		Serializer<ZonedDateTime> serializer = serializer(TemporalHints.timestamp());
 
 		ZonedDateTime dt = ZonedDateTime.now(ZoneOffset.UTC);
 		StreamingInput in = write(out -> out.writeLong(dt.toInstant().toEpochMilli())).get();
@@ -64,8 +64,8 @@ public class ZonedDateTimeTest
 		throws IOException
 	{
 		Serializer<ZonedDateTime> serializer = serializer(
-			TemporalAnnotations.timestamp(),
-			TemporalAnnotations.precision(ChronoUnit.SECONDS)
+			TemporalHints.timestamp(),
+			TemporalHints.precision(ChronoUnit.SECONDS)
 		);
 
 		ZonedDateTime dt = ZonedDateTime.now(ZoneOffset.UTC);
@@ -80,8 +80,8 @@ public class ZonedDateTimeTest
 		throws IOException
 	{
 		Serializer<ZonedDateTime> serializer = serializer(
-			TemporalAnnotations.timestamp(),
-			TemporalAnnotations.precision(ChronoUnit.SECONDS)
+			TemporalHints.timestamp(),
+			TemporalHints.precision(ChronoUnit.SECONDS)
 		);
 
 		ZonedDateTime dt = ZonedDateTime.now(ZoneOffset.UTC);
@@ -98,7 +98,7 @@ public class ZonedDateTimeTest
 		throws IOException
 	{
 		Serializer<ZonedDateTime> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		ZonedDateTime dt = ZonedDateTime.of(2011, 12, 03, 10, 15, 30, 0, ZoneId.of("Europe/Paris"));
@@ -113,7 +113,7 @@ public class ZonedDateTimeTest
 		throws IOException
 	{
 		Serializer<ZonedDateTime> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		StreamingInput in = write(out -> out.writeString("2011-12-03T10:15:30+01:00[Europe/Paris]")).get();
@@ -129,7 +129,7 @@ public class ZonedDateTimeTest
 		throws IOException
 	{
 		Serializer<ZonedDateTime> serializer = serializer(
-			TemporalAnnotations.format(Temporal.StandardFormat.ISO_LOCAL_DATE)
+			TemporalHints.format(TemporalHints.StandardFormat.ISO_LOCAL_DATE)
 		);
 
 		ZonedDateTime dt = LocalDate.of(2011, 12, 3).atStartOfDay(ZoneOffset.UTC);
@@ -144,7 +144,7 @@ public class ZonedDateTimeTest
 		throws IOException
 	{
 		Serializer<ZonedDateTime> serializer = serializer(
-			TemporalAnnotations.format(Temporal.StandardFormat.ISO_LOCAL_DATE)
+			TemporalHints.format(TemporalHints.StandardFormat.ISO_LOCAL_DATE)
 		);
 
 		StreamingInput in = write(out -> out.writeString("2011-12-03")).get();
@@ -159,7 +159,7 @@ public class ZonedDateTimeTest
 		throws IOException
 	{
 		Serializer<ZonedDateTime> serializer = serializer(
-			TemporalAnnotations.format(Temporal.StandardFormat.ISO_LOCAL_TIME)
+			TemporalHints.format(TemporalHints.StandardFormat.ISO_LOCAL_TIME)
 		);
 
 		ZonedDateTime dt = LocalDate.of(2011, 12, 3).atTime(10, 15, 30).atZone(ZoneOffset.UTC);
@@ -174,7 +174,7 @@ public class ZonedDateTimeTest
 		throws IOException
 	{
 		Serializer<ZonedDateTime> serializer = serializer(
-			TemporalAnnotations.format(Temporal.StandardFormat.ISO_LOCAL_TIME)
+			TemporalHints.format(TemporalHints.StandardFormat.ISO_LOCAL_TIME)
 		);
 
 		StreamingInput in = write(out -> out.writeString("10:15:30")).get();

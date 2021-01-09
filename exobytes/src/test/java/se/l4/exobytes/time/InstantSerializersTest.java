@@ -33,7 +33,7 @@ public class InstantSerializersTest
 	public void testWriteTimestampDefault()
 		throws IOException
 	{
-		Serializer<Instant> serializer = serializer(TemporalAnnotations.timestamp());
+		Serializer<Instant> serializer = serializer(TemporalHints.timestamp());
 
 		Instant instant = Instant.now();
 		StreamingInput in = write(out -> serializer.write(instant, out)).get();
@@ -46,7 +46,7 @@ public class InstantSerializersTest
 	public void testReadTimestampDefault()
 		throws IOException
 	{
-		Serializer<Instant> serializer = serializer(TemporalAnnotations.timestamp());
+		Serializer<Instant> serializer = serializer(TemporalHints.timestamp());
 
 		Instant instant = Instant.now();
 		StreamingInput in = write(out -> out.writeLong(instant.toEpochMilli())).get();
@@ -62,8 +62,8 @@ public class InstantSerializersTest
 		throws IOException
 	{
 		Serializer<Instant> serializer = serializer(
-			TemporalAnnotations.timestamp(),
-			TemporalAnnotations.precision(ChronoUnit.SECONDS)
+			TemporalHints.timestamp(),
+			TemporalHints.precision(ChronoUnit.SECONDS)
 		);
 
 		Instant instant = Instant.now();
@@ -78,8 +78,8 @@ public class InstantSerializersTest
 		throws IOException
 	{
 		Serializer<Instant> serializer = serializer(
-			TemporalAnnotations.timestamp(),
-			TemporalAnnotations.precision(ChronoUnit.SECONDS)
+			TemporalHints.timestamp(),
+			TemporalHints.precision(ChronoUnit.SECONDS)
 		);
 
 		Instant instant = Instant.now();
@@ -96,8 +96,8 @@ public class InstantSerializersTest
 		throws IOException
 	{
 		Serializer<Instant> serializer = serializer(
-			TemporalAnnotations.timestamp(),
-			TemporalAnnotations.precision(ChronoUnit.DAYS)
+			TemporalHints.timestamp(),
+			TemporalHints.precision(ChronoUnit.DAYS)
 		);
 
 		Instant instant = Instant.now();
@@ -112,8 +112,8 @@ public class InstantSerializersTest
 		throws IOException
 	{
 		Serializer<Instant> serializer = serializer(
-			TemporalAnnotations.timestamp(),
-			TemporalAnnotations.precision(ChronoUnit.DAYS)
+			TemporalHints.timestamp(),
+			TemporalHints.precision(ChronoUnit.DAYS)
 		);
 
 		Instant instant = Instant.now();
@@ -136,8 +136,8 @@ public class InstantSerializersTest
 		throws IOException
 	{
 		Serializer<Instant> serializer = serializer(
-			TemporalAnnotations.format(),
-			TemporalAnnotations.precision(ChronoUnit.NANOS)
+			TemporalHints.format(),
+			TemporalHints.precision(ChronoUnit.NANOS)
 		);
 
 		Instant instant = Instant.now();

@@ -32,7 +32,7 @@ public class YearMonthTest
 	public void testWriteTimestampDefault()
 		throws IOException
 	{
-		Serializer<YearMonth> serializer = serializer(TemporalAnnotations.timestamp());
+		Serializer<YearMonth> serializer = serializer(TemporalHints.timestamp());
 
 		StreamingInput in = write(out -> serializer.write(YearMonth.of(2011, 12), out)).get();
 
@@ -50,7 +50,7 @@ public class YearMonthTest
 	public void testReadTimestampDefault()
 		throws IOException
 	{
-		Serializer<YearMonth> serializer = serializer(TemporalAnnotations.timestamp());
+		Serializer<YearMonth> serializer = serializer(TemporalHints.timestamp());
 
 		StreamingInput in = write(out -> out.writeLong(1322697600000l)).get();
 
@@ -65,7 +65,7 @@ public class YearMonthTest
 		throws IOException
 	{
 		Serializer<YearMonth> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		YearMonth dt = YearMonth.of(2011, 12);
@@ -80,7 +80,7 @@ public class YearMonthTest
 		throws IOException
 	{
 		Serializer<YearMonth> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		StreamingInput in = write(out -> out.writeString("2011-12")).get();
@@ -95,7 +95,7 @@ public class YearMonthTest
 		throws IOException
 	{
 		Serializer<YearMonth> serializer = serializer(
-			TemporalAnnotations.customFormat("uu-MM")
+			TemporalHints.customFormat("uu-MM")
 		);
 
 		YearMonth dt = YearMonth.of(2011, 12);
@@ -110,7 +110,7 @@ public class YearMonthTest
 		throws IOException
 	{
 		Serializer<YearMonth> serializer = serializer(
-			TemporalAnnotations.customFormat("uu-MM")
+			TemporalHints.customFormat("uu-MM")
 		);
 
 		StreamingInput in = write(out -> out.writeString("11-12")).get();

@@ -58,7 +58,7 @@ public class DayOfWeekTest
 		throws IOException
 	{
 		Serializer<DayOfWeek> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		StreamingInput in = write(out -> serializer.write(DayOfWeek.FRIDAY, out)).get();
@@ -72,7 +72,7 @@ public class DayOfWeekTest
 		throws IOException
 	{
 		Serializer<DayOfWeek> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		StreamingInput in = write(out -> out.writeString("5")).get();
@@ -88,7 +88,7 @@ public class DayOfWeekTest
 		throws IOException
 	{
 		Serializer<DayOfWeek> serializer = serializer(
-			TemporalAnnotations.customFormat("EE")
+			TemporalHints.customFormat("EE")
 		);
 
 		StreamingInput in = write(out -> serializer.write(DayOfWeek.FRIDAY, out)).get();
@@ -102,7 +102,7 @@ public class DayOfWeekTest
 		throws IOException
 	{
 		Serializer<DayOfWeek> serializer = serializer(
-			TemporalAnnotations.customFormat("EE")
+			TemporalHints.customFormat("EE")
 		);
 
 		StreamingInput in = write(out -> out.writeString("Fri")).get();

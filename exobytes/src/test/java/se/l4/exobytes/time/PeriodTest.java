@@ -32,7 +32,7 @@ public class PeriodTest
 		throws IOException
 	{
 		Serializer<Period> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		Period d = Period.ofDays(2);
@@ -47,7 +47,7 @@ public class PeriodTest
 		throws IOException
 	{
 		Serializer<Period> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		StreamingInput in = write(out -> out.writeString("P2D")).get();

@@ -94,7 +94,7 @@ public class Employee {
   private String name;
 
   @Expose
-  @Temporal.Timestamp
+  @TemporalHints.Timestamp
   private LocalDate hired;
 }
 ```
@@ -149,20 +149,20 @@ via `Temporal`-annotations.
 
 ```java
 @Expose
-@Temporal.Precision(ChronoUnit.SECONDS)
-@Temporal.Timestamp
+@TemporalHints.Precision(ChronoUnit.SECONDS)
+@TemporalHints.Timestamp
 public Instant created;
 
 @Expose
-@Temporal.Format
+@TemporalHints.Format
 public Instant created;
 
 @Expose
-@Temporal.Format(Temporal.StandardFormat.ISO_WEEK_DATE)
+@TemporalHints.Format(TemporalHints.StandardFormat.ISO_WEEK_DATE)
 public Instant created;
 
 @Expose
-@Temporal.CustomFormat("yyyy-MM-dd")
+@TemporalHints.CustomFormat("yyyy-MM-dd")
 public ZonedDateTime time;
 ```
 
@@ -173,8 +173,8 @@ in turns is annotated with Exobytes annotations. This functionality makes it
 easy to create standards, such as if you always
 
 ```java
-@Temporal.Precision(ChronoUnit.MILLISECONDS)
-@Temporal.Timestamp
+@TemporalHints.Precision(ChronoUnit.MILLISECONDS)
+@TemporalHints.Timestamp
 public @interface StorableTimestamp {
 }
 ```

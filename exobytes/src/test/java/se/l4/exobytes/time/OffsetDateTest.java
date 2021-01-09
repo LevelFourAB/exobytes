@@ -32,7 +32,7 @@ public class OffsetDateTest
 	public void testWriteTimestampDefault()
 		throws IOException
 	{
-		Serializer<OffsetTime> serializer = serializer(TemporalAnnotations.timestamp());
+		Serializer<OffsetTime> serializer = serializer(TemporalHints.timestamp());
 
 		StreamingInput in = write(out -> serializer.write(OffsetTime.of(10, 15, 30, 0, ZoneOffset.UTC), out)).get();
 
@@ -44,7 +44,7 @@ public class OffsetDateTest
 	public void testReadTimestampDefault()
 		throws IOException
 	{
-		Serializer<OffsetTime> serializer = serializer(TemporalAnnotations.timestamp());
+		Serializer<OffsetTime> serializer = serializer(TemporalHints.timestamp());
 
 		StreamingInput in = write(out -> out.writeLong(36930000L)).get();
 
@@ -59,7 +59,7 @@ public class OffsetDateTest
 		throws IOException
 	{
 		Serializer<OffsetTime> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		OffsetTime time = OffsetTime.of(10, 15, 30, 0, ZoneOffset.ofHours(2));
@@ -74,7 +74,7 @@ public class OffsetDateTest
 		throws IOException
 	{
 		Serializer<OffsetTime> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		StreamingInput in = write(out -> out.writeString("10:15:30+02:00")).get();

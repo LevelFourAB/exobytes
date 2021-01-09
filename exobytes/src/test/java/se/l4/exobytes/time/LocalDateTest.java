@@ -32,7 +32,7 @@ public class LocalDateTest
 	public void testWriteTimestampDefault()
 		throws IOException
 	{
-		Serializer<LocalDate> serializer = serializer(TemporalAnnotations.timestamp());
+		Serializer<LocalDate> serializer = serializer(TemporalHints.timestamp());
 
 		LocalDate date = LocalDate.now();
 		StreamingInput in = write(out -> serializer.write(date, out)).get();
@@ -45,7 +45,7 @@ public class LocalDateTest
 	public void testReadTimestampDefault()
 		throws IOException
 	{
-		Serializer<LocalDate> serializer = serializer(TemporalAnnotations.timestamp());
+		Serializer<LocalDate> serializer = serializer(TemporalHints.timestamp());
 
 		LocalDate date = LocalDate.now();
 		StreamingInput in = write(out -> out.writeLong(date.toEpochDay() * 86400000l)).get();
@@ -61,7 +61,7 @@ public class LocalDateTest
 		throws IOException
 	{
 		Serializer<LocalDate> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		LocalDate dt = LocalDate.of(2011, 12, 3);
@@ -76,7 +76,7 @@ public class LocalDateTest
 		throws IOException
 	{
 		Serializer<LocalDate> serializer = serializer(
-			TemporalAnnotations.format()
+			TemporalHints.format()
 		);
 
 		StreamingInput in = write(out -> out.writeString("2011-12-03")).get();

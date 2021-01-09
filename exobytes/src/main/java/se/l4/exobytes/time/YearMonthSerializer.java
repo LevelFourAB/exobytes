@@ -49,7 +49,7 @@ public class YearMonthSerializer
 			encounter,
 			YearMonth::from,
 			FORMATTER,
-			Sets.immutable.of(Temporal.StandardFormat.DEFAULT)
+			Sets.immutable.of(TemporalHints.StandardFormat.DEFAULT)
 		);
 
 		if(result.isPresent())

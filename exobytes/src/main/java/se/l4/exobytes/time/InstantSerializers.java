@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 
 import org.eclipse.collections.api.factory.Sets;
 
-import se.l4.exobytes.time.Temporal.StandardFormat;
+import se.l4.exobytes.time.TemporalHints.StandardFormat;
 
 /**
  * Serializers for {@link Instant}.

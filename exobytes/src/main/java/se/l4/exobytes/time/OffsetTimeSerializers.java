@@ -67,14 +67,14 @@ public class OffsetTimeSerializers
 			},
 			DateTimeFormatter.ISO_TIME,
 			Sets.immutable.of(
-				Temporal.StandardFormat.DEFAULT,
-				Temporal.StandardFormat.ISO_DATE_TIME,
-				Temporal.StandardFormat.ISO_TIME,
-				Temporal.StandardFormat.ISO_LOCAL_DATE_TIME,
-				Temporal.StandardFormat.ISO_LOCAL_TIME,
-				Temporal.StandardFormat.ISO_OFFSET_DATE_TIME,
-				Temporal.StandardFormat.ISO_OFFSET_TIME,
-				Temporal.StandardFormat.RFC_1123_DATE_TIME
+				TemporalHints.StandardFormat.DEFAULT,
+				TemporalHints.StandardFormat.ISO_DATE_TIME,
+				TemporalHints.StandardFormat.ISO_TIME,
+				TemporalHints.StandardFormat.ISO_LOCAL_DATE_TIME,
+				TemporalHints.StandardFormat.ISO_LOCAL_TIME,
+				TemporalHints.StandardFormat.ISO_OFFSET_DATE_TIME,
+				TemporalHints.StandardFormat.ISO_OFFSET_TIME,
+				TemporalHints.StandardFormat.RFC_1123_DATE_TIME
 			)
 		);
 
