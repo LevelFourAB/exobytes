@@ -1,6 +1,7 @@
 package se.l4.exobytes.collections;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -24,7 +25,8 @@ public class CollectionSerializersModule
 	@Override
 	public void activate(Serializers serializers)
 	{
-		serializers.register(Map.class, new MapSerializerResolver());
+		serializers.register(Map.class, new MapResolver<>(Map.class, HashMap::new));
+		serializers.register(HashMap.class, new MapResolver<>(HashMap.class, HashMap::new));
 
 		serializers.register(List.class, new MutableCollectionResolver<>(List.class, ArrayList::new));
 		serializers.register(ArrayList.class, new MutableCollectionResolver<>(ArrayList.class, ArrayList::new));
