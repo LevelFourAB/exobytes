@@ -22,7 +22,7 @@ public interface StreamingInput
 	 *
 	 * Tokens are considered consumed if:
 	 * <ul>
-	 *   <li>{@link Token#VALUE} and {@link Token#KEY} it has been read or {@link #skip() skipped}
+	 *   <li>{@link Token#VALUE} is consumed if it has been read or {@link #skip() skipped}
 	 *   <li>{@link Token#NULL} is always fully consumed
 	 *   <li>
 	 *     {@link Token#OBJECT_START}, {@link Token#OBJECT_END},
@@ -98,8 +98,8 @@ public interface StreamingInput
 	/**
 	 * Advance to the next token and then skip the value. This will call
 	 * {@link #next()} followed by {@link #skip()}. The use case here is most
-	 * commonly when the {@link #current() current token} is {@link Token#KEY}
-	 * and a serializer wishes to skip value that follows.
+	 * commonly when reading an object key and a serializer wishes to skip it
+	 * and the value that follows.
 	 *
 	 * @throws IOException
 	 */

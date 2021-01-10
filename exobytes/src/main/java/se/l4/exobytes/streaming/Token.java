@@ -26,7 +26,7 @@ public enum Token
 	 */
 	OBJECT_END,
 	/**
-	 * Value, available via getters (and {@link StreamingInput#getValue()}).
+	 * Simple value.
 	 */
 	VALUE,
 	/**

@@ -35,7 +35,7 @@ public class EnumIgnoreCaseNameSerializer
 
 	/**
 	 * Create a serializer that will serialize the given enum type using its
-	 * {@link #name()} while being case insensitive in reading.
+	 * {@link Enum#name()} while being case insensitive in reading.
 	 *
 	 * @param <E>
 	 * @param type

@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 import se.l4.exobytes.standard.SimpleTypeSerializer;
 
 /**
- * Indicate that a field may contain any simple type, which is all primtive
+ * Indicate that a field may contain any simple type, which is all primitive
  * types and {@link String}, the field may not contain any object.
  */
 @Retention(RetentionPolicy.RUNTIME)

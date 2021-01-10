@@ -8,11 +8,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * Resolver for a specific {@link Serializer}. This is used to support
  * generics and other semi-dynamic features.
  *
- * <p>
- * Resolvers that use extra annotations to determine the serializer to use
- * should override {@link #getHints()} to return an array of the annotations
- * it uses.
- *
  * @param <T>
  */
 public interface SerializerResolver<T>

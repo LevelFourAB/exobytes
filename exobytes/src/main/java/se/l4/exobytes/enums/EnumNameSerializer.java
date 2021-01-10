@@ -35,7 +35,7 @@ public class EnumNameSerializer
 
 	/**
 	 * Create a serializer that will serialize the given enum type using its
-	 * {@link #name()}.
+	 * {@link Enum#name()}.
 	 *
 	 * @param <E>
 	 * @param type

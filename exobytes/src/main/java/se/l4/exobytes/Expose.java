@@ -8,19 +8,19 @@ import java.lang.annotation.Target;
 
 /**
  * Indicate that a certain field should be exposed in the serialized form.
- * This annotation is handled correctly if a class uses {@link ReflectionSerializer}.
+ * This annotation is handled correctly if a class uses {@link AnnotationSerialization}.
  * Optionally you can control the name of the field in serialize form by
  * setting {@link #value()}, which is useful to maintain backwards compatibility
- * if you want to refactor the name used in the code but maintaing compatibility
+ * if you want to refactor the name used in the code but maintaining compatibility
  * with previously serialized objects.
  *
  * <p>
  * Example:
  *
  * <pre>
- * @Use(ReflectionSerializer.class)
+ * {@literal @}AnnotationSerialization
  * public class Data {
- *   @Expose
+ *   {@literal @}Expose
  *   private int number;
  *
  *   // ... constructors and other code here ..

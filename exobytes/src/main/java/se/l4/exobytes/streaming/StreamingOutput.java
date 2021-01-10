@@ -45,7 +45,7 @@ public interface StreamingOutput
 	/**
 	 * Write the start of a list.
 	 *
-	 * @param name
+	 * @throws IOException
 	 */
 	void writeListStart()
 		throws IOException;
@@ -74,7 +74,6 @@ public interface StreamingOutput
 	 * Write a string.
 	 *
 	 * @param value
-	 * @return
 	 * @throws IOException
 	 */
 	void writeString(String value)
@@ -111,7 +110,6 @@ public interface StreamingOutput
 	 * Write an integer.
 	 *
 	 * @param number
-	 * @return
 	 * @throws IOException
 	 */
 	void writeInt(int number)
@@ -121,7 +119,6 @@ public interface StreamingOutput
 	 * Write a long.
 	 *
 	 * @param number
-	 * @return
 	 * @throws IOException
 	 */
 	void writeLong(long number)
@@ -131,7 +128,6 @@ public interface StreamingOutput
 	 * Write a float.
 	 *
 	 * @param number
-	 * @return
 	 * @throws IOException
 	 */
 	void writeFloat(float number)
@@ -141,7 +137,6 @@ public interface StreamingOutput
 	 * Write a double.
 	 *
 	 * @param number
-	 * @return
 	 * @throws IOException
 	 */
 	void writeDouble(double number)
@@ -151,7 +146,6 @@ public interface StreamingOutput
 	 * Write a boolean.
 	 *
 	 * @param b
-	 * @return
 	 * @throws IOException
 	 */
 	void writeBoolean(boolean b)
@@ -233,7 +227,6 @@ public interface StreamingOutput
 	/**
 	 * Write a null value.
 	 *
-	 * @return
 	 * @throws IOException
 	 */
 	void writeNull()
