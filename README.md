@@ -25,7 +25,7 @@ see the file `LICENSE` and `NOTICE` for details.
 <dependency>
   <groupId>se.l4.exobytes</groupId>
   <artifactId>exobytes</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
