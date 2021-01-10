@@ -24,8 +24,6 @@
 
 	<modules>
 		<module>exobytes</module>
-
-		<module>exobytes-benchmarks</module>
 	</modules>
 
 	<!-- License -->
@@ -235,7 +233,24 @@
 
 	<profiles>
 		<profile>
+			<id>no-release</id>
+			<activation>
+				<property>
+					<name>!release</name>
+				</property>
+			</activation>
+			<modules>
+				<module>exobytes-benchmarks</module>
+			</modules>
+		</profile>
+
+		<profile>
 			<id>release</id>
+			<activation>
+				<property>
+					<name>release</name>
+				</property>
+			</activation>
 			<build>
 				<plugins>
 					<plugin>
