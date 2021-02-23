@@ -19,7 +19,6 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<commons-version>2.0.0-SNAPSHOT</commons-version>
 	</properties>
 
 	<modules>
@@ -122,13 +121,13 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>3.1.12.2</version>
+				<version>4.2.0</version>
 
 				<dependencies>
 					<dependency>
 						<groupId>com.github.spotbugs</groupId>
 						<artifactId>spotbugs</artifactId>
-						<version>3.1.12</version>
+						<version>4.2.1</version>
 					</dependency>
 				</dependencies>
 				<executions>
@@ -147,12 +146,12 @@
 			<plugin>
 				<groupId>org.revapi</groupId>
 				<artifactId>revapi-maven-plugin</artifactId>
-				<version>0.11.2</version>
+				<version>0.13.2</version>
 				<dependencies>
 					<dependency>
 						<groupId>org.revapi</groupId>
 						<artifactId>revapi-java</artifactId>
-						<version>0.20.0</version>
+						<version>0.23.2</version>
 					</dependency>
 				</dependencies>
 				<executions>
