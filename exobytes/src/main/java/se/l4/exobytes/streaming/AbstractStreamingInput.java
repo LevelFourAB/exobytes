@@ -180,11 +180,15 @@ public abstract class AbstractStreamingInput
 				return map;
 			case LIST_START:
 				List<Object> list = new ArrayList<>();
+
 				while(peek() != Token.LIST_END)
 				{
 					next();
 					list.add(readDynamic());
 				}
+
+				next(Token.LIST_END);
+
 				return list;
 			case NULL:
 				return null;
