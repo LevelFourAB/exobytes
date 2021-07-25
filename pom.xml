@@ -223,6 +223,11 @@
 								<annotationType>edu.umd.cs.findbugs.annotations.SuppressFBWarnings</annotationType>
 								<justification>SpotBugs annotations are for bug finding and not code generation</justification>
 							</item>
+
+							<item>
+								<code>java.class.externalClassExposedInAPI</code>
+								<justification></justification>
+							</item>
 						</revapi.ignore>
 					</analysisConfiguration>
 				</configuration>
