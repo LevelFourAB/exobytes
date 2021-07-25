@@ -302,6 +302,8 @@ public class CBOROutput
 	public void writeByteArray(byte[] data)
 		throws IOException
 	{
+		consumeWrite();
+
 		writeMajorTypeAndLength(CborConstants.MAJOR_TYPE_BYTE_STRING, data.length);
 		write(data, 0, data.length);
 	}
@@ -317,6 +319,8 @@ public class CBOROutput
 	public OutputStream writeByteStream(int chunkSize)
 		throws IOException
 	{
+		consumeWrite();
+
 		ensure(1);
 		buffer[index++] = (byte) (CborConstants.MAJOR_TYPE_BYTE_STRING << 5 | CborConstants.AI_INDEFINITE);
 
